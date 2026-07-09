@@ -1,3 +1,6 @@
+# Local/self-hosted alternative to Vercel. The database, storage and auth are
+# hosted Supabase either way — set the Supabase/Resend variables in
+# frontend/.env (see frontend/.env.example).
 services:
   frontend:
     build:
@@ -8,14 +11,3 @@ services:
     env_file:
       - ./frontend/.env
     restart: always
-
-# If you want to run a local MongoDB instance, uncomment the following:
-#  mongodb:
-#    image: mongo:latest
-#    ports:
-#      - "27017:27017"
-#    volumes:
-#      - mongodb_data:/data/db
-
-# volumes:
-#   mongodb_data:
