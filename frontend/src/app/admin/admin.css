@@ -1,0 +1,22 @@
+/* Admin CMS Overrides - Sharp Edge Design */
+
+/* Ensure sidebar and header alignment stays fixed */
+[data-slot="sidebar-inset"] {
+    transition: none !important;
+}
+
+/* Override any rounded corners globally */
+[data-slot="sidebar-menu-button"],
+[data-slot="sidebar-menu-button"] *,
+[data-slot="card"],
+[data-slot="button"],
+[data-slot="input"] {
+    border-radius: 0 !important;
+}
+
+/* Specific overrides for common patterns */
+.admin button,
+.admin input,
+.admin [role="button"] {
+    border-radius: 0 !important;
+}
