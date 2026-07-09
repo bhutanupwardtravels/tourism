@@ -227,7 +227,7 @@ export default function AdminLoginPage() {
                     {/* Footer */}
                     <div className="mt-8 pt-6 border-t border-dashed border-gray-200">
                         <p className="text-[10px] text-center text-gray-400 uppercase tracking-widest font-mono">
-                            Bhutan Tourism © 2025
+                            Bhutan Upward Travels © 2025
                         </p>
                     </div>
                 </div>

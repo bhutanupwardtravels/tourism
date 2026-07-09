@@ -27,7 +27,7 @@ async function testEmail() {
     console.log("1. Testing User Confirmation Email...");
     const userResult = await sendMail({
         to: mockData.email,
-        subject: "TEST: Your Tour Request - Black Tomato Bhutan",
+        subject: "TEST: Your Tour Request - Bhutan Upward Travels",
         html: emailTemplates.userConfirmation(mockData as any),
     });
     console.log("User email result:", userResult);

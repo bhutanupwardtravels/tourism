@@ -17,7 +17,7 @@ export async function sendMail({ to, subject, html }: MailOptions) {
         const resend = new Resend(apiKey);
         const { data, error } = await resend.emails.send({
             // onboarding@resend.dev works without a verified domain (testing only)
-            from: process.env.EMAIL_FROM || "Black Tomato Bhutan <onboarding@resend.dev>",
+            from: process.env.EMAIL_FROM || "Bhutan Upward Travels <onboarding@resend.dev>",
             to,
             subject,
             html,

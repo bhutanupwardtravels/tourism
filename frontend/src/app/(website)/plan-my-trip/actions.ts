@@ -71,13 +71,13 @@ export async function submitTourRequest(data: any) {
         // Send email to User
         const userMail = sendMail({
             to: data.email,
-            subject: "Your Tour Request - Black Tomato Bhutan",
+            subject: "Your Tour Request - Bhutan Upward Travels",
             html: emailTemplates.userConfirmation(result),
         });
 
         // Send email to Operator
         const operatorMail = sendMail({
-            to: process.env.OPERATOR_EMAIL || "info@blacktomato.com",
+            to: process.env.OPERATOR_EMAIL || "info@bhutanupwardtravels.com",
             subject: "New Tour Request Notification",
             html: emailTemplates.operatorNotification(result),
         });

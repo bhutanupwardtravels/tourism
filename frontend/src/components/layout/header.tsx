@@ -49,7 +49,7 @@ export function Header() {
           {/* Logo */}
           <Link href="/" className="z-50 relative group">
             <span className="text-2xl font-bold tracking-widest uppercase">
-              Bhutan
+              Bhutan Upward
             </span>
             <span
               className={cn(
@@ -59,7 +59,7 @@ export function Header() {
                   : "text-gray-300 group-hover:text-white"
               )}
             >
-              Kingdom of Happiness
+              Travels
             </span>
           </Link>
 

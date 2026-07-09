@@ -279,7 +279,7 @@ export default function EnquirePage() {
 
                             <div className="text-center">
                                 <span className="font-mono text-[9px] text-gray-400 uppercase tracking-widest leading-loose">
-                                    Bhutan Kingdom Tourism // Private Exploration Auth <br />
+                                    Bhutan Upward Travels // Private Exploration Auth <br />
                                     By submitting, you agree to our bespoke processing terms.
                                 </span>
                             </div>

@@ -12,10 +12,10 @@ export function Footer() {
           <div className="space-y-6">
             <Link href="/" className="block">
               <span className="text-2xl font-bold tracking-widest uppercase">
-                Bhutan
+                Bhutan Upward
               </span>
               <span className="block text-[10px] tracking-[0.3em] text-gray-400">
-                Kingdom of Happiness
+                Travels
               </span>
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed">
@@ -110,7 +110,7 @@ export function Footer() {
 
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/10">
           <p className="text-xs text-gray-500 mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} Bhutan Tourism. All rights
+            &copy; {new Date().getFullYear()} Bhutan Upward Travels. All rights
             reserved.
           </p>
           <div className="flex items-center gap-6">

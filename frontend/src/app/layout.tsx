@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "Bhutan Tourism",
+    title: "Bhutan Upward Travels",
     description: "Experience the magic of Bhutan",
 };
 

@@ -19,7 +19,7 @@ const supabase = createClient(
 );
 
 // Override via env or CLI: node scripts/seed-admin-user.js email password
-const email = process.argv[2] || process.env.ADMIN_EMAIL || "admin@bhutan-tourism.com";
+const email = process.argv[2] || process.env.ADMIN_EMAIL || "admin@bhutanupwardtravels.com";
 const password = process.argv[3] || process.env.ADMIN_PASSWORD || "admin123";
 
 async function seed() {

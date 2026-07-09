@@ -4,7 +4,7 @@ export const emailTemplates = {
     userConfirmation: (data: TourRequest) => `
         <div style="font-family: sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
             <h2 style="color: #1a1a1a;">Tashi Delek, ${data.firstName}!</h2>
-            <p>Thank you for choosing <strong>Black Tomato Bhutan</strong> to plan your journey. We have received your tour request and our team is already working on it.</p>
+            <p>Thank you for choosing <strong>Bhutan Upward Travels</strong> to plan your journey. We have received your tour request and our team is already working on it.</p>
             
             <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
                 <h3 style="margin-top: 0;">Request Summary:</h3>
@@ -17,10 +17,10 @@ export const emailTemplates = {
 
             <p>One of our travel specialists will reach out to you shortly at <strong>${data.email}</strong> to discuss your itinerary in detail.</p>
             
-            <p>Warm regards,<br>The Black Tomato Bhutan Team</p>
+            <p>Warm regards,<br>The Bhutan Upward Travels Team</p>
             
             <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-            <p style="font-size: 12px; color: #777; text-align: center;">&copy; 2025 Black Tomato Bhutan. All rights reserved.</p>
+            <p style="font-size: 12px; color: #777; text-align: center;">&copy; 2025 Bhutan Upward Travels. All rights reserved.</p>
         </div>
     `,
 
