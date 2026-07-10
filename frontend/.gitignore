@@ -45,4 +45,4 @@ next-env.d.ts
 /uploads/*
 !/uploads/.gitkeep
 # Large video files - should be hosted on CDN
-public/videos/*.mp4
+# public/videos/*.mp4
