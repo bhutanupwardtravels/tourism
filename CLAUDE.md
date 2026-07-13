@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Next.js 14+ application for Bhutan Tourism, featuring a public website and an admin CMS panel. The application uses:
+This is a Next.js 16 (React 19) application for Bhutan Tourism ("Bhutan Upward Travels"), featuring a public website and an admin CMS panel. The application uses:
 
 - Next.js App Router with Server Components
 - Supabase (Postgres) for data storage, Supabase Storage for images
@@ -32,6 +32,8 @@ frontend/                 # Main Next.js application
 ```
 
 ## Common Development Commands
+
+All commands run from the `frontend/` directory (the Next.js app root), not the repo root.
 
 ### Running the Application
 
@@ -77,8 +79,9 @@ npm run seed:admin
 ### Authentication
 
 - Admin authentication uses Supabase Auth (email/password) via `@supabase/ssr`
-- `src/middleware.ts` refreshes the session and guards `/admin/*` (requires `app_metadata.role === "admin"`)
-- Server-side session helpers are in `src/lib/supabase/server.ts` (`getAuthUser`, `getAdminUser`)
+- `src/proxy.ts` (Next.js 16's renamed middleware — exports a `proxy()` function + `config.matcher`) validates the session and guards `/admin/*`, redirecting to `/login` unless the user's role is `admin`. There is no `src/middleware.ts`.
+- Role is read from `app_metadata.role` (set server-side, not self-assignable), falling back to `user_metadata.role`
+- Server-side session helpers are in `src/lib/supabase/server.ts` (`supabaseServer`, `getAuthUser`, `getAdminUser`)
 
 ### Component Architecture
 
@@ -109,33 +112,21 @@ The public website includes:
 
 ## Testing
 
-Tests should be run using:
-
-```bash
-# Run all tests
-npm test
-
-# Run specific test file
-npm test -- tests/file.test.ts
-```
+No test runner is configured — there is no `test` script in `package.json` and no test files in the repo. Verify changes with `npm run lint` and `npm run build`. If adding tests, wire up the runner and script first.
 
 ## Deployment
 
-The application can be deployed using:
+Two options, both backed by hosted Supabase + Resend:
 
-```bash
-# Build the application
-npm run build
+- **Vercel** (default): `npm run build` / `npm run start`.
+- **Self-hosted via Docker**: `docker-compose up` from the repo root, which builds `frontend/Dockerfile` and reads env from `frontend/.env`.
 
-# Start the production server
-npm run start
-```
-
-Environment variables must be configured (see `.env.example`):
+Environment variables must be configured (copy `frontend/.env.example` to `frontend/.env`):
 
 - NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY: Supabase project URL and anon key
 - SUPABASE_SERVICE_ROLE_KEY: Supabase service-role key (server-only)
-- RESEND_API_KEY / EMAIL_FROM / OPERATOR_EMAIL: Resend email configuration
+- RESEND_API_KEY / EMAIL_FROM / OPERATOR_EMAIL: Resend email configuration (tour-request notifications go to OPERATOR_EMAIL)
+- NEXT_PUBLIC_SITE_URL: canonical public URL (used for sitemap/robots and email links)
 
 ## Common Patterns
 
