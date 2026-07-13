@@ -8,8 +8,13 @@ import { usePathname } from "next/navigation";
 import { Menu, Search } from "lucide-react";
 import { OverlayMenu } from "@/components/ui/overlay-menu";
 import { useScroll, useMotionValueEvent } from "framer-motion";
+import type { ContactContent } from "@/lib/data/contact";
 
-export function Header() {
+interface HeaderProps {
+  contact?: ContactContent | null;
+}
+
+export function Header({ contact }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { scrollY } = useScroll();
@@ -179,7 +184,11 @@ export function Header() {
         </div>
       </header>
 
-      <OverlayMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <OverlayMenu
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        contact={contact}
+      />
     </>
   );
 }

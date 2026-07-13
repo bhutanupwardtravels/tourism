@@ -2,10 +2,22 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Facebook, Instagram, Twitter, Youtube } from "lucide-react";
+import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
+import type { ContactContent } from "@/lib/data/contact";
 
-export function Footer() {
+interface FooterProps {
+  contact?: ContactContent | null;
+}
+
+export function Footer({ contact }: FooterProps) {
+  const socialLinks = [
+    { href: contact?.socials.instagram, icon: Instagram, label: "Instagram" },
+    { href: contact?.socials.facebook, icon: Facebook, label: "Facebook" },
+    { href: contact?.socials.twitter, icon: Twitter, label: "Twitter" },
+    { href: contact?.socials.youtube, icon: Youtube, label: "YouTube" },
+  ].filter((social) => !!social.href);
+
   return (
     <footer className="bg-black text-white py-16 border-t border-white/10">
       <div className="container mx-auto px-6">
@@ -34,6 +46,38 @@ export function Footer() {
               Curating exceptional journeys to the Land of the Thunder Dragon.
               Experience the magic, culture, and serenity of Bhutan with us.
             </p>
+            {(contact?.email || contact?.phone || contact?.address) && (
+              <ul className="space-y-3 text-sm text-gray-400">
+                {contact?.email && (
+                  <li>
+                    <a
+                      href={`mailto:${contact.email}`}
+                      className="flex items-center gap-3 hover:text-white transition-colors"
+                    >
+                      <Mail className="w-4 h-4 shrink-0" />
+                      {contact.email}
+                    </a>
+                  </li>
+                )}
+                {contact?.phone && (
+                  <li>
+                    <a
+                      href={`tel:${contact.phone.replace(/\s+/g, "")}`}
+                      className="flex items-center gap-3 hover:text-white transition-colors"
+                    >
+                      <Phone className="w-4 h-4 shrink-0" />
+                      {contact.phone}
+                    </a>
+                  </li>
+                )}
+                {contact?.address && (
+                  <li className="flex items-start gap-3">
+                    <MapPin className="w-4 h-4 shrink-0 mt-0.5" />
+                    <span className="whitespace-pre-line">{contact.address}</span>
+                  </li>
+                )}
+              </ul>
+            )}
           </div>
 
           <div>
@@ -125,32 +169,22 @@ export function Footer() {
             &copy; {new Date().getFullYear()} Bhutan Upward Travels. All rights
             reserved.
           </p>
-          <div className="flex items-center gap-6">
-            <a
-              href="#"
-              className="text-gray-400 hover:text-white transition-colors"
-            >
-              <Instagram className="w-5 h-5" />
-            </a>
-            <a
-              href="#"
-              className="text-gray-400 hover:text-white transition-colors"
-            >
-              <Facebook className="w-5 h-5" />
-            </a>
-            <a
-              href="#"
-              className="text-gray-400 hover:text-white transition-colors"
-            >
-              <Twitter className="w-5 h-5" />
-            </a>
-            <a
-              href="#"
-              className="text-gray-400 hover:text-white transition-colors"
-            >
-              <Youtube className="w-5 h-5" />
-            </a>
-          </div>
+          {socialLinks.length > 0 && (
+            <div className="flex items-center gap-6">
+              {socialLinks.map(({ href, icon: Icon, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <Icon className="w-5 h-5" />
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </footer>

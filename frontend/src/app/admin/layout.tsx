@@ -11,6 +11,7 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
@@ -22,56 +23,86 @@ import Image from "next/image";
 import { AdminNavItem } from "@/components/admin/admin-nav-items";
 import { Button } from "@/components/ui/button";
 
-const menuItems = [
+const menuGroups = [
   {
-    iconName: "layout-dashboard" as const,
-    label: "Dashboard",
-    href: "/admin"
+    label: "Overview",
+    items: [
+      {
+        iconName: "layout-dashboard" as const,
+        label: "Dashboard",
+        href: "/admin",
+      },
+    ],
   },
   {
-    iconName: "map-pin" as const,
-    label: "Destinations",
-    href: "/admin/destinations",
+    label: "Content",
+    items: [
+      {
+        iconName: "map-pin" as const,
+        label: "Destinations",
+        href: "/admin/destinations",
+      },
+      {
+        iconName: "layers" as const,
+        label: "Experience Types",
+        href: "/admin/experience-types",
+      },
+      {
+        iconName: "compass" as const,
+        label: "Experiences",
+        href: "/admin/experiences",
+      },
+      {
+        iconName: "package" as const,
+        label: "Tours",
+        href: "/admin/tours",
+      },
+      {
+        iconName: "hotel" as const,
+        label: "Hotels",
+        href: "/admin/hotels",
+      },
+    ],
   },
   {
-    iconName: "layers" as const,
-    label: "Experience Types",
-    href: "/admin/experience-types",
+    label: "Enquiries",
+    items: [
+      {
+        iconName: "file-text" as const,
+        label: "Trip Requests",
+        href: "/admin/tour-requests",
+      },
+    ],
   },
   {
-    iconName: "compass" as const,
-    label: "Experiences",
-    href: "/admin/experiences",
+    label: "Site Settings",
+    items: [
+      {
+        iconName: "info" as const,
+        label: "About Us",
+        href: "/admin/about-us",
+      },
+      {
+        iconName: "phone" as const,
+        label: "Contact & Socials",
+        href: "/admin/contact",
+      },
+      {
+        iconName: "settings" as const,
+        label: "Fee Settings",
+        href: "/admin/settings",
+      },
+    ],
   },
   {
-    iconName: "hotel" as const,
-    label: "Hotels",
-    href: "/admin/hotels"
-  },
-  {
-    iconName: "settings" as const,
-    label: "Fee Settings",
-    href: "/admin/settings"
-  },
-  {
-    iconName: "package" as const,
-    label: "Tours",
-    href: "/admin/tours"
-  },
-  {
-    iconName: "file-text" as const,
-    label: "Trip Requests",
-    href: "/admin/tour-requests",
-  },
-  {
-    iconName: "info" as const,
-    label: "About Us",
-    href: "/admin/about-us"
-  },
-  {
-    iconName: "users" as const,
-    label: "User Management",
-    href: "/admin/users"
+    label: "Administration",
+    items: [
+      {
+        iconName: "users" as const,
+        label: "User Management",
+        href: "/admin/users",
+      },
+    ],
   },
 ];
 
@@ -118,20 +149,25 @@ export default async function AdminLayout({
         </SidebarHeader>
 
         <SidebarContent className="bg-black text-white">
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu className="space-y-1 px-2 py-4">
-                {menuItems.map((item) => (
-                  <AdminNavItem
-                    key={item.href}
-                    iconName={item.iconName}
-                    label={item.label}
-                    href={item.href}
-                  />
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+          {menuGroups.map((group) => (
+            <SidebarGroup key={group.label}>
+              <SidebarGroupLabel className="px-4 text-[10px] font-bold uppercase tracking-[0.25em] text-gray-500">
+                {group.label}
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu className="space-y-1 px-2 pb-2">
+                  {group.items.map((item) => (
+                    <AdminNavItem
+                      key={item.href}
+                      iconName={item.iconName}
+                      label={item.label}
+                      href={item.href}
+                    />
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          ))}
         </SidebarContent>
       </Sidebar>
 

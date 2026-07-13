@@ -15,6 +15,7 @@ import {
   Layers,
   Users,
   Settings,
+  Phone,
 } from "lucide-react";
 
 const iconMap = {
@@ -28,6 +29,7 @@ const iconMap = {
   layers: Layers,
   users: Users,
   settings: Settings,
+  phone: Phone,
 };
 
 interface AdminNavItemProps {

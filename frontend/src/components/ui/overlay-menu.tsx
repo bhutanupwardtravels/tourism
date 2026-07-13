@@ -4,10 +4,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { ContactContent } from "@/lib/data/contact";
 
 interface OverlayMenuProps {
   isOpen: boolean;
   onClose: () => void;
+  contact?: ContactContent | null;
 }
 
 const menuVariants = {
@@ -45,7 +47,14 @@ const itemVariants = {
   show: { y: 0, opacity: 1 },
 };
 
-export function OverlayMenu({ isOpen, onClose }: OverlayMenuProps) {
+export function OverlayMenu({ isOpen, onClose, contact }: OverlayMenuProps) {
+  const socialLinks = [
+    { href: contact?.socials.instagram, label: "Instagram" },
+    { href: contact?.socials.facebook, label: "Facebook" },
+    { href: contact?.socials.twitter, label: "Twitter" },
+    { href: contact?.socials.youtube, label: "YouTube" },
+  ].filter((social) => !!social.href);
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -136,45 +145,54 @@ export function OverlayMenu({ isOpen, onClose }: OverlayMenuProps) {
                   <p className="text-lg">
                     Start planning your custom trip to Bhutan today.
                   </p>
-                  <a
-                    href="tel:+1234567890"
-                    className="block text-2xl hover:underline"
-                  >
-                    +975 123 456 789
-                  </a>
-                  <a
-                    href="mailto:travel@bhutan.com"
-                    className="block text-xl hover:underline"
-                  >
-                    travel@bhutan.com
-                  </a>
+                  {contact?.phone && (
+                    <a
+                      href={`tel:${contact.phone.replace(/\s+/g, "")}`}
+                      className="block text-2xl hover:underline"
+                    >
+                      {contact.phone}
+                    </a>
+                  )}
+                  {contact?.email && (
+                    <a
+                      href={`mailto:${contact.email}`}
+                      className="block text-xl hover:underline"
+                    >
+                      {contact.email}
+                    </a>
+                  )}
+                  {contact?.whatsapp && (
+                    <a
+                      href={`https://wa.me/${contact.whatsapp.replace(/[^0-9]/g, "")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block text-xl hover:underline"
+                    >
+                      WhatsApp: {contact.whatsapp}
+                    </a>
+                  )}
                 </motion.div>
 
-                <motion.div variants={itemVariants} className="space-y-4">
-                  <h3 className="text-xl font-medium text-gray-400">
-                    Follow Us
-                  </h3>
-                  <div className="flex gap-4">
-                    <a
-                      href="#"
-                      className="hover:text-gray-300 transition-colors"
-                    >
-                      Instagram
-                    </a>
-                    <a
-                      href="#"
-                      className="hover:text-gray-300 transition-colors"
-                    >
-                      Facebook
-                    </a>
-                    <a
-                      href="#"
-                      className="hover:text-gray-300 transition-colors"
-                    >
-                      Twitter
-                    </a>
-                  </div>
-                </motion.div>
+                {socialLinks.length > 0 && (
+                  <motion.div variants={itemVariants} className="space-y-4">
+                    <h3 className="text-xl font-medium text-gray-400">
+                      Follow Us
+                    </h3>
+                    <div className="flex gap-4">
+                      {socialLinks.map(({ href, label }) => (
+                        <a
+                          key={label}
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-gray-300 transition-colors"
+                        >
+                          {label}
+                        </a>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
               </motion.div>
             </div>
           </div>
