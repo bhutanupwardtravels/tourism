@@ -31,8 +31,8 @@ export async function getAllTours(): Promise<Tour[]> {
 
 export async function getTopPriorityTours(limit: number = 5): Promise<Tour[]> {
   try {
-    const all = await tourDb.getAllTours();
-    const resolved = await Promise.all(all.slice(0, limit).map(resolveTourCategory));
+    const top = await tourDb.getTopTours(limit);
+    const resolved = await Promise.all(top.map(resolveTourCategory));
     return resolved as Tour[];
   } catch (error) {
     console.error("Error fetching top priority tours:", error);
@@ -84,39 +84,44 @@ export async function getTourDay(
       }
     }
 
-    // Resolve Experiences and Travel Destinations from items
-    const themeExperiences = [];
+    // Resolve Experiences and Travel Destinations from items. Items are
+    // resolved in parallel; getDestinationById/getExperienceById are cache()'d
+    // so repeated ids within the render collapse into one query each.
+    const themeExperiences: any[] = [];
     if (dayData.items) {
-      for (const item of dayData.items) {
-        if (item.type === "experience" && item.experienceId) {
-          const exp = await experienceDb.getExperienceById(item.experienceId);
-          if (exp) themeExperiences.push(exp);
-        }
-        if (item.type === "travel" && item.travel && !item.hotelId) {
-          // Resolve From coordinates — new builder uses destinationFromId, legacy used travel.from as ID
-          if (item.destinationFromId) {
-            const dest = await destinationDb.getDestinationById(item.destinationFromId);
-            if (dest?.coordinates) item.travel.fromCoordinates = dest.coordinates;
-          } else if (item.travel.from && item.travel.from.length === 24) {
-            const dest = await destinationDb.getDestinationById(item.travel.from);
-            if (dest) {
-              item.travel.from = dest.name;
-              if (dest.coordinates) item.travel.fromCoordinates = dest.coordinates;
+      const resolved = await Promise.all(
+        dayData.items.map(async (item: any) => {
+          if (item.type === "experience" && item.experienceId) {
+            return experienceDb.getExperienceById(item.experienceId);
+          }
+          if (item.type === "travel" && item.travel && !item.hotelId) {
+            // Resolve From coordinates — new builder uses destinationFromId, legacy used travel.from as ID
+            if (item.destinationFromId) {
+              const dest = await destinationDb.getDestinationById(item.destinationFromId);
+              if (dest?.coordinates) item.travel.fromCoordinates = dest.coordinates;
+            } else if (item.travel.from && item.travel.from.length === 24) {
+              const dest = await destinationDb.getDestinationById(item.travel.from);
+              if (dest) {
+                item.travel.from = dest.name;
+                if (dest.coordinates) item.travel.fromCoordinates = dest.coordinates;
+              }
+            }
+            // Resolve To coordinates — new builder uses destinationToId, legacy used travel.to as ID
+            if (item.destinationToId) {
+              const dest = await destinationDb.getDestinationById(item.destinationToId);
+              if (dest?.coordinates) item.travel.toCoordinates = dest.coordinates;
+            } else if (item.travel.to && item.travel.to.length === 24) {
+              const dest = await destinationDb.getDestinationById(item.travel.to);
+              if (dest) {
+                item.travel.to = dest.name;
+                if (dest.coordinates) item.travel.toCoordinates = dest.coordinates;
+              }
             }
           }
-          // Resolve To coordinates — new builder uses destinationToId, legacy used travel.to as ID
-          if (item.destinationToId) {
-            const dest = await destinationDb.getDestinationById(item.destinationToId);
-            if (dest?.coordinates) item.travel.toCoordinates = dest.coordinates;
-          } else if (item.travel.to && item.travel.to.length === 24) {
-            const dest = await destinationDb.getDestinationById(item.travel.to);
-            if (dest) {
-              item.travel.to = dest.name;
-              if (dest.coordinates) item.travel.toCoordinates = dest.coordinates;
-            }
-          }
-        }
-      }
+          return null;
+        })
+      );
+      for (const exp of resolved) if (exp) themeExperiences.push(exp);
     }
 
     return {

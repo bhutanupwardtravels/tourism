@@ -22,7 +22,9 @@ export const tourRequestDb = {
     async getAllTourRequests(page = 1, limit = 10, status?: RequestStatus | RequestStatus[], search?: string) {
         const supabase = supabaseAdmin();
 
-        let query = supabase.from(TABLE).select("*", { count: "exact" });
+        // `estimated` returns an exact count for small tables and a fast planner
+        // estimate once the table grows, avoiding a full count scan per page load.
+        let query = supabase.from(TABLE).select("*", { count: "estimated" });
         if (status) {
             query = Array.isArray(status)
                 ? query.in("status", status)

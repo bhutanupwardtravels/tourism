@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { supabaseAdmin } from "../supabase/admin";
 import { rowToDoc, docToRow, paginate, pageRange, UUID_RE } from "../supabase/mapping";
 
@@ -26,13 +27,21 @@ const COLUMNS = [
 // `destinationId` or `destinationSlug` (id or slug). This mirrors the old
 // Mongo $lookup: resolve whichever is present and expose
 // resolvedDestinationName / resolvedDestinationSlug / destinationId.
+// The destinations lookup table is read once per request and shared across
+// every resolveDestinations() call (list + carousels) via cache().
+const loadDestinationIndex = cache(async () => {
+    const supabase = supabaseAdmin();
+    const { data: dests } = await supabase.from("destinations").select("id, name, slug");
+    return {
+        byId: new Map((dests ?? []).map((d) => [d.id, d])),
+        bySlug: new Map((dests ?? []).map((d) => [d.slug, d])),
+    };
+});
+
 async function resolveDestinations(docs: any[]): Promise<any[]> {
     if (docs.length === 0) return docs;
-    const supabase = supabaseAdmin();
 
-    const { data: dests } = await supabase.from("destinations").select("id, name, slug");
-    const byId = new Map((dests ?? []).map((d) => [d.id, d]));
-    const bySlug = new Map((dests ?? []).map((d) => [d.slug, d]));
+    const { byId, bySlug } = await loadDestinationIndex();
 
     return docs.map((doc) => {
         const ref = doc.destination || doc.destinationId || doc.destinationSlug;
@@ -70,7 +79,7 @@ export async function listHotels(page: number = 1, pageSize: number = 10, search
     };
 }
 
-export async function getHotelById(id: string) {
+export const getHotelById = cache(async (id: string) => {
     try {
         const supabase = supabaseAdmin();
         const { data } = await supabase.from(TABLE).select("*").eq("id", id).maybeSingle();
@@ -80,15 +89,15 @@ export async function getHotelById(id: string) {
     } catch (e) {
         return null;
     }
-}
+});
 
-export async function getHotelBySlug(slug: string) {
+export const getHotelBySlug = cache(async (slug: string) => {
     const supabase = supabaseAdmin();
     const { data } = await supabase.from(TABLE).select("*").eq("slug", slug).maybeSingle();
     if (!data) return null;
     const [resolved] = await resolveDestinations([rowToDoc(data)]);
     return resolved;
-}
+});
 
 export async function createHotel(data: any) {
     const supabase = supabaseAdmin();
@@ -118,9 +127,22 @@ export async function deleteHotel(id: string) {
     return { acknowledged: true };
 }
 
-export async function getAllHotels() {
+export const getAllHotels = cache(async () => {
     const supabase = supabaseAdmin();
     const { data, error } = await supabase.from(TABLE).select("*").order("name");
+    if (error) throw error;
+    return resolveDestinations((data ?? []).map(rowToDoc));
+});
+
+// Top-N by priority in Postgres (homepage best hotels).
+export async function getTopHotels(limit: number = 6) {
+    const supabase = supabaseAdmin();
+    const { data, error } = await supabase
+        .from(TABLE)
+        .select("*")
+        .order("priority", { ascending: false })
+        .order("name")
+        .limit(limit);
     if (error) throw error;
     return resolveDestinations((data ?? []).map(rowToDoc));
 }
@@ -129,14 +151,17 @@ export async function getHotelsByDestination(destinationId?: string, slug?: stri
     if (!destinationId && !slug) return [];
 
     const supabase = supabaseAdmin();
-    const { data, error } = await supabase.from(TABLE).select("*");
+
+    // Filter in Postgres against every legacy destination reference column
+    // instead of pulling the whole table and filtering in JS.
+    const refs = [destinationId, slug].filter(Boolean) as string[];
+    const orParts: string[] = [];
+    for (const ref of refs) {
+        orParts.push(`destination.eq.${ref}`, `destination_id.eq.${ref}`, `destination_slug.eq.${ref}`);
+    }
+
+    const { data, error } = await supabase.from(TABLE).select("*").or(orParts.join(","));
     if (error) throw error;
 
-    const docs = (data ?? []).map(rowToDoc).filter((doc: any) => {
-        if (destinationId && (doc.destinationId === destinationId || doc.destination === destinationId)) return true;
-        if (slug && (doc.destinationSlug === slug || doc.destination === slug)) return true;
-        return false;
-    });
-
-    return resolveDestinations(docs);
+    return resolveDestinations((data ?? []).map(rowToDoc));
 }

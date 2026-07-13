@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { supabaseAdmin } from "../supabase/admin";
 import { rowToDoc, docToRow, paginate, pageRange } from "../supabase/mapping";
 import { Destination } from "@/app/admin/destinations/schema";
@@ -42,7 +43,7 @@ export async function listDestinations(page: number = 1, pageSize: number = 10, 
     };
 }
 
-export async function getAllDestinations() {
+export const getAllDestinations = cache(async () => {
     const supabase = supabaseAdmin();
     const { data, error } = await supabase
         .from(TABLE)
@@ -51,15 +52,28 @@ export async function getAllDestinations() {
         .order("name");
     if (error) throw error;
     return (data ?? []).map(rowToDoc);
+});
+
+// Top-N by priority in Postgres (homepage featured destinations).
+export async function getTopDestinations(limit: number = 4) {
+    const supabase = supabaseAdmin();
+    const { data, error } = await supabase
+        .from(TABLE)
+        .select("*")
+        .order("priority", { ascending: false })
+        .order("name")
+        .limit(limit);
+    if (error) throw error;
+    return (data ?? []).map(rowToDoc);
 }
 
-export async function getDestinationBySlug(slug: string) {
+export const getDestinationBySlug = cache(async (slug: string) => {
     const supabase = supabaseAdmin();
     const { data } = await supabase.from(TABLE).select("*").eq("slug", slug).maybeSingle();
     return rowToDoc(data);
-}
+});
 
-export async function getDestinationById(id: string) {
+export const getDestinationById = cache(async (id: string) => {
     try {
         const supabase = supabaseAdmin();
         const { data } = await supabase.from(TABLE).select("*").eq("id", id).maybeSingle();
@@ -67,7 +81,7 @@ export async function getDestinationById(id: string) {
     } catch (error) {
         return null;
     }
-}
+});
 
 export async function createDestination(data: Partial<Destination>) {
     const supabase = supabaseAdmin();
