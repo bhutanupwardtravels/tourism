@@ -29,7 +29,10 @@ export default function Loading() {
             <div className="flex flex-col items-center gap-3">
                 <div className="h-px w-8 bg-black/10" />
                 <p className="font-mono text-[10px] uppercase tracking-[0.5em] text-amber-600/80 animate-pulse">
-                    // We Welcome You
+                    // Bhutan Upward Travels
+                </p>
+                 <p className="font-mono text-[10px] uppercase tracking-[0.5em] text-amber-600/80 animate-pulse">
+                    Welcomes You
                 </p>
                 <div className="h-px w-8 bg-black/10" />
             </div>
