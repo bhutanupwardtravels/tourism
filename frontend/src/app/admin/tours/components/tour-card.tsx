@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Pencil, Trash2, Clock, MapPin, DollarSign } from "lucide-react";
@@ -9,7 +9,6 @@ import { motion } from "framer-motion";
 import { Tour } from "../schema";
 import { Badge } from "@/components/ui/badge";
 import { DeleteTourDialog } from "./delete-tour-dialog";
-import { getExperienceTypeById } from "@/app/admin/experience-types/actions";
 
 interface TourCardProps {
     tour: Tour;
@@ -19,27 +18,9 @@ interface TourCardProps {
 export function TourCard({ tour, showActionsOnClick }: TourCardProps) {
     const [isHovered, setIsHovered] = useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-    const [categoryName, setCategoryName] = useState<string>("Loading...");
     const router = useRouter();
 
-    useEffect(() => {
-        const categoryId = tour.category;
-        if (!categoryId) {
-            setCategoryName("General");
-            return;
-        }
-
-        const fetchCategory = async () => {
-            try {
-                const experienceType = await getExperienceTypeById(categoryId);
-                setCategoryName(experienceType?.title || "General");
-            } catch (error) {
-                setCategoryName("General");
-            }
-        };
-
-        fetchCategory();
-    }, [tour.category]);
+    const categoryName = tour.categoryTitle || "General";
 
     return (
         <>

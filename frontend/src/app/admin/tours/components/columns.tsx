@@ -6,8 +6,6 @@ import { Tour } from "../schema";
 import { DataTableColumnHeader } from "@/components/admin/data-table/data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { Badge } from "@/components/ui/badge";
-import { useEffect, useState } from "react";
-import { getExperienceTypeById } from "@/app/admin/experience-types/actions";
 
 function ImageCell({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
     if (!imageUrl) {
@@ -27,35 +25,15 @@ function ImageCell({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
     );
 }
 
-function CategoryCell({ categoryId }: { categoryId?: string }) {
-    const [categoryName, setCategoryName] = useState<string>("Loading...");
-
-    useEffect(() => {
-        if (!categoryId) {
-            setCategoryName("-");
-            return;
-        }
-
-        const fetchCategory = async () => {
-            try {
-                const experienceType = await getExperienceTypeById(categoryId);
-                setCategoryName(experienceType?.title || categoryId);
-            } catch (error) {
-                setCategoryName(categoryId);
-            }
-        };
-
-        fetchCategory();
-    }, [categoryId]);
-
-    if (!categoryName || categoryName === "-") return <span className="text-gray-400">-</span>;
+function CategoryCell({ tour }: { tour: Tour }) {
+    if (!tour.category) return <span className="text-gray-400">-</span>;
 
     return (
         <Badge
             variant="outline"
             className="rounded-none uppercase text-[10px] font-bold tracking-widest bg-amber-50 text-amber-700 border-amber-200"
         >
-            {categoryName}
+            {tour.categoryTitle || tour.category}
         </Badge>
     );
 }
@@ -87,14 +65,11 @@ export const columns: ColumnDef<Tour>[] = [
     {
         accessorKey: "category",
         header: "Category",
-        cell: ({ row }) => {
-            const category = row.getValue("category") as string;
-            return (
-                <div className="flex flex-col">
-                    <CategoryCell categoryId={category} />
-                </div>
-            );
-        },
+        cell: ({ row }) => (
+            <div className="flex flex-col">
+                <CategoryCell tour={row.original} />
+            </div>
+        ),
         filterFn: (row, id, value) => {
             return value.includes(row.getValue(id));
         },

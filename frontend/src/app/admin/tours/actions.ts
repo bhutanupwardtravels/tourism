@@ -13,6 +13,24 @@ import * as experienceTypeDb from "@/lib/data/experience-types";
 export async function getTours(page: number = 1, pageSize: number = 10, category?: string | string[], search?: string): Promise<PaginatedTours> {
     try {
         const data = await tourDb.listTours(page, pageSize, category, search);
+        const tours = data.items as Tour[];
+
+        // Resolve category titles in one batch instead of per-row lookups.
+        // A failed lookup must not blank the tour list — cells fall back to the raw id.
+        try {
+            const categoryIds = [...new Set(tours.map((t) => t.category).filter((c): c is string => !!c))];
+            if (categoryIds.length > 0) {
+                const titles = await experienceTypeDb.getExperienceTypeTitlesByIds(categoryIds);
+                tours.forEach((tour) => {
+                    if (tour.category) {
+                        tour.categoryTitle = titles[tour.category];
+                    }
+                });
+            }
+        } catch {
+            // Tours render with the raw category value instead
+        }
+
         return data as PaginatedTours;
     } catch (error) {
         return {

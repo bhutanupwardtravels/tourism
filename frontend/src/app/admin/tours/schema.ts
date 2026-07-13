@@ -66,6 +66,8 @@ export const tourSchema = z.object({
         return 0;
     }, z.number().default(0)),
     category: z.string().optional(),
+    // Resolved server-side from the category's experience type; never persisted
+    categoryTitle: z.string().optional(),
     highlights: z.array(z.string()).optional(),
     days: z.array(tourDaySchema),
     selectedCostIds: z.array(z.string()).default([]),

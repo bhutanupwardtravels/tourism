@@ -47,6 +47,19 @@ export async function getExperienceTypeById(id: string) {
     }
 }
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export async function getExperienceTypeTitlesByIds(ids: string[]): Promise<Record<string, string>> {
+    // Legacy rows may hold slugs/titles instead of uuids; those would make the
+    // uuid cast in `.in("id", ...)` throw, so only look up well-formed ids.
+    const uuids = ids.filter((id) => UUID_RE.test(id));
+    if (uuids.length === 0) return {};
+    const supabase = supabaseAdmin();
+    const { data, error } = await supabase.from(TABLE).select("id, title").in("id", uuids);
+    if (error) throw error;
+    return Object.fromEntries((data ?? []).map((row) => [row.id, row.title]));
+}
+
 export async function getAllExperienceTypes() {
     const supabase = supabaseAdmin();
     const { data, error } = await supabase

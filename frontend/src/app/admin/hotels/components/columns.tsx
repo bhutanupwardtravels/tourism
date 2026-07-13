@@ -5,8 +5,6 @@ import { format } from "date-fns";
 import { Hotel } from "../schema";
 import { DataTableColumnHeader } from "@/components/admin/data-table/data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
-import { useEffect, useState } from "react";
-import { getDestinationById } from "@/app/admin/destinations/actions";
 
 
 function ImageCell({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
@@ -27,32 +25,16 @@ function ImageCell({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
   );
 }
 
-function DestinationCell({ destinationId }: { destinationId?: string }) {
-  const [destinationName, setDestinationName] = useState<string>("Loading...");
+function DestinationCell({ hotel }: { hotel: Hotel }) {
+  // Name is resolved server-side by the data layer (resolvedDestinationName)
+  const name =
+    hotel.resolvedDestinationName ||
+    hotel.destination ||
+    hotel.destinationId ||
+    hotel.destinationSlug ||
+    "-";
 
-  useEffect(() => {
-    if (!destinationId) {
-      setDestinationName("-");
-      return;
-    }
-
-    const fetchDestination = async () => {
-      try {
-        const destination = await getDestinationById(destinationId);
-        setDestinationName(destination?.name || destinationId);
-      } catch (error) {
-        setDestinationName(destinationId);
-      }
-    };
-
-    fetchDestination();
-  }, [destinationId]);
-
-  return (
-    <div className="text-xs text-zinc-500">
-      {destinationName}
-    </div>
-  );
+  return <div className="text-xs text-zinc-500">{name}</div>;
 }
 
 export const columns: ColumnDef<Hotel>[] = [
@@ -82,17 +64,14 @@ export const columns: ColumnDef<Hotel>[] = [
   {
     accessorKey: "destination",
     header: "Destination",
-    cell: ({ row }) => {
-      const destinationId = row.original.destination || row.original.destinationId || row.original.destinationSlug;
-      return (
-        <div className="flex flex-col">
-          <span className="text-xs font-bold text-zinc-700">
-            <DestinationCell destinationId={destinationId} />
-          </span>
-          <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Market Location</span>
-        </div>
-      );
-    },
+    cell: ({ row }) => (
+      <div className="flex flex-col">
+        <span className="text-xs font-bold text-zinc-700">
+          <DestinationCell hotel={row.original} />
+        </span>
+        <span className="text-[10px] text-zinc-400 uppercase font-medium tracking-tight">Market Location</span>
+      </div>
+    ),
   },
   {
     accessorKey: "rating",
