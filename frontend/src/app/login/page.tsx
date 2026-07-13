@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { loginAction } from "./actions";
-import { Eye, EyeOff, Shield } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -145,14 +146,21 @@ export default function AdminLoginPage() {
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             transition={{ duration: 0.5, delay: 0.3 }}
-                            className="w-12 h-12 bg-black text-white flex items-center justify-center mx-auto mb-4 relative"
+                            className="w-16 h-16 flex items-center justify-center mx-auto mb-4 relative"
                         >
-                            <Shield className="w-6 h-6" />
+                            <Image
+                                src="/images/logo.png"
+                                alt="Bhutan Upward Travels logo"
+                                width={64}
+                                height={64}
+                                priority
+                                className="h-16 w-16 object-contain"
+                            />
                         </motion.div>
                         <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.3em] mb-2 block">
                             // SECURE ACCESS
                         </span>
-                        <h1 className="text-2xl font-light text-black tracking-tighter uppercase">ADMIN PORTAL</h1>
+                        <h1 className="text-2xl font-light text-black tracking-tighter uppercase">Bhutan Upward Admin</h1>
                     </div>
                 </div>
 

@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/sidebar";
 import { LogOut, Settings } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { AdminNavItem } from "@/components/admin/admin-nav-items";
 import { Button } from "@/components/ui/button";
 
@@ -93,13 +94,19 @@ export default async function AdminLayout({
         <SidebarHeader className="border-b border-gray-800 bg-black">
           <div className="p-6">
             <Link href="/" className="block">
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-white flex items-center justify-center">
-                  <span className="text-black font-black text-lg">B</span>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 shrink-0 rounded-full bg-white flex items-center justify-center">
+                  <Image
+                    src="/images/logo.png"
+                    alt="Bhutan Upward Travels logo"
+                    width={32}
+                    height={32}
+                    className="h-8 w-8 object-contain"
+                  />
                 </div>
                 <div>
                   <span className="text-lg font-bold tracking-widest uppercase block text-white">
-                    BHUTAN
+                    BHUTAN UPWARD
                   </span>
                   <span className="text-[9px] tracking-[0.2em] text-gray-400 block">
                     ADMIN PORTAL

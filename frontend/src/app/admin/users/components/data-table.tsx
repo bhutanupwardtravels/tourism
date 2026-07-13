@@ -28,9 +28,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DataTablePagination } from "@/components/admin/data-table/data-table-pagination";
+import {
+  DataTableSkeletonRows,
+  DataTableSkeletonCards,
+} from "@/components/admin/data-table/data-table-skeleton";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { UserCard } from "./user-card";
-import { Loader2 } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -153,11 +156,7 @@ export function UsersDataTable<TData, TValue>({
     <div className="space-y-4">
       <DataTableToolbar table={table} view={view} onViewChange={onViewChange} />
 
-      {isLoading ? (
-        <div className="flex items-center justify-center min-h-[400px]">
-          <Loader2 className="h-8 w-8 animate-spin text-zinc-300" />
-        </div>
-      ) : view === "list" ? (
+      {view === "list" ? (
         <div className="rounded-none border bg-card overflow-hidden">
           <Table>
             <TableHeader className="bg-gray-100">
@@ -186,7 +185,9 @@ export function UsersDataTable<TData, TValue>({
               ))}
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows?.length ? (
+              {isLoading ? (
+                <DataTableSkeletonRows columns={columns.length} />
+              ) : table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
@@ -218,7 +219,9 @@ export function UsersDataTable<TData, TValue>({
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {table.getRowModel().rows?.length ? (
+          {isLoading ? (
+            <DataTableSkeletonCards />
+          ) : table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <UserCard key={row.id} user={row.original as any} />
             ))

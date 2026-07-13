@@ -29,6 +29,10 @@ import {
 } from "@/components/ui/table";
 
 import { DataTablePagination } from "./data-table-pagination";
+import {
+    DataTableSkeletonRows,
+    DataTableSkeletonCards,
+} from "@/components/admin/data-table/data-table-skeleton";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { TourRequestCard } from "./tour-request-card";
 
@@ -42,6 +46,7 @@ interface DataTableProps<TData, TValue> {
     };
     view?: "list" | "grid";
     onViewChange?: (view: "list" | "grid") => void;
+    isLoading?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -51,6 +56,7 @@ export function DataTable<TData, TValue>({
     pagination,
     view,
     onViewChange,
+    isLoading = false,
 }: DataTableProps<TData, TValue>) {
     const router = useRouter();
     const pathname = usePathname();
@@ -221,7 +227,9 @@ export function DataTable<TData, TValue>({
                             ))}
                         </TableHeader>
                         <TableBody>
-                            {table.getRowModel().rows?.length ? (
+                            {isLoading ? (
+                                <DataTableSkeletonRows columns={columns.length} />
+                            ) : table.getRowModel().rows?.length ? (
                                 table.getRowModel().rows.map((row) => (
                                     <TableRow
                                         key={row.id}
@@ -253,7 +261,9 @@ export function DataTable<TData, TValue>({
                 </div>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {table.getRowModel().rows?.length ? (
+                    {isLoading ? (
+                        <DataTableSkeletonCards />
+                    ) : table.getRowModel().rows?.length ? (
                         table.getRowModel().rows.map((row) => {
                             const request = row.original as any;
                             if (!request) return null;

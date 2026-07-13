@@ -102,6 +102,7 @@ export default function TourRequestsPage({
           pageSize: pageData.pageSize,
         }}
         view={view}
+        isLoading={isLoading}
         onViewChange={handleViewChange}
       />
     </div>

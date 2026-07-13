@@ -26,7 +26,10 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { SettingsDataTableToolbar } from "./data-table-toolbar";
-import { Loader2 } from "lucide-react";
+import {
+    DataTableSkeletonRows,
+    DataTableSkeletonCards,
+} from "@/components/admin/data-table/data-table-skeleton";
 import { CostCard } from "./cost-card";
 
 interface DataTableProps<TData, TValue> {
@@ -117,11 +120,7 @@ export function SettingsDataTable<TData, TValue>({
         <div className="space-y-4">
             <SettingsDataTableToolbar table={table} view={view} onViewChange={onViewChange} />
 
-            {isLoading ? (
-                <div className="flex items-center justify-center min-h-[400px]">
-                    <Loader2 className="h-8 w-8 animate-spin text-zinc-300" />
-                </div>
-            ) : view === "list" ? (
+            {view === "list" ? (
                 <div className="rounded-none border border-gray-200 bg-white overflow-hidden shadow-sm">
                     <Table>
                         <TableHeader className="bg-gray-100">
@@ -150,7 +149,9 @@ export function SettingsDataTable<TData, TValue>({
                             ))}
                         </TableHeader>
                         <TableBody>
-                            {table.getRowModel().rows?.length ? (
+                            {isLoading ? (
+                                <DataTableSkeletonRows columns={columns.length} />
+                            ) : table.getRowModel().rows?.length ? (
                                 table.getRowModel().rows.map((row) => (
                                     <TableRow
                                         key={row.id}
@@ -182,7 +183,9 @@ export function SettingsDataTable<TData, TValue>({
                 </div>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {table.getRowModel().rows?.length ? (
+                    {isLoading ? (
+                        <DataTableSkeletonCards />
+                    ) : table.getRowModel().rows?.length ? (
                         table.getRowModel().rows.map((row) => (
                             <CostCard key={row.id} cost={row.original as any} isMobile={isMobile} />
                         ))

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Facebook, Instagram, Twitter, Youtube } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -10,12 +11,23 @@ export function Footer() {
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="space-y-6">
-            <Link href="/" className="block">
-              <span className="text-2xl font-bold tracking-widest uppercase">
-                Bhutan Upward
+            <Link href="/" className="flex items-center gap-3">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white">
+                <Image
+                  src="/images/logo.png"
+                  alt="Bhutan Upward Travels logo"
+                  width={40}
+                  height={40}
+                  className="h-10 w-10 object-contain"
+                />
               </span>
-              <span className="block text-[10px] tracking-[0.3em] text-gray-400">
-                Travels
+              <span className="flex flex-col">
+                <span className="text-2xl font-bold tracking-widest uppercase">
+                  Bhutan Upward
+                </span>
+                <span className="block text-[10px] tracking-[0.3em] text-gray-400">
+                  Travels
+                </span>
               </span>
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed">

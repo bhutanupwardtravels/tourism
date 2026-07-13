@@ -66,11 +66,13 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
                                 <Link href={`/experiences?category=${encodeURIComponent(experience.title)}`} className="block group relative bg-neutral-100 border border-black/10 hover:border-amber-600/50 transition-all duration-700 rounded-xs overflow-hidden">
                                     {/* Image Container with Reveal */}
                                     <div className="aspect-4/3 overflow-hidden relative">
-                                        <img
-                                            src={experience.image}
-                                            alt={experience.title}
-                                            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                                        />
+                                        {experience.image && (
+                                            <img
+                                                src={experience.image}
+                                                alt={experience.title}
+                                                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                                            />
+                                        )}
 
                                         <div className="absolute top-6 left-6 right-6 flex justify-between items-start">
                                             <span className="bg-white/80 backdrop-blur-md px-3 py-1 font-mono text-[9px] tracking-widest border border-black/10 text-black">

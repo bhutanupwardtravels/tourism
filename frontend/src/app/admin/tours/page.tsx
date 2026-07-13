@@ -104,6 +104,7 @@ export default function ToursPage({
                 }}
                 view={view}
                 onViewChange={handleViewChange}
+                isLoading={isLoading}
             />
         </div>
     );

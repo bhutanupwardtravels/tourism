@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
@@ -47,19 +48,36 @@ export function Header() {
           )}
         >
           {/* Logo */}
-          <Link href="/" className="z-50 relative group">
-            <span className="text-2xl font-bold tracking-widest uppercase">
-              Bhutan Upward
-            </span>
+          <Link href="/" className="z-50 relative group flex items-center gap-3">
             <span
               className={cn(
-                "block text-[10px] tracking-[0.3em] transition-colors",
-                isDarkText
-                  ? "text-gray-600 group-hover:text-black"
-                  : "text-gray-300 group-hover:text-white"
+                "flex h-12 w-12 shrink-0 items-center justify-center rounded-full transition-colors duration-500",
+                !isDarkText && "bg-white"
               )}
             >
-              Travels
+              <Image
+                src="/images/logo.png"
+                alt="Bhutan Upward Travels logo"
+                width={40}
+                height={40}
+                priority
+                className="h-10 w-10 object-contain"
+              />
+            </span>
+            <span className="flex flex-col">
+              <span className="text-2xl font-bold tracking-widest uppercase">
+                Bhutan Upward
+              </span>
+              <span
+                className={cn(
+                  "block text-[10px] tracking-[0.3em] transition-colors",
+                  isDarkText
+                    ? "text-gray-600 group-hover:text-black"
+                    : "text-gray-300 group-hover:text-white"
+                )}
+              >
+                Travels
+              </span>
             </span>
           </Link>
 

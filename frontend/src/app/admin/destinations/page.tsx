@@ -97,6 +97,7 @@ export default function DestinationsPage({ searchParams }: DestinationsPageProps
           pageSize: pageData.pageSize,
         }}
         view={view}
+        isLoading={isLoading}
         onViewChange={handleViewChange}
       />
     </div>

@@ -91,6 +91,7 @@ export default function ExperienceTypesPage({ searchParams }: ExperienceTypesPag
           pageSize: pageData.pageSize,
         }}
         view={view}
+        isLoading={isLoading}
         onViewChange={handleViewChange}
       />
     </div>

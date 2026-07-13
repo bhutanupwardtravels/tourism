@@ -27,11 +27,13 @@ export function ExperienceCard({ experience, index, disableLink, className }: Ex
             className
         )}>
             {/* Image Layer */}
-            <img
-                src={experience.image}
-                alt={experience.title}
-                className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 saturate-[0.8] group-hover:saturate-[1.2] group-hover:scale-110"
-            />
+            {experience.image && (
+                <img
+                    src={experience.image}
+                    alt={experience.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 saturate-[0.8] group-hover:saturate-[1.2] group-hover:scale-110"
+                />
+            )}
 
             {/* Cinematic Overlay - Dark gradient for text readability */}
             <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent z-20" />
