@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { submitTourRequest } from "../actions";
 import { Tour } from "../../tours/schema";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Turnstile } from "@/components/turnstile";
 
 interface TourRequestFormProps {
     selectedTour: Tour | null;
@@ -28,6 +29,9 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [submitError, setSubmitError] = useState("");
+    const [turnstileToken, setTurnstileToken] = useState("");
+    const [company, setCompany] = useState(""); // honeypot
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setFormState({
@@ -38,10 +42,13 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setSubmitError("");
         setIsSubmitting(true);
 
         const payload = {
             ...formState,
+            company, // honeypot
+            turnstileToken,
             tourId: selectedTour ? selectedTour._id : undefined,
             tourName: selectedTour ? selectedTour.title : undefined,
         };
@@ -51,7 +58,7 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
         if (result.success) {
             setIsSubmitted(true);
         } else {
-            console.error("Failed to submit");
+            setSubmitError(result.error || "Something went wrong. Please try again.");
         }
         setIsSubmitting(false);
     };
@@ -253,6 +260,33 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                                 placeholder="Describe your vision, interests, or any special moments you wish to experience..."
                             />
                         </div>
+
+                        {/* Honeypot — hidden from real users, catches bots */}
+                        <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden">
+                            <label>
+                                Company
+                                <input
+                                    type="text"
+                                    name="company"
+                                    tabIndex={-1}
+                                    autoComplete="off"
+                                    value={company}
+                                    onChange={(e) => setCompany(e.target.value)}
+                                />
+                            </label>
+                        </div>
+
+                        {/* Bot verification */}
+                        <div className="pt-4">
+                            <Turnstile
+                                onVerify={setTurnstileToken}
+                                onExpire={() => setTurnstileToken("")}
+                            />
+                        </div>
+
+                        {submitError && (
+                            <p className="text-sm text-red-600 font-light">{submitError}</p>
+                        )}
 
                         {/* Action Button */}
                         <div className="pt-12">

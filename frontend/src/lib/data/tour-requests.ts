@@ -16,6 +16,7 @@ const COLUMNS = [
     "tour_id",
     "tour_name",
     "status",
+    "custom_itinerary",
 ];
 
 export const tourRequestDb = {

@@ -17,6 +17,7 @@ import { ExperienceSelector } from "./builder/experience-selector";
 import { TravelSelector } from "./builder/travel-selector";
 import { HotelSelector } from "./builder/hotel-selector";
 import { submitTourRequest } from "../actions";
+import { Turnstile } from "@/components/turnstile";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getTravelTime } from "@/constants/travel-times";
@@ -74,6 +75,8 @@ export function CustomItineraryBuilder({
         message: ""
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [turnstileToken, setTurnstileToken] = useState("");
+    const [company, setCompany] = useState(""); // honeypot
 
     // --- Logic Helpers ---
 
@@ -272,6 +275,8 @@ export function CustomItineraryBuilder({
 
         const payload = {
             ...userDetails,
+            company, // honeypot
+            turnstileToken,
             tourName: "Custom Bespoke Itinerary",
             status: "pending",
             travelDate: "Custom Dates", // Or add field
@@ -285,7 +290,7 @@ export function CustomItineraryBuilder({
         if (result.success) {
             setStep("SUCCESS");
         } else {
-            toast.error("Failed to submit request.");
+            toast.error(result.error || "Failed to submit request.");
         }
         setIsSubmitting(false);
     };
@@ -585,6 +590,28 @@ export function CustomItineraryBuilder({
                                                 <span className="text-white/80">${(calculateTotalCost() - calculateFees().total).toLocaleString()}</span>
                                             </div>
                                         </div>
+                                    </div>
+
+                                    {/* Honeypot — hidden from real users, catches bots */}
+                                    <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden">
+                                        <label>
+                                            Company
+                                            <input
+                                                type="text"
+                                                name="company"
+                                                tabIndex={-1}
+                                                autoComplete="off"
+                                                value={company}
+                                                onChange={(e) => setCompany(e.target.value)}
+                                            />
+                                        </label>
+                                    </div>
+
+                                    <div className="mt-8 flex justify-center">
+                                        <Turnstile
+                                            onVerify={setTurnstileToken}
+                                            onExpire={() => setTurnstileToken("")}
+                                        />
                                     </div>
 
                                     <button
