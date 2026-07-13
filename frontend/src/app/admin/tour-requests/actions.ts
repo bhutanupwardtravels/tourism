@@ -3,6 +3,8 @@
 import { tourRequestDb } from "@/lib/data/tour-requests";
 import { RequestStatus } from "./types";
 import { revalidatePath } from "next/cache";
+import { sendMail } from "@/lib/mail";
+import { emailTemplates } from "@/lib/email/templates";
 
 export async function getTourRequests(page = 1, pageSize = 10, status?: RequestStatus | RequestStatus[], search?: string) {
     const result = await tourRequestDb.getAllTourRequests(page, pageSize, status, search);
@@ -17,7 +19,14 @@ export async function getTourRequests(page = 1, pageSize = 10, status?: RequestS
 
 export async function updateTourRequestStatus(id: string, status: RequestStatus) {
     try {
-        // First, update the status
+        // Fetch first: we need the requester's email + the previous status so we
+        // only notify on an actual transition (and reuse it for priority logic).
+        const tourRequest = await tourRequestDb.getTourRequestById(id);
+        if (!tourRequest) {
+            return { success: false, error: "Request not found" };
+        }
+        const previousStatus = tourRequest.status;
+
         const success = await tourRequestDb.updateTourRequestStatus(id, status);
         if (!success) {
             return { success: false, error: "Failed to update status" };
@@ -26,54 +35,75 @@ export async function updateTourRequestStatus(id: string, status: RequestStatus)
         // If the status is APPROVED, increment priorities
         if (status === RequestStatus.APPROVED) {
             try {
-                // Fetch the tour request to get its details
-                const tourRequest = await tourRequestDb.getTourRequestById(id);
+                // Handle prepackaged tours
+                if (tourRequest.tourId) {
+                    const { incrementTourPriority } = await import("@/lib/data/priority-helpers");
+                    await incrementTourPriority(tourRequest.tourId);
+                }
 
-                if (tourRequest) {
-                    // Handle prepackaged tours
-                    if (tourRequest.tourId) {
-                        const { incrementTourPriority } = await import("@/lib/data/priority-helpers");
-                        await incrementTourPriority(tourRequest.tourId);
-                    }
+                // Handle custom trips - extract unique IDs from itinerary
+                if (tourRequest.customItinerary && tourRequest.customItinerary.length > 0) {
+                    const experienceIds: string[] = [];
+                    const destinationIds: string[] = [];
+                    const hotelIds: string[] = [];
 
-                    // Handle custom trips - extract unique IDs from itinerary
-                    // Handle custom trips - extract unique IDs from itinerary
-                    if (tourRequest.customItinerary && tourRequest.customItinerary.length > 0) {
-                        const experienceIds: string[] = [];
-                        const destinationIds: string[] = [];
-                        const hotelIds: string[] = [];
-
-                        // Extract all IDs from the custom itinerary
-                        tourRequest.customItinerary.forEach(day => {
-                            day.items.forEach(item => {
-                                if (item.experienceId) {
-                                    experienceIds.push(item.experienceId);
-                                }
-                                // Handle new destinationFromId and destinationToId fields
-                                if (item.destinationFromId) {
-                                    destinationIds.push(item.destinationFromId);
-                                }
-                                if (item.destinationToId) {
-                                    destinationIds.push(item.destinationToId);
-                                }
-                                // Also handle legacy destinationId field
-                                if (item.destinationId) {
-                                    destinationIds.push(item.destinationId);
-                                }
-                                if (item.hotelId) {
-                                    hotelIds.push(item.hotelId);
-                                }
-                            });
+                    // Extract all IDs from the custom itinerary
+                    tourRequest.customItinerary.forEach(day => {
+                        day.items.forEach(item => {
+                            if (item.experienceId) {
+                                experienceIds.push(item.experienceId);
+                            }
+                            // Handle new destinationFromId and destinationToId fields
+                            if (item.destinationFromId) {
+                                destinationIds.push(item.destinationFromId);
+                            }
+                            if (item.destinationToId) {
+                                destinationIds.push(item.destinationToId);
+                            }
+                            // Also handle legacy destinationId field
+                            if (item.destinationId) {
+                                destinationIds.push(item.destinationId);
+                            }
+                            if (item.hotelId) {
+                                hotelIds.push(item.hotelId);
+                            }
                         });
+                    });
 
-                        // Increment priorities for all unique items
-                        const { incrementMultiplePriorities } = await import("@/lib/data/priority-helpers");
-                        await incrementMultiplePriorities(experienceIds, destinationIds, hotelIds);
-                    }
+                    // Increment priorities for all unique items
+                    const { incrementMultiplePriorities } = await import("@/lib/data/priority-helpers");
+                    await incrementMultiplePriorities(experienceIds, destinationIds, hotelIds);
                 }
             } catch (error) {
                 // Log error but don't fail the approval
                 console.error("Failed to increment priorities:", error);
+            }
+        }
+
+        // Notify the requester when the decision actually changes to approved or
+        // rejected. Archive stays silent (internal cleanup). Email failures are
+        // logged but don't fail the status update.
+        const notify =
+            status !== previousStatus &&
+            (status === RequestStatus.APPROVED || status === RequestStatus.REJECTED);
+
+        if (notify && tourRequest.email) {
+            const isApproved = status === RequestStatus.APPROVED;
+            try {
+                const mail = await sendMail({
+                    to: tourRequest.email,
+                    subject: isApproved
+                        ? "Your Tour Request is Approved - Bhutan Upward Travels"
+                        : "Update on Your Tour Request - Bhutan Upward Travels",
+                    html: isApproved
+                        ? emailTemplates.requestApproved(tourRequest)
+                        : emailTemplates.requestRejected(tourRequest),
+                });
+                if (!mail.success) {
+                    console.error(`Failed to send ${status} email:`, mail.error);
+                }
+            } catch (err) {
+                console.error(`Error sending ${status} email:`, err);
             }
         }
 
