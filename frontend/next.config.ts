@@ -35,6 +35,20 @@ const nextConfig: NextConfig = {
     "d3-zoom",
   ],
   images: {
+    // Transformed images are cached at the edge for 1 year.
+    // Each unique (src × width × format) combination counts as one
+    // Vercel Image Optimization transformation — cached results are free.
+    minimumCacheTTL: 31536000,
+
+    // Fewer breakpoints = fewer unique transformations per image.
+    // These cover mobile, tablet, desktop, and retina desktop.
+    deviceSizes: [640, 960, 1280, 1920],
+    imageSizes: [64, 128, 256, 384],
+
+    // Serve webp only — uploads are already webp from our sharp pipeline,
+    // so avif re-encoding is wasted CPU and an extra transformation slot.
+    formats: ["image/webp"],
+
     remotePatterns: [
       {
         protocol: "https",
@@ -53,8 +67,8 @@ const nextConfig: NextConfig = {
         hostname: "plus.unsplash.com",
       },
       {
-        protocol: 'https',
-        hostname: 'i.ibb.co',
+        protocol: "https",
+        hostname: "i.ibb.co",
       },
       {
         protocol: "http",
@@ -62,9 +76,28 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Long Cache-Control for static public assets so Vercel CDN serves them
+  // without hitting the origin on repeat visits, cutting Fast Origin Transfer.
+  async headers() {
+    return [
+      {
+        source: "/videos/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      {
+        source: "/images/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+    ];
+  },
+
   experimental: {
     serverActions: {
-      bodySizeLimit: '20mb',
+      bodySizeLimit: "20mb",
     },
   },
 };

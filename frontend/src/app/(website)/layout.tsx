@@ -3,8 +3,9 @@ import { Header } from "@/components/layout/header";
 import { getContactContent, ContactContent } from "@/lib/data/contact";
 
 // Public pages are statically rendered and revalidated in the background.
-// Admin actions additionally call revalidatePath for instant updates.
-export const revalidate = 300;
+// Admin mutations call revalidatePath for instant propagation, so a long
+// background TTL is safe and keeps ISR writes well under Vercel limits.
+export const revalidate = 3600;
 
 export default async function SiteLayout({
   children,

@@ -86,26 +86,27 @@ export function Footer({ contact }: FooterProps) {
             </h4>
             <ul className="space-y-4 text-sm">
               <li>
-                <Link
-                  href="/destinations"
-                  className="hover:text-gray-300 transition-colors"
-                >
+                <Link href="/destinations" className="hover:text-gray-300 transition-colors">
                   Destinations
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/experiences"
-                  className="hover:text-gray-300 transition-colors"
-                >
+                <Link href="/tours" className="hover:text-gray-300 transition-colors">
+                  Tours
+                </Link>
+              </li>
+              <li>
+                <Link href="/experiences" className="hover:text-gray-300 transition-colors">
                   Experiences
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/about"
-                  className="hover:text-gray-300 transition-colors"
-                >
+                <Link href="/hotels" className="hover:text-gray-300 transition-colors">
+                  Hotels
+                </Link>
+              </li>
+              <li>
+                <Link href="/about-us" className="hover:text-gray-300 transition-colors">
                   About Us
                 </Link>
               </li>
@@ -118,27 +119,23 @@ export function Footer({ contact }: FooterProps) {
             </h4>
             <ul className="space-y-4 text-sm">
               <li>
-                <Link
-                  href="/enquire"
-                  className="hover:text-gray-300 transition-colors"
-                >
+                <Link href="/enquire" className="hover:text-gray-300 transition-colors">
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/privacy"
-                  className="hover:text-gray-300 transition-colors"
-                >
-                  Privacy Policy
+                <Link href="/plan-my-trip" className="hover:text-gray-300 transition-colors">
+                  Plan My Trip
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/terms"
-                  className="hover:text-gray-300 transition-colors"
-                >
-                  Terms & Conditions
+                <Link href="/terms" className="hover:text-gray-300 transition-colors">
+                  Terms &amp; Conditions
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy" className="hover:text-gray-300 transition-colors">
+                  Privacy Policy
                 </Link>
               </li>
             </ul>
@@ -164,11 +161,18 @@ export function Footer({ contact }: FooterProps) {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/10">
-          <p className="text-xs text-gray-500 mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} Bhutan Upward Travels. All rights
-            reserved.
+        <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/10 gap-4">
+          <p className="text-xs text-gray-500">
+            &copy; {new Date().getFullYear()} Bhutan Upward Travels. All rights reserved.
           </p>
+          <div className="flex items-center gap-6">
+            <Link href="/terms" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
+              Terms &amp; Conditions
+            </Link>
+            <Link href="/privacy" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
+              Privacy Policy
+            </Link>
+          </div>
           {socialLinks.length > 0 && (
             <div className="flex items-center gap-6">
               {socialLinks.map(({ href, icon: Icon, label }) => (
