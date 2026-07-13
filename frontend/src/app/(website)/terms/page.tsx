@@ -28,7 +28,7 @@ const sections = [
         body: [
             "Cancellations must be submitted in writing to our team. The following cancellation fees apply based on the number of days prior to departure:",
             "• 60+ days: Loss of deposit only\n• 30–59 days: 50% of total tour cost\n• 15–29 days: 75% of total tour cost\n• 0–14 days: 100% of total tour cost (no refund)",
-            "Bhutan Upward Travels reserves the right to cancel a tour due to insufficient participant numbers, adverse weather, political unrest, or force majeure events. In such cases, a full refund of amounts paid will be provided, but we accept no further liability for consequential costs such as flights or visas.",
+            "Bhutan Upward Travels reserves the right to cancel a tour due to adverse weather, political unrest, or force majeure events. In such cases, a full refund of amounts paid will be provided, but we accept no further liability for consequential costs such as flights or visas.",
         ],
     },
     {
