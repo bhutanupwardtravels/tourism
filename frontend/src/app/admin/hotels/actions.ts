@@ -204,10 +204,12 @@ export async function deleteHotel(id: string) {
   if (!session) throw new Error("Unauthorized");
 
   try {
+    const hotel = await db.getHotelById(id);
     await db.deleteHotel(id);
     revalidatePath("/admin/hotels");
     revalidatePath("/hotels");
     revalidatePath("/");
+    if (hotel?.slug) revalidatePath(`/hotels/${hotel.slug}`);
     return { success: true, message: "Hotel deleted successfully" };
   } catch (error) {
     return { success: false, message: "Failed to delete hotel" };

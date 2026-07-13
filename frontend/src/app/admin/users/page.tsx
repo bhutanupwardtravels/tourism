@@ -1,19 +1,9 @@
-"use client";
-
-import { useState, useEffect } from "react";
-import { columns } from "./components/columns";
-import {
-    DataTable,
-    DataTableFilterParam,
-} from "@/components/admin/data-table/data-table";
-import { DataTableToolbar } from "./components/data-table-toolbar";
-import { UserCard } from "./components/user-card";
 import { listUsers } from "./actions";
+import { UsersTable } from "./components/users-table";
 import { User } from "./schema";
+import type { Metadata } from "next";
 
-const filterParams: DataTableFilterParam[] = [
-    { id: "username", param: "search" },
-];
+export const metadata: Metadata = { title: "User Management" };
 
 interface UsersPageProps {
     searchParams: Promise<{
@@ -23,65 +13,13 @@ interface UsersPageProps {
     }>;
 }
 
-export default function UsersPage({ searchParams }: UsersPageProps) {
-    const [view, setView] = useState<"list" | "grid">("list");
-    const [users, setUsers] = useState<User[]>([]);
-    const [pageData, setPageData] = useState({
-        pageCount: 0,
-        pageIndex: 0,
-        pageSize: 10,
-    });
-    const [isLoading, setIsLoading] = useState(true);
+export default async function UsersPage({ searchParams }: UsersPageProps) {
+    const params = await searchParams;
+    const page = Number(params.page) || 1;
+    const pageSize = Number(params.page_size) || 10;
+    const search = params.search || undefined;
 
-    // Initial view choice and persistence
-    useEffect(() => {
-        const stored = localStorage.getItem("users_view_preference");
-        if (stored === "list" || stored === "grid") {
-            setView(stored);
-        } else if (window.innerWidth < 768) {
-            setView("grid");
-        }
-
-        const handleResize = () => {
-            if (!localStorage.getItem("users_view_preference")) {
-                if (window.innerWidth < 768) {
-                    setView("grid");
-                } else {
-                    setView("list");
-                }
-            }
-        };
-
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
-
-    const handleViewChange = (newView: "list" | "grid") => {
-        setView(newView);
-        localStorage.setItem("users_view_preference", newView);
-    };
-
-    useEffect(() => {
-        const fetchData = async () => {
-            setIsLoading(true);
-            const params = await searchParams;
-            const page = Number(params.page) || 1;
-            const pageSize = Number(params.page_size) || 10;
-            const search = params.search || undefined;
-
-            const paginatedData = await listUsers(page, pageSize, search);
-
-            setUsers(paginatedData.items as User[]);
-            setPageData({
-                pageCount: paginatedData.total_pages,
-                pageIndex: paginatedData.page - 1,
-                pageSize: paginatedData.page_size,
-            });
-            setIsLoading(false);
-        };
-
-        fetchData();
-    }, [searchParams]);
+    const data = await listUsers(page, pageSize, search);
 
     return (
         <div className="space-y-6">
@@ -93,22 +31,10 @@ export default function UsersPage({ searchParams }: UsersPageProps) {
                     Manage system administrators and staff access levels.
                 </p>
             </div>
-
-            <DataTable
-                columns={columns}
-                data={users}
-                pageCount={pageData.pageCount}
-                pagination={{
-                    pageIndex: pageData.pageIndex,
-                    pageSize: pageData.pageSize,
-                }}
-                view={view}
-                onViewChange={handleViewChange}
-                isLoading={isLoading}
-                filterParams={filterParams}
-                toolbar={DataTableToolbar}
-                emptyMessage="No administrative users found."
-                renderCard={(row) => <UserCard user={row.original} />}
+            <UsersTable
+                data={data.items as User[]}
+                pageCount={data.total_pages}
+                pagination={{ pageIndex: data.page - 1, pageSize: data.page_size }}
             />
         </div>
     );

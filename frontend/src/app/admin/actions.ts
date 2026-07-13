@@ -8,16 +8,14 @@ import { RequestStatus } from "@/app/admin/tour-requests/types";
 
 export async function getDashboardData() {
     try {
-        // Fetch counts from MongoDB
-        const toursData = await tourDb.listTours(1, 1);
-        const experiencesData = await experienceDb.listExperiences(1, 1);
-        const destinationsData = await destinationDb.listDestinations(1, 1);
-
-        // Fetch tour requests (limit to 5 for recent activity)
-        const tourRequestsData = await tourRequestDb.getAllTourRequests(1, 5);
-
-        // Fetch pending requests specifically for the dashboard
-        const pendingRequestsData = await tourRequestDb.getAllTourRequests(1, 1, RequestStatus.PENDING);
+        const [toursData, experiencesData, destinationsData, tourRequestsData, pendingRequestsData] =
+            await Promise.all([
+                tourDb.listTours(1, 1),
+                experienceDb.listExperiences(1, 1),
+                destinationDb.listDestinations(1, 1),
+                tourRequestDb.getAllTourRequests(1, 5),
+                tourRequestDb.getAllTourRequests(1, 1, RequestStatus.PENDING),
+            ]);
 
         // Recent Activity
         const recentActivity = tourRequestsData.items.map(tr => ({
@@ -52,6 +50,6 @@ export async function getDashboardData() {
             recentActivity
         };
     } catch (error) {
-        throw new Error("Failed to fetch dashboard data");
+        throw new Error("Failed to fetch dashboard data", { cause: error });
     }
 }

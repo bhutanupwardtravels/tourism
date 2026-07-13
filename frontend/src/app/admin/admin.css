@@ -20,3 +20,21 @@
 .admin [role="button"] {
     border-radius: 0 !important;
 }
+
+/* ── Sidebar scrollbar ──────────────────────────────────────────────── */
+[data-slot="sidebar-content"] {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}
+[data-slot="sidebar-content"]::-webkit-scrollbar {
+    width: 3px;
+}
+[data-slot="sidebar-content"]::-webkit-scrollbar-track {
+    background: transparent;
+}
+[data-slot="sidebar-content"]::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+}
+[data-slot="sidebar-content"]::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+}

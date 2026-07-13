@@ -206,9 +206,11 @@ export async function deleteTourAction(id: string) {
     if (!session) throw new Error("Unauthorized");
 
     try {
+        const tour = await tourDb.getTourById(id);
         await tourDb.deleteTour(id);
         revalidatePath("/admin/tours");
         revalidatePath("/tours");
+        if (tour?.slug) revalidatePath(`/tours/${tour.slug}`);
         return { success: true, message: "Tour deleted successfully" };
     } catch (error) {
         return { success: false, message: "Failed to delete tour" };

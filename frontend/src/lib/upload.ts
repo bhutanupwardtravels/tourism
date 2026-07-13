@@ -17,6 +17,10 @@ export async function uploadImage(file: File): Promise<string | null> {
     if (!file || !(file instanceof File) || file.size === 0) {
         return null;
     }
+    if (file.size > 5 * 1024 * 1024) {
+        console.warn("Upload rejected: file exceeds 5 MB limit");
+        return null;
+    }
 
     try {
         const bytes = await file.arrayBuffer();

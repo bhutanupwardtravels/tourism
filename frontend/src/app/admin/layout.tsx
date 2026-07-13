@@ -9,6 +9,7 @@ import {
   SidebarProvider,
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -17,7 +18,7 @@ import {
   SidebarMenu,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { LogOut, Settings } from "lucide-react";
+import { LogOut } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { AdminNavItem } from "@/components/admin/admin-nav-items";
@@ -148,14 +149,14 @@ export default async function AdminLayout({
           </div>
         </SidebarHeader>
 
-        <SidebarContent className="bg-black text-white">
-          {menuGroups.map((group) => (
-            <SidebarGroup key={group.label}>
-              <SidebarGroupLabel className="px-4 text-[10px] font-bold uppercase tracking-[0.25em] text-gray-500">
+        <SidebarContent className="bg-black text-white gap-0">
+          {menuGroups.map((group, i) => (
+            <SidebarGroup key={group.label} className={i > 0 ? "pt-1" : "pt-2"}>
+              <SidebarGroupLabel className="px-4 py-1 text-[9px] font-bold uppercase tracking-[0.3em] text-gray-600">
                 {group.label}
               </SidebarGroupLabel>
               <SidebarGroupContent>
-                <SidebarMenu className="space-y-1 px-2 pb-2">
+                <SidebarMenu className="px-2 gap-0.5">
                   {group.items.map((item) => (
                     <AdminNavItem
                       key={item.href}
@@ -168,17 +169,27 @@ export default async function AdminLayout({
               </SidebarGroupContent>
             </SidebarGroup>
           ))}
+          {/* Bottom padding so last item isn't flush against the footer */}
+          <div className="h-4 shrink-0" />
         </SidebarContent>
+
+        <SidebarFooter className="bg-black border-t border-gray-800/60 px-4 py-3">
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+            <span className="text-[10px] text-gray-500 tracking-widest uppercase truncate">
+              Admin Portal
+            </span>
+          </div>
+        </SidebarFooter>
       </Sidebar>
 
-      <SidebarInset>
-        <header className="h-16 bg-white border-b border-gray-200 sticky top-0 z-30 px-8 flex items-center justify-between ">
+      <SidebarInset className="h-svh overflow-y-auto">
+        <header className="h-16 bg-white border-b border-gray-200 sticky top-0 z-20 px-8 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <SidebarTrigger className="hover:bg-gray-100 border border-gray-300 text-gray-700 rounded-none" />
             <AdminBreadcrumbs />
           </div>
           <div className="flex items-center gap-4">
-
             <form
               action={async () => {
                 "use server";
@@ -198,8 +209,8 @@ export default async function AdminLayout({
             </form>
           </div>
         </header>
-        <div className="h-full bg-gray-50">
-          <div className="p-8">{children}</div>
+        <div className="bg-gray-50 min-h-[calc(100svh-4rem)]">
+          <div className="p-8 overflow-x-auto">{children}</div>
         </div>
       </SidebarInset>
     </SidebarProvider>

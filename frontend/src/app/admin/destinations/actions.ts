@@ -190,10 +190,12 @@ export async function deleteDestination(id: string) {
   }
 
   try {
+    const destination = await db.getDestinationById(id);
     await db.deleteDestination(id);
     revalidatePath("/admin/destinations");
     revalidatePath("/destinations");
     revalidatePath("/");
+    if (destination?.slug) revalidatePath(`/destinations/${destination.slug}`);
 
     return {
       success: true,

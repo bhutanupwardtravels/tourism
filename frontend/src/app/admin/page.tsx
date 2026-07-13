@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { StatCard } from "@/components/admin/stats-card";
+
+export const metadata: Metadata = { title: "Dashboard" };
 import { Users, Package, Calendar, DollarSign, ArrowRight, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
@@ -113,21 +116,21 @@ export default async function AdminDashboard() {
             </h2>
             <div className="space-y-3">
               <Link
-                href="/admin/tours/new"
+                href="/admin/tours/create"
                 className="flex items-center justify-between p-4 bg-white/10 hover:bg-white/20 transition-colors group border border-white/20 rounded-none"
               >
                 <span className="text-sm font-medium">Add New Tour</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
-                href="/admin/experiences/new"
+                href="/admin/experiences/create"
                 className="flex items-center justify-between p-4 bg-white/10 hover:bg-white/20 transition-colors group border border-white/20 rounded-none"
               >
                 <span className="text-sm font-medium">Add Experience</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
-                href="/admin/destinations/new"
+                href="/admin/destinations/create"
                 className="flex items-center justify-between p-4 bg-white/10 hover:bg-white/20 transition-colors group border border-white/20 rounded-none"
               >
                 <span className="text-sm font-medium">Add Destination</span>

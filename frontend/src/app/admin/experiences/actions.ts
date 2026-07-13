@@ -329,6 +329,7 @@ export async function deleteExperience(id: string) {
     revalidatePath("/admin/experiences");
     revalidatePath("/experiences");
     revalidatePath("/");
+    if (experience?.slug) revalidatePath(`/experiences/${experience.slug}`);
 
     return {
       success: true,

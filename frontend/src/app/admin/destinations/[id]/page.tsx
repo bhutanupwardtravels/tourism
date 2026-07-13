@@ -25,7 +25,7 @@ export default async function DestinationViewPage({
   const { id } = await params;
 
   if (id === "new") {
-    redirect("/admin/destinations/new/edit");
+    redirect("/admin/destinations/create");
   }
 
   const destination = await getDestinationById(id);

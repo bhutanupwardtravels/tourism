@@ -1,127 +1,43 @@
-"use client";
-
-import { useState, useEffect } from "react";
-import { columns } from "./components/columns";
-import {
-  DataTable,
-  DataTableFilterParam,
-} from "@/components/admin/data-table/data-table";
-import { DataTableToolbar } from "./components/data-table-toolbar";
-import { TourRequestCard } from "./components/tour-request-card";
 import { getTourRequests } from "./actions";
-import { TourRequest, RequestStatus } from "./types";
+import { TourRequestsTable } from "./components/tour-requests-table";
+import { RequestStatus } from "./types";
+import type { Metadata } from "next";
 
-const filterParams: DataTableFilterParam[] = [
-  { id: "status", type: "array" },
-  { id: "email" },
-];
+export const metadata: Metadata = { title: "Tour Requests" };
 
 interface TourRequestsPageProps {
-  searchParams: Promise<{
-    page?: string;
-    page_size?: string;
-    status?: string;
-    email?: string;
-  }>;
+    searchParams: Promise<{
+        page?: string;
+        page_size?: string;
+        status?: string;
+        email?: string;
+    }>;
 }
 
-export default function TourRequestsPage({
-  searchParams,
-}: TourRequestsPageProps) {
-  // Always default to 'list' on the server to avoid hydration mismatch
-  const [view, setView] = useState<"list" | "grid">("list");
-  const [requests, setRequests] = useState<TourRequest[]>([]);
-  const [pageData, setPageData] = useState({
-    pageCount: 0,
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [isLoading, setIsLoading] = useState(true);
+export default async function TourRequestsPage({ searchParams }: TourRequestsPageProps) {
+    const params = await searchParams;
+    const page = Number(params.page) || 1;
+    const pageSize = Number(params.page_size) || 10;
+    const status = params.status ? (params.status.split(",") as RequestStatus[]) : undefined;
+    const email = params.email || undefined;
 
-  // Load initial view from localStorage and set up resize listener
-  useEffect(() => {
-    const stored = localStorage.getItem("tour_requests_view_preference");
-    if (stored === "list" || stored === "grid") {
-      setView(stored);
-    } else if (window.innerWidth < 768) {
-      setView("grid");
-    }
+    const data = await getTourRequests(page, pageSize, status, email);
 
-    const handleResize = () => {
-      // Only auto-switch if no manual preference is stored
-      if (!localStorage.getItem("tour_requests_view_preference")) {
-        if (window.innerWidth < 768) {
-          setView("grid");
-        } else {
-          setView("list");
-        }
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // Save view preference when user manually changes it
-  const handleViewChange = (newView: "list" | "grid") => {
-    setView(newView);
-    localStorage.setItem("tour_requests_view_preference", newView);
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      const params = await searchParams;
-      const page = Number(params.page) || 1;
-      const pageSize = Number(params.page_size) || 10;
-      const status = params.status ? (params.status.split(",") as RequestStatus[]) : undefined;
-      const email = params.email || undefined;
-
-      const paginatedData = await getTourRequests(page, pageSize, status, email);
-
-      setRequests(paginatedData.items as TourRequest[]);
-      setPageData({
-        pageCount: paginatedData.total_pages,
-        pageIndex: paginatedData.page - 1,
-        pageSize: paginatedData.page_size,
-      });
-      setIsLoading(false);
-    };
-
-    fetchData();
-  }, [searchParams]);
-
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex flex-col gap-1">
-          <h2 className="text-2xl font-semibold tracking-tight text-black">
-            Tour Requests
-          </h2>
-          <p className="text-black text-sm">
-            Manage incoming traveler inquiries and luxury package requests.
-          </p>
+    return (
+        <div className="space-y-6">
+            <div className="flex flex-col gap-1">
+                <h2 className="text-2xl font-semibold tracking-tight text-black">
+                    Tour Requests
+                </h2>
+                <p className="text-sm text-black">
+                    Manage incoming traveler inquiries and luxury package requests.
+                </p>
+            </div>
+            <TourRequestsTable
+                data={data.items as any}
+                pageCount={data.total_pages}
+                pagination={{ pageIndex: data.page - 1, pageSize: data.page_size }}
+            />
         </div>
-      </div>
-      <DataTable
-        data={requests}
-        columns={columns}
-        pageCount={pageData.pageCount}
-        pagination={{
-          pageIndex: pageData.pageIndex,
-          pageSize: pageData.pageSize,
-        }}
-        view={view}
-        isLoading={isLoading}
-        onViewChange={handleViewChange}
-        filterParams={filterParams}
-        toolbar={DataTableToolbar}
-        renderCard={(row, { isMobile }) => {
-          const request = row.original;
-          if (!request) return null;
-          return <TourRequestCard request={request} isMobile={isMobile} />;
-        }}
-      />
-    </div>
-  );
+    );
 }

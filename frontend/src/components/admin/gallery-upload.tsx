@@ -27,7 +27,9 @@ export function GalleryUpload({
     const fileInputRef = React.useRef<HTMLInputElement>(null);
 
     React.useEffect(() => {
-        setPreviews([...existingImages, ...files.map(f => URL.createObjectURL(f))]);
+        const objectUrls = files.map(f => URL.createObjectURL(f));
+        setPreviews([...existingImages, ...objectUrls]);
+        return () => objectUrls.forEach(url => URL.revokeObjectURL(url));
     }, [existingImages, files]);
 
     const handleDrag = (e: React.DragEvent) => {
