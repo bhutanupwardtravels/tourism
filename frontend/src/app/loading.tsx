@@ -1,15 +1,40 @@
-"use client";
-
-import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function Loading() {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-white">
-            <motion.div
-                className="w-16 h-16 border-4 border-amber-600/30 border-t-amber-600 rounded-full"
-                animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-            />
-        </div>
+        <main
+            className="flex min-h-screen flex-col items-center justify-center bg-white gap-10"
+            role="status"
+            aria-label="Loading"
+        >
+
+            {/* Spinner */}
+            <div className="relative flex h-20 w-20 items-center justify-center">
+                <div
+                    className="absolute inset-0 rounded-full border border-stone-200 border-t-amber-500"
+                    style={{ animation: "spin 1.6s linear infinite" }}
+                />
+                <Image
+                    src="/images/logo.png"
+                    alt="Bhutan Upward Travels"
+                    width={56}
+                    height={56}
+                    className="object-contain opacity-90"
+                    priority
+                />
+
+            </div>
+
+            {/* Label */}
+            <div className="flex flex-col items-center gap-3">
+                <div className="h-px w-8 bg-black/10" />
+                <p className="font-mono text-[10px] uppercase tracking-[0.5em] text-amber-600/80 animate-pulse">
+                    // We Welcome You
+                </p>
+                <div className="h-px w-8 bg-black/10" />
+            </div>
+
+            <span className="sr-only">Loading...</span>
+        </main>
     );
 }
