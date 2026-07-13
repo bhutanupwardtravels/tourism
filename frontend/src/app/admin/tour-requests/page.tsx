@@ -2,9 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { columns } from "./components/columns";
-import { DataTable } from "./components/data-table";
+import {
+  DataTable,
+  DataTableFilterParam,
+} from "@/components/admin/data-table/data-table";
+import { DataTableToolbar } from "./components/data-table-toolbar";
+import { TourRequestCard } from "./components/tour-request-card";
 import { getTourRequests } from "./actions";
 import { TourRequest, RequestStatus } from "./types";
+
+const filterParams: DataTableFilterParam[] = [
+  { id: "status", type: "array" },
+  { id: "email" },
+];
 
 interface TourRequestsPageProps {
   searchParams: Promise<{
@@ -104,6 +114,13 @@ export default function TourRequestsPage({
         view={view}
         isLoading={isLoading}
         onViewChange={handleViewChange}
+        filterParams={filterParams}
+        toolbar={DataTableToolbar}
+        renderCard={(row, { isMobile }) => {
+          const request = row.original;
+          if (!request) return null;
+          return <TourRequestCard request={request} isMobile={isMobile} />;
+        }}
       />
     </div>
   );

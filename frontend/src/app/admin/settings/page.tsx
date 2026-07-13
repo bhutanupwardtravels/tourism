@@ -2,9 +2,20 @@
 
 import { useState, useEffect } from "react";
 import { columns } from "./components/columns";
-import { SettingsDataTable } from "./components/data-table";
+import {
+    DataTable,
+    DataTableFilterParam,
+} from "@/components/admin/data-table/data-table";
+import { SettingsDataTableToolbar } from "./components/data-table-toolbar";
+import { CostCard } from "./components/cost-card";
 import { listCosts } from "./actions";
 import { Cost } from "./schema";
+
+const filterParams: DataTableFilterParam[] = [
+    { id: "title" },
+    { id: "travelerCategory" },
+    { id: "isIndianNational" },
+];
 
 interface SettingsPageProps {
     searchParams: Promise<{
@@ -92,12 +103,19 @@ export default function SettingsPage({ searchParams }: SettingsPageProps) {
                 </p>
             </div>
 
-            <SettingsDataTable
+            <DataTable
                 columns={columns}
                 data={costs}
                 view={view}
                 onViewChange={handleViewChange}
                 isLoading={isLoading}
+                filterParams={filterParams}
+                toolbar={SettingsDataTableToolbar}
+                emptyMessage="No settings found."
+                gridClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                renderCard={(row, { isMobile }) => (
+                    <CostCard cost={row.original} isMobile={isMobile} />
+                )}
             />
         </div>
     );

@@ -3,9 +3,16 @@
 import { useState, useEffect } from "react";
 // Link and Button removed as unused
 import { columns } from "./components/columns";
-import { DataTable } from "./components/data-table";
+import {
+  DataTable,
+  DataTableFilterParam,
+} from "@/components/admin/data-table/data-table";
+import { DataTableToolbar } from "./components/data-table-toolbar";
+import { HotelCard } from "./components/hotel-card";
 import { getHotels } from "./actions";
 import { Hotel } from "./schema";
+
+const filterParams: DataTableFilterParam[] = [{ id: "name" }];
 
 export default function HotelsPage({
   searchParams,
@@ -93,6 +100,12 @@ export default function HotelsPage({
         view={view}
         isLoading={isLoading}
         onViewChange={handleViewChange}
+        filterParams={filterParams}
+        toolbar={DataTableToolbar}
+        gridClassName="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        renderCard={(row, { isMobile }) => (
+          <HotelCard hotel={row.original} showActionsOnClick={isMobile} />
+        )}
       />
     </div>
   );

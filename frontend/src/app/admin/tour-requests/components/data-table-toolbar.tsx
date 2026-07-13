@@ -5,8 +5,8 @@ import { X, CheckCircle, Circle, Archive, Ban, List, LayoutGrid } from "lucide-r
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DataTableViewOptions } from "./data-table-view-options";
-import { DataTableFacetedFilter } from "./data-table-faceted-filter";
+import { DataTableViewOptions } from "@/components/admin/data-table/data-table-view-options";
+import { DataTableFacetedFilter } from "@/components/admin/data-table/data-table-faceted-filter";
 import { RequestStatus } from "../types";
 
 interface DataTableToolbarProps<TData> {

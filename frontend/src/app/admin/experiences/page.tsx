@@ -1,10 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { DataTable } from "./components/data-table";
+import {
+  DataTable,
+  DataTableFilterParam,
+} from "@/components/admin/data-table/data-table";
+import { DataTableToolbar } from "./components/data-table-toolbar";
+import { ExperienceCard } from "./components/experience-card";
 import { getExperiences } from "./actions";
 import { columns } from "./components/columns";
 import { Experience } from "./schema";
+
+const filterParams: DataTableFilterParam[] = [
+  { id: "title" },
+  { id: "category", type: "array" },
+];
 
 interface ExperiencesPageProps {
   searchParams: Promise<{
@@ -99,6 +109,12 @@ export default function ExperiencesPage({ searchParams }: ExperiencesPageProps) 
         view={view}
         isLoading={isLoading}
         onViewChange={handleViewChange}
+        filterParams={filterParams}
+        toolbar={DataTableToolbar}
+        gridClassName="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        renderCard={(row, { isMobile }) => (
+          <ExperienceCard experience={row.original} showActionsOnClick={isMobile} />
+        )}
       />
     </div>
   );

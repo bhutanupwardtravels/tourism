@@ -11,13 +11,16 @@ import {
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
+    Row,
     SortingState,
+    Table as TanstackTable,
     useReactTable,
     VisibilityState,
     OnChangeFn,
     PaginationState,
 } from "@tanstack/react-table";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import type { ReadonlyURLSearchParams } from "next/navigation";
 
 import {
     Table,
@@ -27,26 +30,77 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-
 import { DataTablePagination } from "./data-table-pagination";
 import {
     DataTableSkeletonRows,
     DataTableSkeletonCards,
-} from "@/components/admin/data-table/data-table-skeleton";
-import { DataTableToolbar } from "./data-table-toolbar";
-import { TourRequestCard } from "./tour-request-card";
+} from "./data-table-skeleton";
+
+export interface DataTableFilterParam {
+    /** Column id the filter binds to */
+    id: string;
+    /** URL query param name; defaults to the column id */
+    param?: string;
+    /**
+     * How the filter value round-trips through the URL:
+     * - "string": plain text value (default)
+     * - "array":  comma-separated list <-> string[]
+     * - "single": string[] in the table, but only the first entry is written to the URL
+     * - "auto":   string[] when the URL value contains a comma, plain string otherwise
+     */
+    type?: "string" | "array" | "single" | "auto";
+}
+
+interface DataTableToolbarProps<TData> {
+    table: TanstackTable<TData>;
+    view?: "list" | "grid";
+    onViewChange?: (view: "list" | "grid") => void;
+}
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
-    pageCount: number;
-    pagination: {
-        pageIndex: number;
-        pageSize: number;
-    };
+    /** Server-side pagination. Omit both to render every row without a pagination footer. */
+    pageCount?: number;
+    pagination?: PaginationState;
     view?: "list" | "grid";
     onViewChange?: (view: "list" | "grid") => void;
     isLoading?: boolean;
+    /** URL query params kept in sync with the table's column filters */
+    filterParams?: DataTableFilterParam[];
+    toolbar?: React.ComponentType<DataTableToolbarProps<TData>>;
+    /** Card renderer for grid view; the wrapping key is handled by the table */
+    renderCard?: (row: Row<TData>, ctx: { isMobile: boolean }) => React.ReactNode;
+    gridClassName?: string;
+    emptyMessage?: string;
+}
+
+function filtersFromSearchParams(
+    searchParams: ReadonlyURLSearchParams,
+    filterParams: DataTableFilterParam[]
+): ColumnFiltersState {
+    const filters: ColumnFiltersState = [];
+    for (const fp of filterParams) {
+        const raw = searchParams.get(fp.param ?? fp.id);
+        if (!raw) continue;
+        switch (fp.type) {
+            case "array":
+                filters.push({ id: fp.id, value: raw.split(",") });
+                break;
+            case "single":
+                filters.push({ id: fp.id, value: [raw] });
+                break;
+            case "auto":
+                filters.push({
+                    id: fp.id,
+                    value: raw.includes(",") ? raw.split(",") : raw,
+                });
+                break;
+            default:
+                filters.push({ id: fp.id, value: raw });
+        }
+    }
+    return filters;
 }
 
 export function DataTable<TData, TValue>({
@@ -54,46 +108,35 @@ export function DataTable<TData, TValue>({
     data,
     pageCount,
     pagination,
-    view,
+    view = "list",
     onViewChange,
     isLoading = false,
+    filterParams = [],
+    toolbar: Toolbar,
+    renderCard,
+    gridClassName = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6",
+    emptyMessage = "No results.",
 }: DataTableProps<TData, TValue>) {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
+    const serverPaginated = pageCount !== undefined && pagination !== undefined;
+
     const [rowSelection, setRowSelection] = React.useState({});
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({});
+    const [sorting, setSorting] = React.useState<SortingState>([]);
 
     // Initialize column filters from searchParams
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(() => {
-        const filters: ColumnFiltersState = [];
-        const status = searchParams.get("status");
-        if (status) {
-            filters.push({ id: "status", value: status.split(",") });
-        }
-        const email = searchParams.get("email");
-        if (email) {
-            filters.push({ id: "email", value: email });
-        }
-        return filters;
-    });
-
-    const [sorting, setSorting] = React.useState<SortingState>([]);
+    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+        () => filtersFromSearchParams(searchParams, filterParams)
+    );
 
     // Sync column filters when searchParams change (e.g. back navigation)
     React.useEffect(() => {
-        const filters: ColumnFiltersState = [];
-        const status = searchParams.get("status");
-        if (status) {
-            filters.push({ id: "status", value: status.split(",") });
-        }
-        const email = searchParams.get("email");
-        if (email) {
-            filters.push({ id: "email", value: email });
-        }
-        setColumnFilters(filters);
+        setColumnFilters(filtersFromSearchParams(searchParams, filterParams));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchParams]);
 
     // Determine if mobile (show actions on click/tap)
@@ -106,12 +149,15 @@ export function DataTable<TData, TValue>({
     }, []);
 
     // Maintain pagination state locally
-    const [paginationState, setPaginationState] =
-        React.useState<PaginationState>(pagination);
+    const [paginationState, setPaginationState] = React.useState<PaginationState>(
+        pagination ?? { pageIndex: 0, pageSize: 10 }
+    );
 
     // Sync pagination state when props change
     React.useEffect(() => {
-        setPaginationState(pagination);
+        if (pagination) {
+            setPaginationState(pagination);
+        }
     }, [pagination]);
 
     // Handle pagination changes
@@ -134,7 +180,7 @@ export function DataTable<TData, TValue>({
         [paginationState, pathname, searchParams, router]
     );
 
-    // Handle filter changes
+    // Handle filter changes: write them back to the URL for server-side filtering
     const onColumnFiltersChange: OnChangeFn<ColumnFiltersState> = React.useCallback(
         (updaterOrValue) => {
             const newFilters =
@@ -146,50 +192,61 @@ export function DataTable<TData, TValue>({
 
             const params = new URLSearchParams(searchParams.toString());
 
-            // Clear existing status filters from params first
-            params.delete("status");
-            params.delete("email");
+            filterParams.forEach((fp) => params.delete(fp.param ?? fp.id));
 
-            newFilters.forEach(filter => {
-                if (filter.id === "status" || filter.id === "email") {
-                    if (Array.isArray(filter.value)) {
-                        params.set(filter.id, filter.value.join(","));
-                    } else if (filter.value) {
-                        params.set(filter.id, filter.value as string);
+            newFilters.forEach((filter) => {
+                const fp = filterParams.find((f) => f.id === filter.id);
+                if (!fp) return;
+                const key = fp.param ?? fp.id;
+                const value = filter.value;
+                if (Array.isArray(value)) {
+                    if (value.length > 0) {
+                        params.set(
+                            key,
+                            fp.type === "single" ? String(value[0]) : value.join(",")
+                        );
                     }
+                } else if (value) {
+                    params.set(key, String(value));
                 }
             });
 
             // Reset to page 1 when filtering
-            params.set("page", "1");
+            if (serverPaginated) {
+                params.set("page", "1");
+            }
 
             router.push(`${pathname}?${params.toString()}`);
         },
-        [columnFilters, pathname, searchParams, router]
+        [columnFilters, filterParams, serverPaginated, pathname, searchParams, router]
     );
 
     const table = useReactTable({
         data,
         columns,
-        pageCount,
         state: {
             sorting,
             columnVisibility,
             rowSelection,
             columnFilters,
-            pagination: paginationState,
+            ...(serverPaginated ? { pagination: paginationState } : {}),
         },
-        manualPagination: true,
-        manualFiltering: true, // Tell table we handle filtering on server
-        onPaginationChange: onPaginationChange,
+        ...(serverPaginated
+            ? {
+                pageCount,
+                manualPagination: true,
+                onPaginationChange,
+                getPaginationRowModel: getPaginationRowModel(),
+            }
+            : {}),
+        manualFiltering: true, // Filtering happens server-side via the URL params
         enableRowSelection: true,
         onRowSelectionChange: setRowSelection,
         onSortingChange: setSorting,
-        onColumnFiltersChange: onColumnFiltersChange,
+        onColumnFiltersChange,
         onColumnVisibilityChange: setColumnVisibility,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFacetedRowModel: getFacetedRowModel(),
         getFacetedUniqueValues: getFacetedUniqueValues(),
@@ -197,8 +254,10 @@ export function DataTable<TData, TValue>({
 
     return (
         <div className="space-y-4">
-            <DataTableToolbar table={table} view={view} onViewChange={onViewChange} />
-            {view === "list" ? (
+            {Toolbar && (
+                <Toolbar table={table} view={view} onViewChange={onViewChange} />
+            )}
+            {view === "list" || !renderCard ? (
                 <div className="rounded-none border bg-card overflow-hidden">
                     <Table>
                         <TableHeader className="bg-gray-100">
@@ -207,22 +266,20 @@ export function DataTable<TData, TValue>({
                                     key={headerGroup.id}
                                     className="h-16 hover:bg-gray-100/20"
                                 >
-                                    {headerGroup.headers.map((header) => {
-                                        return (
-                                            <TableHead
-                                                key={header.id}
-                                                colSpan={header.colSpan}
-                                                className="px-4 text-black font-semibold"
-                                            >
-                                                {header.isPlaceholder
-                                                    ? null
-                                                    : flexRender(
-                                                        header.column.columnDef.header,
-                                                        header.getContext()
-                                                    )}
-                                            </TableHead>
-                                        );
-                                    })}
+                                    {headerGroup.headers.map((header) => (
+                                        <TableHead
+                                            key={header.id}
+                                            colSpan={header.colSpan}
+                                            className="px-4 text-black font-semibold"
+                                        >
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(
+                                                    header.column.columnDef.header,
+                                                    header.getContext()
+                                                )}
+                                        </TableHead>
+                                    ))}
                                 </TableRow>
                             ))}
                         </TableHeader>
@@ -237,7 +294,10 @@ export function DataTable<TData, TValue>({
                                         className="h-12 border-b border-gray-100 last:border-0"
                                     >
                                         {row.getVisibleCells().map((cell) => (
-                                            <TableCell key={cell.id} className="px-4 py-3 text-black">
+                                            <TableCell
+                                                key={cell.id}
+                                                className="px-4 py-3 text-black"
+                                            >
                                                 {flexRender(
                                                     cell.column.columnDef.cell,
                                                     cell.getContext()
@@ -252,7 +312,7 @@ export function DataTable<TData, TValue>({
                                         colSpan={columns.length}
                                         className="h-24 text-center text-black"
                                     >
-                                        No results.
+                                        {emptyMessage}
                                     </TableCell>
                                 </TableRow>
                             )}
@@ -260,30 +320,23 @@ export function DataTable<TData, TValue>({
                     </Table>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className={gridClassName}>
                     {isLoading ? (
                         <DataTableSkeletonCards />
                     ) : table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => {
-                            const request = row.original as any;
-                            if (!request) return null;
-
-                            return (
-                                <TourRequestCard
-                                    key={request._id}
-                                    request={request}
-                                    isMobile={isMobile}
-                                />
-                            );
-                        })
+                        table.getRowModel().rows.map((row) => (
+                            <React.Fragment key={row.id}>
+                                {renderCard(row, { isMobile })}
+                            </React.Fragment>
+                        ))
                     ) : (
                         <div className="col-span-full text-center text-black py-12">
-                            No results.
+                            {emptyMessage}
                         </div>
                     )}
                 </div>
             )}
-            <DataTablePagination table={table} />
+            {serverPaginated && <DataTablePagination table={table} />}
         </div>
     );
 }

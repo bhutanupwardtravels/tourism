@@ -3,9 +3,20 @@
 import { useState, useEffect } from "react";
 // Button, Plus, Link removed as unused
 import { columns } from "./components/columns";
-import { DataTable } from "./components/data-table";
+import {
+    DataTable,
+    DataTableFilterParam,
+} from "@/components/admin/data-table/data-table";
+import { DataTableToolbar } from "./components/data-table-toolbar";
+import { TourCard } from "./components/tour-card";
 import { getTours } from "./actions";
 import { Tour } from "./schema";
+
+const filterParams: DataTableFilterParam[] = [
+    { id: "category", type: "array" },
+    { id: "status", type: "auto" },
+    { id: "title" },
+];
 
 interface ToursPageProps {
     searchParams: Promise<{
@@ -105,6 +116,13 @@ export default function ToursPage({
                 view={view}
                 onViewChange={handleViewChange}
                 isLoading={isLoading}
+                filterParams={filterParams}
+                toolbar={DataTableToolbar}
+                renderCard={(row, { isMobile }) => {
+                    const tour = row.original;
+                    if (!tour || (!tour.slug && !tour.id)) return null;
+                    return <TourCard tour={tour} showActionsOnClick={isMobile} />;
+                }}
             />
         </div>
     );

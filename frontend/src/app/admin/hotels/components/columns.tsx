@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { Hotel } from "../schema";
-import { DataTableColumnHeader } from "./data-table-column-header";
+import { DataTableColumnHeader } from "@/components/admin/data-table/data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { useEffect, useState } from "react";
 import { getDestinationById } from "@/app/admin/destinations/actions";

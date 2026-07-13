@@ -1,11 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, ComponentProps } from "react";
 import { Metadata } from "next";
 import { columns } from "./components/columns";
-import { DataTable } from "./components/data-table";
+import {
+  DataTable,
+  DataTableFilterParam,
+} from "@/components/admin/data-table/data-table";
+import { DataTableToolbar } from "./components/data-table-toolbar";
+import { DestinationCard } from "./components/destination-card";
 import { getDestinations } from "./actions";
 import { Destination } from "./schema";
+
+const filterParams: DataTableFilterParam[] = [
+  { id: "name" },
+  { id: "region", type: "array" },
+  { id: "isEntryPoint", type: "single" },
+];
 interface DestinationsPageProps {
   searchParams: Promise<{
     page?: string;
@@ -99,6 +110,20 @@ export default function DestinationsPage({ searchParams }: DestinationsPageProps
         view={view}
         isLoading={isLoading}
         onViewChange={handleViewChange}
+        filterParams={filterParams}
+        toolbar={DataTableToolbar}
+        renderCard={(row, { isMobile }) => {
+          const destination = row.original;
+          if (!destination || typeof destination.slug !== "string") return null;
+          return (
+            <DestinationCard
+              destination={
+                destination as ComponentProps<typeof DestinationCard>["destination"]
+              }
+              showActionsOnClick={isMobile}
+            />
+          );
+        }}
       />
     </div>
   );

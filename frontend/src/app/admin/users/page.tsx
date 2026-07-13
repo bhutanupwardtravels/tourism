@@ -2,9 +2,18 @@
 
 import { useState, useEffect } from "react";
 import { columns } from "./components/columns";
-import { UsersDataTable } from "./components/data-table";
+import {
+    DataTable,
+    DataTableFilterParam,
+} from "@/components/admin/data-table/data-table";
+import { DataTableToolbar } from "./components/data-table-toolbar";
+import { UserCard } from "./components/user-card";
 import { listUsers } from "./actions";
 import { User } from "./schema";
+
+const filterParams: DataTableFilterParam[] = [
+    { id: "username", param: "search" },
+];
 
 interface UsersPageProps {
     searchParams: Promise<{
@@ -85,7 +94,7 @@ export default function UsersPage({ searchParams }: UsersPageProps) {
                 </p>
             </div>
 
-            <UsersDataTable
+            <DataTable
                 columns={columns}
                 data={users}
                 pageCount={pageData.pageCount}
@@ -96,6 +105,10 @@ export default function UsersPage({ searchParams }: UsersPageProps) {
                 view={view}
                 onViewChange={handleViewChange}
                 isLoading={isLoading}
+                filterParams={filterParams}
+                toolbar={DataTableToolbar}
+                emptyMessage="No administrative users found."
+                renderCard={(row) => <UserCard user={row.original} />}
             />
         </div>
     );

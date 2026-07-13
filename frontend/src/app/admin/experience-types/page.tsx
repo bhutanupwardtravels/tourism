@@ -1,10 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { DataTable } from "./components/data-table";
+import {
+  DataTable,
+  DataTableFilterParam,
+} from "@/components/admin/data-table/data-table";
+import { DataTableToolbar } from "./components/data-table-toolbar";
+import { ExperienceTypeCard } from "./components/experience-type-card";
 import { getExperienceTypes } from "./actions";
 import { columns } from "./components/columns";
 import { ExperienceType } from "./schema";
+
+const filterParams: DataTableFilterParam[] = [{ id: "title", type: "auto" }];
 
 interface ExperienceTypesPageProps {
   searchParams: Promise<{ page?: string; page_size?: string; title?: string }>;
@@ -93,6 +100,11 @@ export default function ExperienceTypesPage({ searchParams }: ExperienceTypesPag
         view={view}
         isLoading={isLoading}
         onViewChange={handleViewChange}
+        filterParams={filterParams}
+        toolbar={DataTableToolbar}
+        renderCard={(row) => (
+          <ExperienceTypeCard experienceType={row.original} />
+        )}
       />
     </div>
   );
