@@ -70,10 +70,8 @@ export async function getAllHotels(): Promise<Hotel[]> {
 
 export async function getBestHotels(limit: number = 6): Promise<Hotel[]> {
     try {
-        const data = await hotelDb.getAllHotels();
-        // Sort by priority (descending)
-        const sorted = [...data].sort((a, b) => (b.priority || 0) - (a.priority || 0));
-        return sorted.slice(0, limit) as Hotel[];
+        const top = await hotelDb.getTopHotels(limit);
+        return top as Hotel[];
     } catch (error) {
         console.error("Error fetching best hotels:", error);
         return [];

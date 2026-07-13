@@ -43,10 +43,8 @@ export async function getFeaturedDestinations(
   limit: number = 4
 ): Promise<Destination[]> {
   try {
-    const all = await destDb.getAllDestinations();
-    // Sort by priority (descending)
-    const sorted = [...all].sort((a, b) => (b.priority || 0) - (a.priority || 0));
-    return sorted.slice(0, limit) as Destination[];
+    const top = await destDb.getTopDestinations(limit);
+    return top as Destination[];
   } catch (error) {
     console.error("Error fetching featured destinations:", error);
     return [];

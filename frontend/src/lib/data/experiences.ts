@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { supabaseAdmin } from "../supabase/admin";
 import { rowToDoc, docToRow, paginate, pageRange, UUID_RE } from "../supabase/mapping";
 import { Experience } from "@/app/admin/experiences/schema";
@@ -26,17 +27,24 @@ const COLUMNS = [
 // title, and `destinations` as an array of destination ids or slugs. This
 // mirrors the old Mongo $lookup pipeline: resolve ids to titles/slugs and
 // expose categoryId / resolvedDestinations / destinationIds alongside.
-async function resolveRefs(docs: any[]): Promise<any[]> {
-    if (docs.length === 0) return docs;
+// The two lookup tables are read once per request and shared across every
+// resolveRefs() call (list + carousels) via cache().
+const loadRefMaps = cache(async () => {
     const supabase = supabaseAdmin();
-
     const [{ data: types }, { data: dests }] = await Promise.all([
         supabase.from("experience_types").select("id, title"),
         supabase.from("destinations").select("id, slug"),
     ]);
+    return {
+        typeById: new Map((types ?? []).map((t) => [t.id, t.title])),
+        destById: new Map((dests ?? []).map((d) => [d.id, d.slug])),
+    };
+});
 
-    const typeById = new Map((types ?? []).map((t) => [t.id, t.title]));
-    const destById = new Map((dests ?? []).map((d) => [d.id, d.slug]));
+async function resolveRefs(docs: any[]): Promise<any[]> {
+    if (docs.length === 0) return docs;
+
+    const { typeById, destById } = await loadRefMaps();
 
     return docs.map((doc) => {
         const resolved = { ...doc };
@@ -87,15 +95,15 @@ export async function listExperiences(
     };
 }
 
-export async function getExperienceBySlug(slug: string) {
+export const getExperienceBySlug = cache(async (slug: string) => {
     const supabase = supabaseAdmin();
     const { data } = await supabase.from(TABLE).select("*").eq("slug", slug).maybeSingle();
     if (!data) return null;
     const [resolved] = await resolveRefs([rowToDoc(data)]);
     return resolved;
-}
+});
 
-export async function getExperienceById(id: string) {
+export const getExperienceById = cache(async (id: string) => {
     try {
         const supabase = supabaseAdmin();
         const { data } = await supabase.from(TABLE).select("*").eq("id", id).maybeSingle();
@@ -105,14 +113,14 @@ export async function getExperienceById(id: string) {
     } catch (error) {
         return null;
     }
-}
+});
 
-export async function getAllExperiences() {
+export const getAllExperiences = cache(async () => {
     const supabase = supabaseAdmin();
     const { data, error } = await supabase.from(TABLE).select("*").order("title");
     if (error) throw error;
     return resolveRefs((data ?? []).map(rowToDoc));
-}
+});
 
 export async function createExperience(data: Partial<Experience>) {
     const supabase = supabaseAdmin();
@@ -158,15 +166,24 @@ export async function getExperiencesByDestination(destinationId?: string, slug?:
     if (!destinationId && !slug) return [];
 
     const supabase = supabaseAdmin();
-    const { data, error } = await supabase.from(TABLE).select("*");
-    if (error) throw error;
 
-    const docs = (data ?? []).map(rowToDoc).filter((doc: any) => {
-        const destinations: string[] = Array.isArray(doc.destinations) ? doc.destinations : [];
-        if (destinationId && destinations.includes(destinationId)) return true;
-        if (slug && (doc.destinationSlug === slug || destinations.includes(slug))) return true;
-        return false;
-    });
+    // Filter in Postgres: match the destination_slug column, or the jsonb
+    // `destinations` array (holds ids or slugs) via containment. A few indexed
+    // queries beat pulling the whole table and filtering in JS.
+    const byId = new Map<string, any>();
+    const collect = (rows: any[] | null) => (rows ?? []).forEach((r) => byId.set(r.id, r));
 
-    return resolveRefs(docs);
+    if (slug) {
+        const { data, error } = await supabase.from(TABLE).select("*").eq("destination_slug", slug);
+        if (error) throw error;
+        collect(data);
+    }
+
+    for (const ref of [destinationId, slug].filter(Boolean) as string[]) {
+        const { data, error } = await supabase.from(TABLE).select("*").contains("destinations", [ref]);
+        if (error) throw error;
+        collect(data);
+    }
+
+    return resolveRefs([...byId.values()].map(rowToDoc));
 }

@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { supabaseAdmin } from "../supabase/admin";
 import { rowToDoc, docToRow, paginate, pageRange } from "../supabase/mapping";
 
@@ -43,13 +44,15 @@ export async function listTours(page: number = 1, pageSize: number = 10, categor
     };
 }
 
-export async function getTourBySlug(slug: string) {
+// cache() dedupes identical calls within a single request render, so the
+// double-fetch from generateMetadata + the page body collapses into one query.
+export const getTourBySlug = cache(async (slug: string) => {
     const supabase = supabaseAdmin();
     const { data } = await supabase.from(TABLE).select("*").eq("slug", slug).maybeSingle();
     return rowToDoc(data);
-}
+});
 
-export async function getTourById(id: string) {
+export const getTourById = cache(async (id: string) => {
     try {
         const supabase = supabaseAdmin();
         const { data } = await supabase.from(TABLE).select("*").eq("id", id).maybeSingle();
@@ -57,15 +60,29 @@ export async function getTourById(id: string) {
     } catch (error) {
         return null;
     }
-}
+});
 
-export async function getAllTours() {
+export const getAllTours = cache(async () => {
     const supabase = supabaseAdmin();
     const { data, error } = await supabase
         .from(TABLE)
         .select("*")
         .order("priority", { ascending: false })
         .order("title");
+    if (error) throw error;
+    return (data ?? []).map(rowToDoc);
+});
+
+// Top-N by priority, computed in Postgres instead of fetching the whole table
+// and slicing in memory (homepage featured itinerary).
+export async function getTopTours(limit: number = 5) {
+    const supabase = supabaseAdmin();
+    const { data, error } = await supabase
+        .from(TABLE)
+        .select("*")
+        .order("priority", { ascending: false })
+        .order("title")
+        .limit(limit);
     if (error) throw error;
     return (data ?? []).map(rowToDoc);
 }
