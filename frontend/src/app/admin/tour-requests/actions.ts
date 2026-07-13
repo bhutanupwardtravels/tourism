@@ -6,8 +6,8 @@ import { revalidatePath } from "next/cache";
 import { sendMail } from "@/lib/mail";
 import { emailTemplates } from "@/lib/email/templates";
 
-export async function getTourRequests(page = 1, pageSize = 10, status?: RequestStatus | RequestStatus[], search?: string) {
-    const result = await tourRequestDb.getAllTourRequests(page, pageSize, status, search);
+export async function getTourRequests(page = 1, pageSize = 10, status?: RequestStatus | RequestStatus[], search?: string, unread?: boolean) {
+    const result = await tourRequestDb.getAllTourRequests(page, pageSize, status, search, unread);
     return {
         items: result.items,
         page: result.page,
@@ -107,6 +107,13 @@ export async function updateTourRequestStatus(id: string, status: RequestStatus)
             }
         }
 
+        // Acting on a request (approve/reject/archive) counts as reading it.
+        try {
+            await tourRequestDb.markRead(id);
+        } catch (err) {
+            console.error("Failed to mark request read:", err);
+        }
+
         revalidatePath("/admin/tour-requests");
         return { success: true };
     } catch (error) {
@@ -133,5 +140,50 @@ export async function getTourRequestById(id: string) {
         return data;
     } catch (error) {
         return null;
+    }
+}
+
+// ---- Notification bell -----------------------------------------------------
+
+export async function getTourRequestNotifications(limit = 10) {
+    try {
+        const [unreadCount, recent] = await Promise.all([
+            tourRequestDb.getUnreadCount(),
+            tourRequestDb.getRecentRequests(limit),
+        ]);
+        return { unreadCount, recent };
+    } catch (error) {
+        console.error("Failed to load notifications:", error);
+        return { unreadCount: 0, recent: [] };
+    }
+}
+
+export async function markTourRequestRead(id: string) {
+    try {
+        await tourRequestDb.markRead(id);
+        revalidatePath("/admin/tour-requests");
+        return { success: true };
+    } catch (error) {
+        return { success: false };
+    }
+}
+
+export async function markAllTourRequestsRead() {
+    try {
+        await tourRequestDb.markAllRead();
+        revalidatePath("/admin/tour-requests");
+        return { success: true };
+    } catch (error) {
+        return { success: false };
+    }
+}
+
+export async function markTourRequestUnread(id: string) {
+    try {
+        await tourRequestDb.markUnread(id);
+        revalidatePath("/admin/tour-requests");
+        return { success: true };
+    } catch (error) {
+        return { success: false };
     }
 }

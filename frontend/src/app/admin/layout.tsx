@@ -22,6 +22,8 @@ import { LogOut } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { AdminNavItem } from "@/components/admin/admin-nav-items";
+import { NotificationsBell } from "@/components/admin/notifications-bell";
+import { NotificationsProvider } from "@/components/admin/notifications-context";
 import { Button } from "@/components/ui/button";
 
 const menuGroups = [
@@ -119,6 +121,7 @@ export default async function AdminLayout({
   }
 
   return (
+    <NotificationsProvider>
     <SidebarProvider>
       <Sidebar
         className="border-r border-gray-800"
@@ -163,6 +166,7 @@ export default async function AdminLayout({
                       iconName={item.iconName}
                       label={item.label}
                       href={item.href}
+                      unreadBadge={item.href === "/admin/tour-requests"}
                     />
                   ))}
                 </SidebarMenu>
@@ -190,6 +194,7 @@ export default async function AdminLayout({
             <AdminBreadcrumbs />
           </div>
           <div className="flex items-center gap-4">
+            <NotificationsBell />
             <form
               action={async () => {
                 "use server";
@@ -214,5 +219,6 @@ export default async function AdminLayout({
         </div>
       </SidebarInset>
     </SidebarProvider>
+    </NotificationsProvider>
   );
 }

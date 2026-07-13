@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { notFound, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { RequestStatus, TourRequest } from "../types";
-import { updateTourRequestStatus, getTourRequestById } from "../actions";
+import { updateTourRequestStatus, getTourRequestById, markTourRequestRead } from "../actions";
 import { getTourById } from "@/app/(website)/tours/actions";
 import { Tour } from "@/app/(website)/tours/schema";
 import { DeleteTourRequestDialog } from "../components/delete-tour-request-dialog";
@@ -39,6 +39,11 @@ export default function TourRequestDetailPage({ params }: PageProps) {
 
             const tr = data as TourRequest;
             setRequest(tr);
+
+            // Viewing the detail page marks the request as read.
+            if (!tr.readAt) {
+                markTourRequestRead(tr._id!);
+            }
 
             // If it's a package inquiry, fetch the tour details
             if (tr.tourId) {

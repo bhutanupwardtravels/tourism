@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import { useNotifications } from "@/components/admin/notifications-context";
 import {
   LayoutDashboard,
   MapPin,
@@ -36,13 +37,17 @@ interface AdminNavItemProps {
   iconName: keyof typeof iconMap;
   label: string;
   href: string;
+  // When true, shows the unread tour-request count as a badge.
+  unreadBadge?: boolean;
 }
 
-export function AdminNavItem({ iconName, label, href }: AdminNavItemProps) {
+export function AdminNavItem({ iconName, label, href, unreadBadge }: AdminNavItemProps) {
   const pathname = usePathname();
+  const { unreadCount } = useNotifications();
   const isActive =
     pathname === href || (href !== "/admin" && pathname.startsWith(href));
   const Icon = iconMap[iconName];
+  const showBadge = unreadBadge && unreadCount > 0;
 
   return (
     <SidebarMenuItem>
@@ -58,6 +63,11 @@ export function AdminNavItem({ iconName, label, href }: AdminNavItemProps) {
         >
           <Icon className="w-5 h-5" />
           <span>{label}</span>
+          {showBadge && (
+            <span className="ml-auto flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white">
+              {unreadCount > 99 ? "99+" : unreadCount}
+            </span>
+          )}
         </Link>
       </SidebarMenuButton>
     </SidebarMenuItem>

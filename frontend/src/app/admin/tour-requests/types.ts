@@ -20,6 +20,7 @@ export interface TourRequest {
     status: RequestStatus;
     createdAt: string;
     updatedAt: string;
+    readAt?: string | null; // null/undefined => unread (notification bell)
     customItinerary?: DayItinerary[];
 }
 

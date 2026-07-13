@@ -52,6 +52,7 @@ export function TourRequestCard({ request, isMobile }: TourRequestCardProps) {
     const router = useRouter();
 
     const fullName = `${request.firstName} ${request.lastName}`;
+    const unread = !request.readAt;
 
     return (
         <>
@@ -61,7 +62,7 @@ export function TourRequestCard({ request, isMobile }: TourRequestCardProps) {
                 onOpenChange={setShowDeleteDialog}
             />
             <motion.div
-                className="relative overflow-hidden bg-white border border-gray-100 group cursor-pointer hover:shadow-xl transition-all duration-500 rounded-none h-full flex flex-col"
+                className={`relative overflow-hidden bg-white border border-gray-100 group cursor-pointer hover:shadow-xl transition-all duration-500 rounded-none h-full flex flex-col ${unread ? "border-l-4 border-l-amber-500" : ""}`}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 onClick={() => router.push(`/admin/tour-requests/${request._id}`)}
@@ -73,9 +74,16 @@ export function TourRequestCard({ request, isMobile }: TourRequestCardProps) {
                     {/* Header: Name and Status */}
                     <div className="flex flex-col gap-2">
                         <div className="space-y-1.5">
-                            <h3 className="text-xl font-semibold text-black tracking-tight leading-tight">
-                                {fullName}
-                            </h3>
+                            <div className="flex items-center gap-2">
+                                <h3 className="text-xl font-semibold text-black tracking-tight leading-tight">
+                                    {fullName}
+                                </h3>
+                                {unread && (
+                                    <span className="rounded-none bg-amber-500 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-white">
+                                        New
+                                    </span>
+                                )}
+                            </div>
                             <div className="flex items-center gap-2 text-[11px] font-medium text-zinc-600">
                                 <Mail className="w-3.5 h-3.5" />
                                 <span className="truncate max-w-[180px]">{request.email}</span>

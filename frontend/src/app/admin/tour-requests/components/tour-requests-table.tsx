@@ -11,6 +11,7 @@ import { TourRequest } from "../types";
 const filterParams: DataTableFilterParam[] = [
     { id: "status", type: "array" },
     { id: "email" },
+    { id: "unread" },
 ];
 
 interface TourRequestsTableProps {

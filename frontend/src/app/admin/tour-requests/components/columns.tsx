@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 // Button and DropdownMenu components removed as they are unused
 import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 import { RequestStatus, TourRequest } from "../types";
 import { DataTableRowActions } from "./data-table-row-actions";
 
@@ -18,11 +19,28 @@ export const columns: ColumnDef<TourRequest>[] = [
     {
         accessorKey: "firstName",
         header: "Client",
-        cell: ({ row }) => (
-            <div className="flex flex-col">
-                <span className="font-semibold text-zinc-900">{row.original.firstName} {row.original.lastName}</span>
-            </div>
-        ),
+        cell: ({ row }) => {
+            const unread = !row.original.readAt;
+            return (
+                <div className="flex items-center gap-2">
+                    <span
+                        className={cn(
+                            "h-2 w-2 shrink-0 rounded-full",
+                            unread ? "bg-amber-500" : "bg-transparent"
+                        )}
+                        title={unread ? "Unread" : undefined}
+                    />
+                    <span className={cn("text-zinc-900", unread ? "font-bold" : "font-semibold")}>
+                        {row.original.firstName} {row.original.lastName}
+                    </span>
+                    {unread && (
+                        <span className="rounded-none bg-amber-500 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-white">
+                            New
+                        </span>
+                    )}
+                </div>
+            );
+        },
     },
     {
         accessorKey: "email",

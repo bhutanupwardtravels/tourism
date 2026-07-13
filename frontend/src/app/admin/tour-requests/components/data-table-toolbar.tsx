@@ -1,8 +1,9 @@
 "use client";
 
 import { Table } from "@tanstack/react-table";
-import { X, CheckCircle, Circle, Archive, Ban, List, LayoutGrid } from "lucide-react";
+import { X, CheckCircle, Circle, Archive, Ban, List, LayoutGrid, Bell } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "@/components/admin/data-table/data-table-view-options";
@@ -21,6 +22,16 @@ export function DataTableToolbar<TData>({
     onViewChange,
 }: DataTableToolbarProps<TData>) {
     const isFiltered = table.getState().columnFilters.length > 0;
+    const unreadActive = table
+        .getState()
+        .columnFilters.some((f) => f.id === "unread" && f.value === "true");
+
+    const toggleUnread = () => {
+        table.setColumnFilters((prev) => {
+            const others = prev.filter((f) => f.id !== "unread");
+            return unreadActive ? others : [...others, { id: "unread", value: "true" }];
+        });
+    };
 
     const statusOptions = [
         { label: "Pending", value: RequestStatus.PENDING, icon: Circle },
@@ -47,6 +58,20 @@ export function DataTableToolbar<TData>({
                         options={statusOptions}
                     />
                 )}
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={toggleUnread}
+                    className={cn(
+                        "h-9 rounded-none border-dashed",
+                        unreadActive
+                            ? "bg-amber-500 text-white border-amber-500 hover:bg-amber-600 hover:text-white"
+                            : "text-black"
+                    )}
+                >
+                    <Bell className="mr-2 h-4 w-4" />
+                    Unread only
+                </Button>
                 {isFiltered && (
                     <Button
                         variant="ghost"

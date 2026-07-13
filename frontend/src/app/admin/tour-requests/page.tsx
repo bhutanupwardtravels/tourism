@@ -11,6 +11,7 @@ interface TourRequestsPageProps {
         page_size?: string;
         status?: string;
         email?: string;
+        unread?: string;
     }>;
 }
 
@@ -20,8 +21,9 @@ export default async function TourRequestsPage({ searchParams }: TourRequestsPag
     const pageSize = Number(params.page_size) || 10;
     const status = params.status ? (params.status.split(",") as RequestStatus[]) : undefined;
     const email = params.email || undefined;
+    const unread = params.unread === "true";
 
-    const data = await getTourRequests(page, pageSize, status, email);
+    const data = await getTourRequests(page, pageSize, status, email, unread);
 
     return (
         <div className="space-y-6">

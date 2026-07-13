@@ -20,7 +20,7 @@ const COLUMNS = [
 ];
 
 export const tourRequestDb = {
-    async getAllTourRequests(page = 1, limit = 10, status?: RequestStatus | RequestStatus[], search?: string) {
+    async getAllTourRequests(page = 1, limit = 10, status?: RequestStatus | RequestStatus[], search?: string, unreadOnly?: boolean) {
         const supabase = supabaseAdmin();
 
         // `estimated` returns an exact count for small tables and a fast planner
@@ -33,6 +33,9 @@ export const tourRequestDb = {
         }
         if (search) {
             query = query.ilike("email", `%${search}%`);
+        }
+        if (unreadOnly) {
+            query = query.is("read_at", null);
         }
 
         const [from, to] = pageRange(page, limit);
@@ -88,5 +91,62 @@ export const tourRequestDb = {
             .select("id");
         if (error) throw error;
         return (data ?? []).length > 0;
-    }
+    },
+
+    // ---- Notifications (read/unread) ----------------------------------------
+
+    async getUnreadCount(): Promise<number> {
+        const supabase = supabaseAdmin();
+        const { count, error } = await supabase
+            .from(TABLE)
+            .select("id", { count: "exact", head: true })
+            .is("read_at", null);
+        if (error) throw error;
+        return count ?? 0;
+    },
+
+    // Latest requests for the notification dropdown, newest first.
+    async getRecentRequests(limit = 10) {
+        const supabase = supabaseAdmin();
+        const { data, error } = await supabase
+            .from(TABLE)
+            .select("*")
+            .order("created_at", { ascending: false })
+            .limit(limit);
+        if (error) throw error;
+        return (data ?? []).map(rowToDoc) as TourRequest[];
+    },
+
+    // Mark a single request read (no-op if already read).
+    async markRead(id: string) {
+        const supabase = supabaseAdmin();
+        const { error } = await supabase
+            .from(TABLE)
+            .update({ read_at: new Date().toISOString() })
+            .eq("id", id)
+            .is("read_at", null);
+        if (error) throw error;
+        return true;
+    },
+
+    async markAllRead() {
+        const supabase = supabaseAdmin();
+        const { error } = await supabase
+            .from(TABLE)
+            .update({ read_at: new Date().toISOString() })
+            .is("read_at", null);
+        if (error) throw error;
+        return true;
+    },
+
+    // Mark a request unread again (clears read_at).
+    async markUnread(id: string) {
+        const supabase = supabaseAdmin();
+        const { error } = await supabase
+            .from(TABLE)
+            .update({ read_at: null })
+            .eq("id", id);
+        if (error) throw error;
+        return true;
+    },
 };
