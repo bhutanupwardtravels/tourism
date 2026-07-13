@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { FadeImage } from "@/components/common/fade-image";
 
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
@@ -21,7 +21,7 @@ export function DestinationCard({ destination, index, className, onClick, disabl
             {/* Image Container */}
             <div className="relative aspect-16/10 overflow-hidden rounded-xs bg-neutral-100 border border-black/5 mb-8">
                 {destination.image && (
-                    <Image
+                    <FadeImage
                         src={destination.image}
                         alt={destination.name}
                         fill

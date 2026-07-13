@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { FadeImage } from "@/components/common/fade-image";
 
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
@@ -69,7 +69,7 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
                                     {/* Image Container with Reveal */}
                                     <div className="aspect-4/3 overflow-hidden relative">
                                         {experience.image && (
-                                            <Image
+                                            <FadeImage
                                                 src={experience.image}
                                                 alt={experience.title}
                                                 fill

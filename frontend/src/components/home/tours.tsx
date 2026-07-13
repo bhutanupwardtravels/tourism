@@ -90,7 +90,7 @@ export function FeaturedItinerary({ itineraries }: FeaturedItineraryProps) {
                                         initial={{ opacity: 0 }}
                                         whileInView={{ opacity: 1 }}
                                         transition={{ duration: 0.8, delay: 0.4 }}
-                                        className="text-lg md:text-xl text-gray-300 leading-relaxed mb-12 font-light max-w-2xl italic"
+                                        className="text-lg md:text-xl text-gray-300 leading-relaxed mb-12 font-light max-w-2xl italic line-clamp-4"
                                     >
                                         "{itinerary.description}"
                                     </motion.p>

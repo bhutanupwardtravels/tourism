@@ -122,6 +122,11 @@
   }
 }
 
+/* Always hide the NProgress spinner — we only want the progress bar */
+#nprogress .spinner {
+  display: none !important;
+}
+
 @keyframes wiggle {
 
   0%,
@@ -136,4 +141,21 @@
   75% {
     transform: translateX(4px);
   }
+}
+
+@keyframes shimmer-slide {
+  from { background-position: 200% center; }
+  to   { background-position: -200% center; }
+}
+
+
+.img-shimmer {
+  background: linear-gradient(
+    90deg,
+    #e5e7eb 0%,
+    #f3f4f6 40%,
+    #e5e7eb 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-slide 1.6s ease-in-out infinite;
 }

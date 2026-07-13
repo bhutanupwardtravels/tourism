@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { FadeImage } from "@/components/common/fade-image";
 
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -30,7 +30,7 @@ export function ExperienceCard({ experience, index, disableLink, className }: Ex
         )}>
             {/* Image Layer */}
             {experience.image && (
-                <Image
+                <FadeImage
                     src={experience.image}
                     alt={experience.title}
                     fill

@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { FadeImage } from "@/components/common/fade-image";
 
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -48,7 +48,7 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
             {/* Image Container */}
             <div className={`relative aspect-16/10 overflow-hidden rounded-XS bg-neutral-100 border transition-colors duration-500 mb-8 ${isSelected ? 'border-amber-600 ring-2 ring-amber-600/20' : 'border-black/5'}`}>
                 {tour.image && (
-                    <Image
+                    <FadeImage
                         src={tour.image}
                         alt={tour.title}
                         fill

@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { FadeImage } from "@/components/common/fade-image";
 
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -34,7 +34,7 @@ export function FestivalCard({ festival, index }: FestivalCardProps) {
                 <div className="flex flex-col gap-10">
                     <div className="relative aspect-video overflow-hidden rounded-xs">
                         {festival.image && (
-                            <Image
+                            <FadeImage
                                 src={festival.image}
                                 alt={festival.title}
                                 fill

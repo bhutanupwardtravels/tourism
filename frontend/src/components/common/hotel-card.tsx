@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { FadeImage } from "@/components/common/fade-image";
 
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -27,7 +27,7 @@ export function HotelCard({ hotel, index, className, disableLink, onClick }: Hot
         )}>
             {/* Image Layer */}
             {hotel.image && (
-                <Image
+                <FadeImage
                     src={hotel.image}
                     alt={hotel.name}
                     fill
