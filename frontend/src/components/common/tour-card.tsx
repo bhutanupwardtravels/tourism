@@ -53,7 +53,7 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
                         alt={tour.title}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="object-cover transition-all duration-1000 saturate-[1.2] brightness-[1.1] group-hover:saturate-[1.4] group-hover:scale-110"
+                        className="object-cover transition-[opacity,transform] duration-700 saturate-[1.2] brightness-[1.1] group-hover:opacity-85 group-hover:scale-105"
                     />
                 )}
                 {/* Vibrant Overlays - Removing desaturating overlays */}

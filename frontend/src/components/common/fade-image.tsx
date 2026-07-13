@@ -27,7 +27,7 @@ export function FadeImage({ className, onLoad, priority, ...props }: ImageProps)
         priority={priority}
         className={cn(
           className,
-          "transition-opacity duration-700",
+          "transition-[opacity,transform] duration-700 ease-out",
           !priority && !loaded ? "opacity-0" : "opacity-100"
         )}
         onLoad={(e) => {

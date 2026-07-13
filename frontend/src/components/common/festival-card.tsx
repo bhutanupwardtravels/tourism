@@ -39,7 +39,7 @@ export function FestivalCard({ festival, index }: FestivalCardProps) {
                                 alt={festival.title}
                                 fill
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                className="object-cover transition-all duration-1000 saturate-[1.2] group-hover:saturate-[1.5] group-hover:scale-110"
+                                className="object-cover transition-[opacity,transform] duration-700 saturate-[1.2] group-hover:opacity-85 group-hover:scale-105"
                             />
                         )}
                         {/* No desaturating overlay to keep colors vibrant as requested */}
