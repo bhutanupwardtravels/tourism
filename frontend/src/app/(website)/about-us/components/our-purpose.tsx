@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { motion } from "framer-motion";
 import { AboutSection } from "../schema";
 
@@ -26,10 +28,12 @@ export function OurPurpose({ purpose }: OurPurposeProps) {
             className="lg:col-span-5 relative group order-2 lg:order-1"
           >
             <div className="relative aspect-4/5 overflow-hidden bg-neutral-100">
-              <img
-                src={purpose.image || "https://images.unsplash.com/photo-1528127269322-539801943592?w=2940&auto=format&fit=crop"}
-                alt={purpose.title}
-                className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105"
+                            <Image
+                  src={purpose.image || "https://images.unsplash.com/photo-1528127269322-539801943592?w=2940&auto=format&fit=crop"}
+                  alt={purpose.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover transition-all duration-1000 group-hover:scale-105"
               />
 
               {/* Tactical Overlay */}

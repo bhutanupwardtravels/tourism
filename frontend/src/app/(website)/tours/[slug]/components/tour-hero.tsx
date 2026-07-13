@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { motion } from "framer-motion";
 import { Clock, Tag } from "lucide-react";
 
@@ -38,7 +40,16 @@ export function TourHero({
                 transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
                 className="absolute inset-0"
             >
-                <img src={image} alt={title} className="w-full h-full object-cover saturate-[1.1] contrast-[1.1]" />
+                {image && (
+                    <Image
+                        src={image}
+                        alt={title}
+                        fill
+                        sizes="100vw"
+                        priority
+                        className="object-cover saturate-[1.1] contrast-[1.1]"
+                    />
+                )}
                 {/* Cinematic Overlays */}
                 <div className="absolute inset-0 bg-linear-to-b from-black/80 via-transparent to-white via-90%" />
                 <div className="absolute inset-0 bg-linear-to-tr from-amber-500/5 via-transparent to-blue-500/5 mix-blend-overlay" />

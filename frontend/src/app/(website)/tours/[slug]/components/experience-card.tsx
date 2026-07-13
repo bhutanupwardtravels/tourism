@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Experience } from "../../schema";
 import { ArrowUpRight } from "lucide-react";
 
@@ -9,11 +10,15 @@ export function ExperienceCard({ experience }: ExperienceCardProps) {
   return (
     <div className="group cursor-pointer">
       <div className="relative aspect-16/10 overflow-hidden rounded-sm bg-neutral-100 border border-black/5 mb-8">
-        <img
-          src={experience.image}
-          alt={experience.title}
-          className="w-full h-full object-cover transition-all duration-1000 saturate-[0.7] brightness-[1.05] group-hover:saturate-[1.2] group-hover:scale-110"
-        />
+        {experience.image && (
+            <Image
+                src={experience.image}
+                alt={experience.title}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover transition-all duration-1000 saturate-[0.7] brightness-[1.05] group-hover:saturate-[1.2] group-hover:scale-110"
+            />
+        )}
         <div className="absolute inset-0 bg-white/40 group-hover:bg-transparent transition-colors duration-700" />
         <div className="absolute inset-0 bg-linear-to-t from-white via-white/5 to-transparent opacity-60 group-hover:opacity-20 transition-opacity duration-700" />
 

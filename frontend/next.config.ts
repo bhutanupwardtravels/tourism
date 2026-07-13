@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
   transpilePackages: [
     "d3",
     "d3-array",
@@ -52,6 +51,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "plus.unsplash.com",
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.ibb.co',
       },
       {
         protocol: "http",

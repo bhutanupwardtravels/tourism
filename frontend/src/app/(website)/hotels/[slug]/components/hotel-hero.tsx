@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { motion } from "framer-motion";
 import { Star, MapPin } from "lucide-react";
 
@@ -21,7 +23,16 @@ export function HotelHero({ name, image, location, rating, priceRange }: HotelHe
                 transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
                 className="absolute inset-0"
             >
-                <img src={image} alt={name} className="w-full h-full object-cover" />
+                {image && (
+                    <Image
+                        src={image}
+                        alt={name}
+                        fill
+                        sizes="100vw"
+                        priority
+                        className="object-cover"
+                    />
+                )}
                 <div className="absolute inset-0 bg-linear-to-b from-black/80 via-transparent to-white via-90%" />
                 <div className="absolute inset-0 bg-linear-to-tr from-amber-500/5 via-transparent to-blue-500/5 mix-blend-overlay" />
             </motion.div>

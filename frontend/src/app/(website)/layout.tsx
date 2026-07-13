@@ -2,7 +2,9 @@ import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { getContactContent, ContactContent } from "@/lib/data/contact";
 
-export const dynamic = "force-dynamic";
+// Public pages are statically rendered and revalidated in the background.
+// Admin actions additionally call revalidatePath for instant updates.
+export const revalidate = 300;
 
 export default async function SiteLayout({
   children,

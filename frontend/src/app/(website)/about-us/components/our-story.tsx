@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { motion } from "framer-motion";
 import { AboutSection } from "../schema";
 
@@ -55,10 +57,12 @@ export function OurStory({ story }: OurStoryProps) {
             className="lg:col-span-5 relative group"
           >
             <div className="relative aspect-4/5 overflow-hidden bg-neutral-100">
-              <img
-                src={story.image || "https://images.unsplash.com/photo-1548013146-72479768bada?w=2940&auto=format&fit=crop"}
-                alt={story.title}
-                className="w-full h-full object-cover grayscale brightness-90 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-1000 group-hover:scale-105"
+                            <Image
+                  src={story.image || "https://images.unsplash.com/photo-1548013146-72479768bada?w=2940&auto=format&fit=crop"}
+                  alt={story.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover grayscale brightness-90 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-1000 group-hover:scale-105"
               />
 
               {/* Tactical Overlay */}

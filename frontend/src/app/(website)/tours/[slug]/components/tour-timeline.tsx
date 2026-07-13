@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { motion } from "framer-motion";
 import { TourDay } from "../../schema";
 import { Plus } from "lucide-react";
@@ -37,11 +39,15 @@ export function TourTimeline({ days, slug }: TourTimelineProps) {
             <div className="lg:col-span-11 grid grid-cols-1 md:grid-cols-2 gap-12 items-start border-l border-black/5 pl-12 pb-24 group-hover:border-amber-500/30 transition-colors duration-700">
               {day.image && (
                 <div className="relative aspect-video overflow-hidden rounded-xs border border-black/5">
-                  <img
-                    src={day.image}
-                    alt={day.title}
-                    className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105"
-                  />
+                  {day.image && (
+                      <Image
+                          src={day.image}
+                          alt={day.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          className="object-cover transition-all duration-1000 group-hover:scale-105"
+                      />
+                  )}
                   {/* Vibrant Overlays - Removing desaturating overlays */}
                   <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-700" />
                   <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity duration-700" />

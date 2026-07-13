@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -24,11 +26,15 @@ export function HotelCard({ hotel, index, className, disableLink, onClick }: Hot
             className
         )}>
             {/* Image Layer */}
-            <img
-                src={hotel.image}
-                alt={hotel.name}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-            />
+            {hotel.image && (
+                <Image
+                    src={hotel.image}
+                    alt={hotel.name}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="absolute inset-0 object-cover transition-transform duration-1000 group-hover:scale-110"
+                />
+            )}
 
             {/* Cinematic Overlay - Dark gradient for text readability */}
             <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent z-20" />

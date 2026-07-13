@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Check } from "lucide-react";
@@ -124,11 +126,15 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                 {/* Sidebar Info */}
                 <div className="lg:col-span-4 space-y-12">
                     <div className="relative aspect-4/5 overflow-hidden rounded-xs group">
-                        <img
-                            src={selectedTour?.image}
-                            alt={selectedTour?.title}
-                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
+                        {selectedTour?.image && (
+                            <Image
+                                src={selectedTour?.image}
+                                alt={selectedTour?.title}
+                                fill
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                className="absolute inset-0 object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                        )}
                         <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
 
                         <div className="absolute inset-0 p-8 flex flex-col justify-between">

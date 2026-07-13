@@ -112,6 +112,8 @@ export async function createHotel(prevState: any, formData: FormData) {
 
     await db.createHotel(hotelData);
     revalidatePath("/admin/hotels");
+    revalidatePath("/hotels");
+    revalidatePath("/");
 
     return { success: true, message: "Hotel created successfully" };
   } catch (error) {
@@ -186,6 +188,8 @@ export async function updateHotel(id: string, prevState: any, formData: FormData
     }
 
     revalidatePath("/admin/hotels");
+    revalidatePath("/hotels");
+    revalidatePath("/");
     revalidatePath(`/admin/hotels/${id}`);
     revalidatePath(`/admin/hotels/${id}/edit`);
 
@@ -202,6 +206,8 @@ export async function deleteHotel(id: string) {
   try {
     await db.deleteHotel(id);
     revalidatePath("/admin/hotels");
+    revalidatePath("/hotels");
+    revalidatePath("/");
     return { success: true, message: "Hotel deleted successfully" };
   } catch (error) {
     return { success: false, message: "Failed to delete hotel" };

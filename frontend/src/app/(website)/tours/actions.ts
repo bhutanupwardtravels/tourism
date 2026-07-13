@@ -131,10 +131,10 @@ export async function getTourDay(
   }
 }
 
-export async function getRelatedTours(currentSlug: string): Promise<Tour[]> {
+export async function getRelatedTours(currentSlug: string, limit: number = 3): Promise<Tour[]> {
   try {
-    const all = await tourDb.getAllTours();
-    return all.filter((tour: any) => tour.slug !== currentSlug).slice(0, 3) as Tour[];
+    const tours = await tourDb.getRelatedTours(currentSlug, limit);
+    return tours as Tour[];
   } catch (error) {
     console.error("Error fetching related tours:", error);
     throw new Error("Failed to fetch related tours");

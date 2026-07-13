@@ -14,8 +14,29 @@ import { DestinationHotels } from "./components/destination-hotels";
 import { DestinationCarousel } from "./components/destination-carousel";
 import CallToAction from "@/components/common/call-to-action";
 
+import type { Metadata } from "next";
+import { listSlugs } from "@/lib/data/slugs";
+import { buildMetadata } from "@/lib/site";
+
+export async function generateStaticParams() {
+    const slugs = await listSlugs("destinations");
+    return slugs.map((slug) => ({ slug }));
+}
+
 interface PageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const { slug } = await params;
+    const destination = await getDestinationBySlug(slug);
+    if (!destination) return {};
+    return buildMetadata({
+        title: destination.name,
+        description: destination.description,
+        image: destination.image,
+        path: `/destinations/${slug}`,
+    });
 }
 
 export default async function DestinationPage({ params }: PageProps) {

@@ -15,6 +15,8 @@ export function Hero() {
           loop
           muted
           playsInline
+          preload="metadata"
+          poster="/images/hero-poster.jpg"
           className="w-full h-full object-cover"
         >
           <source

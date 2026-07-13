@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
+import { siteUrl, SITE_NAME } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,8 +15,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "Bhutan Upward Travels",
-    description: "Experience the magic of Bhutan",
+    metadataBase: new URL(siteUrl()),
+    title: {
+        default: SITE_NAME,
+        template: `%s | ${SITE_NAME}`,
+    },
+    description:
+        "Curated journeys to the Land of the Thunder Dragon — tours, experiences, and stays across Bhutan.",
+    openGraph: {
+        siteName: SITE_NAME,
+        type: "website",
+    },
 };
 
 export default function RootLayout({

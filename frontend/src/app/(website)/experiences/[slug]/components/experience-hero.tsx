@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { motion } from "framer-motion";
 import { Clock, Mountain, Calendar } from "lucide-react";
 import { format } from "date-fns";
@@ -53,7 +55,14 @@ export function ExperienceHero({
                 className="absolute inset-0"
             >
                 {image && (
-                    <img src={image} alt={title} className="w-full h-full object-cover saturate-[1.1] contrast-[1.1]" />
+                    <Image
+                        src={image}
+                        alt={title}
+                        fill
+                        sizes="100vw"
+                        priority
+                        className="object-cover saturate-[1.1] contrast-[1.1]"
+                    />
                 )}
                 {/* Cinematic Overlays - Only fade to white at the very bottom edge */}
                 <div className="absolute inset-0 bg-linear-to-b from-black/80 via-transparent to-white via-90%" />

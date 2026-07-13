@@ -144,6 +144,8 @@ export async function createExperience(prevState: any, formData: FormData) {
     await db.createExperience(experienceData);
 
     revalidatePath("/admin/experiences");
+    revalidatePath("/experiences");
+    revalidatePath("/");
 
     return {
       success: true,
@@ -269,6 +271,8 @@ export async function updateExperience(
     await db.updateExperience(id, experienceData);
 
     revalidatePath("/admin/experiences");
+    revalidatePath("/experiences");
+    revalidatePath("/");
     revalidatePath(`/admin/experiences/${id}`);
     revalidatePath(`/admin/experiences/${id}/edit`);
 
@@ -323,6 +327,8 @@ export async function deleteExperience(id: string) {
     await db.deleteExperience(id);
 
     revalidatePath("/admin/experiences");
+    revalidatePath("/experiences");
+    revalidatePath("/");
 
     return {
       success: true,

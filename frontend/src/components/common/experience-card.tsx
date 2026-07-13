@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -28,10 +30,12 @@ export function ExperienceCard({ experience, index, disableLink, className }: Ex
         )}>
             {/* Image Layer */}
             {experience.image && (
-                <img
+                <Image
                     src={experience.image}
                     alt={experience.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 saturate-[0.8] group-hover:saturate-[1.2] group-hover:scale-110"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="absolute inset-0 object-cover transition-all duration-1000 saturate-[0.8] group-hover:saturate-[1.2] group-hover:scale-110"
                 />
             )}
 

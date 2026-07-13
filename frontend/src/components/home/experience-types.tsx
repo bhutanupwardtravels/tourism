@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
@@ -67,10 +69,12 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
                                     {/* Image Container with Reveal */}
                                     <div className="aspect-4/3 overflow-hidden relative">
                                         {experience.image && (
-                                            <img
+                                            <Image
                                                 src={experience.image}
                                                 alt={experience.title}
-                                                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                className="object-cover transition-transform duration-1000 group-hover:scale-110"
                                             />
                                         )}
 

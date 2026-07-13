@@ -101,6 +101,8 @@ export async function createDestination(prevState: any, formData: FormData) {
     await db.createDestination(destinationData);
 
     revalidatePath("/admin/destinations");
+    revalidatePath("/destinations");
+    revalidatePath("/");
 
     return {
       success: true,
@@ -165,6 +167,8 @@ export async function updateDestination(
     await db.updateDestination(id, destinationData);
 
     revalidatePath("/admin/destinations");
+    revalidatePath("/destinations");
+    revalidatePath("/");
     revalidatePath(`/admin/destinations/${id}/edit`);
 
     return {
@@ -188,6 +192,8 @@ export async function deleteDestination(id: string) {
   try {
     await db.deleteDestination(id);
     revalidatePath("/admin/destinations");
+    revalidatePath("/destinations");
+    revalidatePath("/");
 
     return {
       success: true,

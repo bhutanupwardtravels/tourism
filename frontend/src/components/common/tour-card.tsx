@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, Calendar, DollarSign, Check } from "lucide-react";
@@ -45,11 +47,15 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
         <>
             {/* Image Container */}
             <div className={`relative aspect-16/10 overflow-hidden rounded-XS bg-neutral-100 border transition-colors duration-500 mb-8 ${isSelected ? 'border-amber-600 ring-2 ring-amber-600/20' : 'border-black/5'}`}>
-                <img
-                    src={tour.image}
-                    alt={tour.title}
-                    className="w-full h-full object-cover transition-all duration-1000 saturate-[1.2] brightness-[1.1] group-hover:saturate-[1.4] group-hover:scale-110"
-                />
+                {tour.image && (
+                    <Image
+                        src={tour.image}
+                        alt={tour.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover transition-all duration-1000 saturate-[1.2] brightness-[1.1] group-hover:saturate-[1.4] group-hover:scale-110"
+                    />
+                )}
                 {/* Vibrant Overlays - Removing desaturating overlays */}
                 <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-700" />
                 <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity duration-700" />

@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Check, ChevronDown } from "lucide-react";
@@ -41,10 +43,12 @@ export default function EnquirePage() {
             <div className="min-h-screen bg-black flex flex-col items-center justify-center relative overflow-hidden px-6">
                 {/* Background Texture Overlay */}
                 <div className="absolute inset-0 opacity-20 pointer-events-none">
-                    <img
+                                        <Image
                         src="/images/cinematic/enquire-hero.png"
-                        className="w-full h-full object-cover filter grayscale"
                         alt=""
+                        fill
+                        sizes="100vw"
+                        className="object-cover filter grayscale"
                     />
                 </div>
 
@@ -99,10 +103,12 @@ export default function EnquirePage() {
             {/* Immersive Hero Header */}
             <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0">
-                    <img
+                                        <Image
                         src="/images/cinematic/enquire-hero.png"
-                        className="w-full h-full object-cover"
                         alt="Bhutan Luxury Planning"
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover"
                     />
                     <div className="absolute inset-0 bg-black/70 backdrop-blur-[1px]" />
                 </div>

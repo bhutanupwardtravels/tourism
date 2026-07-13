@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Destination } from "@/app/(website)/destinations/schema";
@@ -18,11 +20,15 @@ export function DestinationCard({ destination, index, className, onClick, disabl
         <>
             {/* Image Container */}
             <div className="relative aspect-16/10 overflow-hidden rounded-xs bg-neutral-100 border border-black/5 mb-8">
-                <img
-                    src={destination.image}
-                    alt={destination.name}
-                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                />
+                {destination.image && (
+                    <Image
+                        src={destination.image}
+                        alt={destination.name}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                    />
+                )}
                 {/* Status Overlay */}
                 <div className="absolute bottom-6 left-6 flex items-center gap-4">
                     <span className="h-px w-8 bg-amber-600/50" />

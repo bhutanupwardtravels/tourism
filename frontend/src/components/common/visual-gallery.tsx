@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
@@ -307,10 +309,18 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                                     <button
                                         key={idx}
                                         onClick={() => setSelectedImage(idx)}
-                                        className={`w-20 h-14 rounded-sm overflow-hidden border-2 transition-all duration-500 ${selectedImage === idx ? "border-amber-600 scale-110 shadow-lg" : "border-transparent opacity-30 hover:opacity-100"
+                                        className={`relative w-20 h-14 rounded-sm overflow-hidden border-2 transition-all duration-500 ${selectedImage === idx ? "border-amber-600 scale-110 shadow-lg" : "border-transparent opacity-30 hover:opacity-100"
                                             }`}
                                     >
-                                        <img src={img} className="w-full h-full object-cover" alt={`Thumbnail ${idx + 1}`} />
+                                        {img && (
+                                            <Image
+                                                src={img}
+                                                alt={`Thumbnail ${idx + 1}`}
+                                                fill
+                                                sizes="80px"
+                                                className="object-cover"
+                                            />
+                                        )}
                                     </button>
                                 ))}
                             </div>

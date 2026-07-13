@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { motion } from "framer-motion";
 import { Hero } from "../schema";
 
@@ -19,11 +21,16 @@ export function AboutHero({ hero }: AboutHeroProps) {
         transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
         className="absolute inset-0 z-0"
       >
-        <img
-          src={hero.backgroundImage}
-          alt="Bhutan landscape"
-          className="w-full h-full object-cover"
-        />
+        {hero.backgroundImage && (
+            <Image
+                src={hero.backgroundImage}
+                alt="Bhutan landscape"
+                fill
+                sizes="100vw"
+                priority
+                className="object-cover"
+            />
+        )}
         {/* Cinematic Overlays */}
         <div className="absolute inset-0 bg-linear-to-b from-black/60 via-transparent to-black/80" />
         <div className="absolute inset-0 bg-linear-to-tr from-amber-500/10 via-transparent to-blue-500/10 mix-blend-overlay" />

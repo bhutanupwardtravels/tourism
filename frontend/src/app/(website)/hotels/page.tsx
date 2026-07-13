@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getAllHotels } from "./actions";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
@@ -35,11 +36,15 @@ export default async function HotelsPage() {
                         >
                             {/* Image Container */}
                             <div className="relative aspect-4/5 overflow-hidden rounded-sm bg-neutral-100 border border-black/5 mb-8">
-                                <img
-                                    src={hotel.image}
-                                    alt={hotel.name}
-                                    className="w-full h-full object-cover transition-all duration-1000 saturate-[0.8] group-hover:saturate-[1.2] group-hover:scale-110"
-                                />
+                                {hotel.image && (
+                                    <Image
+                                        src={hotel.image}
+                                        alt={hotel.name}
+                                        fill
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                        className="object-cover transition-all duration-1000 saturate-[0.8] group-hover:saturate-[1.2] group-hover:scale-110"
+                                    />
+                                )}
                                 <div className="absolute inset-0 bg-white/20 group-hover:bg-transparent transition-colors duration-700" />
                                 <div className="absolute inset-0 bg-linear-to-t from-white via-white/5 to-transparent opacity-60 group-hover:opacity-10 transition-opacity duration-700" />
 

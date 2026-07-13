@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Plus, Calendar, Loader2, Sparkles, Check, X, XCircle, Search, Headphones } from "lucide-react";
@@ -613,8 +615,14 @@ export function CustomItineraryBuilder({
                             {/* Destination Header */}
                             <div className="flex items-center justify-between p-8 bg-white border border-neutral-100 rounded-xs shadow-sm">
                                 <div className="flex items-center gap-6">
-                                    {activeDestination && (
-                                        <img src={activeDestination.image} className="w-16 h-16 rounded-full object-cover ring-2 ring-amber-500/20" alt="" />
+                                    {activeDestination?.image && (
+                                        <Image
+                                            src={activeDestination.image}
+                                            alt=""
+                                            width={64}
+                                            height={64}
+                                            className="w-16 h-16 rounded-full object-cover ring-2 ring-amber-500/20"
+                                        />
                                     )}
                                     <div>
                                         <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 font-mono">// active coordinates</span>

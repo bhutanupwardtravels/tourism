@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Calendar } from "lucide-react";
@@ -31,11 +33,15 @@ export function FestivalCard({ festival, index }: FestivalCardProps) {
             >
                 <div className="flex flex-col gap-10">
                     <div className="relative aspect-video overflow-hidden rounded-xs">
-                        <img
-                            src={festival.image}
-                            alt={festival.title}
-                            className="w-full h-full object-cover transition-all duration-1000 saturate-[1.2] group-hover:saturate-[1.5] group-hover:scale-110"
-                        />
+                        {festival.image && (
+                            <Image
+                                src={festival.image}
+                                alt={festival.title}
+                                fill
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                className="object-cover transition-all duration-1000 saturate-[1.2] group-hover:saturate-[1.5] group-hover:scale-110"
+                            />
+                        )}
                         {/* No desaturating overlay to keep colors vibrant as requested */}
                         <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-700" />
 

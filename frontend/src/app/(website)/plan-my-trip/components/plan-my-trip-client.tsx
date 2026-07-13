@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -57,10 +59,12 @@ export default function PlanMyTripClient({
             {/* Immersive Hero Section */}
             <section className="relative h-[85vh] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0">
-                    <img
+                                        <Image
                         src="/images/Bhutan-Travel-Guide.jpg"
-                        className="w-full h-full object-cover scale-105"
                         alt="Bhutanese Aerial Landscape"
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover scale-105"
                     />
                     <div className="absolute inset-0 bg-linear-to-b from-black/80 via-transparent to-white via-90%" />
                     <div className="absolute inset-0 bg-linear-to-tr from-amber-500/5 via-transparent to-blue-500/5 mix-blend-overlay" />

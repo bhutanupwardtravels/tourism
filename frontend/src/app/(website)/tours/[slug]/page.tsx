@@ -3,19 +3,40 @@ import { TourHero } from "./components/tour-hero";
 import { TourCarousel } from "./components/tour-carousel";
 import { TourItinerary } from "./components/tour-itenary";
 import { TourOverview } from "./components/tour-overview";
-import { getTourBySlug, getAllTours } from "../actions";
+import { getTourBySlug, getRelatedTours } from "../actions";
 import CallToAction from "@/components/common/call-to-action";
 import { TourBookingCard } from "./components/tour-booking-card";
+
+import type { Metadata } from "next";
+import { listSlugs } from "@/lib/data/slugs";
+import { buildMetadata } from "@/lib/site";
+
+export async function generateStaticParams() {
+    const slugs = await listSlugs("tours");
+    return slugs.map((slug) => ({ slug }));
+}
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const { slug } = await params;
+    const tour = await getTourBySlug(slug);
+    if (!tour) return {};
+    return buildMetadata({
+        title: tour.title,
+        description: tour.description,
+        image: tour.image,
+        path: `/tours/${slug}`,
+    });
+}
+
 export default async function TourPage({ params }: PageProps) {
   const { slug } = await params;
-  const [tour, allTours] = await Promise.all([
+  const [tour, relatedTours] = await Promise.all([
     getTourBySlug(slug),
-    getAllTours()
+    getRelatedTours(slug, 6)
   ]);
 
   if (!tour) {
@@ -42,7 +63,7 @@ export default async function TourPage({ params }: PageProps) {
       </div>
 
       {/* Related Tours Section */}
-      <TourCarousel tours={allTours} currentSlug={slug} />
+      <TourCarousel tours={relatedTours} currentSlug={slug} />
       <CallToAction />
     </div>
   );

@@ -13,11 +13,19 @@ import { ExperienceTypes } from "@/components/home/experience-types";
 import { getFeaturedExperiences, getExperienceTypes } from "./experiences/actions";
 
 export default async function Home() {
-  const featuredTours = await getTopPriorityTours(5);
-  const bestHotels = await getBestHotels(6);
-  const featuredExperiences = await getFeaturedExperiences(6);
-  const featuredDestinations = await getFeaturedDestinations(6);
-  const experienceTypes = await getExperienceTypes();
+  const [
+    featuredTours,
+    bestHotels,
+    featuredExperiences,
+    featuredDestinations,
+    experienceTypes,
+  ] = await Promise.all([
+    getTopPriorityTours(5),
+    getBestHotels(6),
+    getFeaturedExperiences(6),
+    getFeaturedDestinations(6),
+    getExperienceTypes(),
+  ]);
 
   return (
     <div className="flex flex-col min-h-screen">

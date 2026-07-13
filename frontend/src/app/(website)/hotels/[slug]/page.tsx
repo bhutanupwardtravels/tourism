@@ -7,8 +7,29 @@ import { LocationMap } from "@/components/common/location-map";
 import { RelatedHotels } from "./components/related-hotels";
 import CallToAction from "@/components/common/call-to-action";
 
+import type { Metadata } from "next";
+import { listSlugs } from "@/lib/data/slugs";
+import { buildMetadata } from "@/lib/site";
+
+export async function generateStaticParams() {
+    const slugs = await listSlugs("hotels");
+    return slugs.map((slug) => ({ slug }));
+}
+
 interface PageProps {
     params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const { slug } = await params;
+    const hotel = await getHotelBySlug(slug);
+    if (!hotel) return {};
+    return buildMetadata({
+        title: hotel.name,
+        description: hotel.description,
+        image: hotel.image,
+        path: `/hotels/${slug}`,
+    });
 }
 
 export default async function HotelPage({ params }: PageProps) {

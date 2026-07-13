@@ -8,8 +8,29 @@ import { getExperienceBySlug, getAllExperiences } from "../actions";
 import { ExperienceCarousel } from "./components/experience-carousel";
 import { ExperienceMap } from "./components/experience-map";
 
+import type { Metadata } from "next";
+import { listSlugs } from "@/lib/data/slugs";
+import { buildMetadata } from "@/lib/site";
+
+export async function generateStaticParams() {
+    const slugs = await listSlugs("experiences");
+    return slugs.map((slug) => ({ slug }));
+}
+
 interface PageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const { slug } = await params;
+    const experience = await getExperienceBySlug(slug);
+    if (!experience) return {};
+    return buildMetadata({
+        title: experience.title,
+        description: experience.description,
+        image: experience.image,
+        path: `/experiences/${slug}`,
+    });
 }
 
 export default async function ExperienceDetailPage({ params }: PageProps) {
