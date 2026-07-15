@@ -3,7 +3,7 @@
 import { tourRequestDb } from "@/lib/data/tour-requests";
 import { RequestStatus } from "./types";
 import { revalidatePath } from "next/cache";
-import { sendMail } from "@/lib/mail";
+import { sendMail, senders } from "@/lib/mail";
 import { emailTemplates } from "@/lib/email/templates";
 
 export async function getTourRequests(page = 1, pageSize = 10, status?: RequestStatus | RequestStatus[], search?: string, unread?: boolean) {
@@ -98,6 +98,10 @@ export async function updateTourRequestStatus(id: string, status: RequestStatus)
                     html: isApproved
                         ? emailTemplates.requestApproved(tourRequest)
                         : emailTemplates.requestRejected(tourRequest),
+                    from: isApproved ? senders.approved() : senders.rejected(),
+                    // reservations@/support@ may not be monitored inboxes yet —
+                    // route replies to the operator.
+                    replyTo: process.env.OPERATOR_EMAIL || undefined,
                 });
                 if (!mail.success) {
                     console.error(`Failed to send ${status} email:`, mail.error);

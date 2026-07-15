@@ -1,9 +1,19 @@
 import { TourRequest } from "@/app/admin/tour-requests/types";
 import { escapeHtml } from "@/lib/utils";
 
+// Resend doesn't host images — the logo must be fetched by the recipient's
+// mail client from a public URL, so it needs the site's absolute origin.
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://bhutanupwardtravels.bt";
+const logoHeader = `
+    <div style="text-align: center; margin-bottom: 20px;">
+        <img src="${SITE_URL}/images/logo.png" alt="Bhutan Upward Travels" width="72" style="width: 72px; height: auto; display: inline-block;" />
+    </div>
+`;
+
 export const emailTemplates = {
     userConfirmation: (data: TourRequest) => `
         <div style="font-family: sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+            ${logoHeader}
             <h2 style="color: #1a1a1a;">Tashi Delek, ${escapeHtml(data.firstName)}!</h2>
             <p>Thank you for choosing <strong>Bhutan Upward Travels</strong> to plan your journey. We have received your tour request and our team is already working on it.</p>
 
@@ -27,6 +37,7 @@ export const emailTemplates = {
 
     operatorNotification: (data: TourRequest) => `
         <div style="font-family: sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+            ${logoHeader}
             <h2 style="color: #d32f2f;">New Tour Request Received</h2>
             <p>A new trip request has been submitted through the website.</p>
 
@@ -60,6 +71,7 @@ export const emailTemplates = {
 
     requestApproved: (data: TourRequest) => `
         <div style="font-family: sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+            ${logoHeader}
             <h2 style="color: #1a7f37;">Great news, ${escapeHtml(data.firstName)}! 🎉</h2>
             <p>Your tour request with <strong>Bhutan Upward Travels</strong> has been <strong>approved</strong>. We're delighted to help bring your journey to life.</p>
 
@@ -84,6 +96,7 @@ export const emailTemplates = {
 
     requestRejected: (data: TourRequest) => `
         <div style="font-family: sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+            ${logoHeader}
             <h2 style="color: #1a1a1a;">Update on your tour request</h2>
             <p>Dear ${escapeHtml(data.firstName)},</p>
             <p>Thank you for your interest in travelling with <strong>Bhutan Upward Travels</strong>. After reviewing your request, we're sorry to say we're unable to proceed with it at this time.</p>
