@@ -10,6 +10,16 @@ import { SustainableTravel } from "./components/sustainable-travel";
 import { WhyBhutan } from "./components/why-bhutan";
 import CallToAction from "@/components/common/call-to-action";
 
+import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/site";
+
+export const metadata: Metadata = buildMetadata({
+    title: "About Us",
+    description:
+        "Bhutan Upward Travels designs bespoke journeys through the Kingdom of Bhutan, rooted in sustainable travel and deep local expertise.",
+    path: "/about-us",
+});
+
 export default async function AboutPage() {
   // Fetch the main about content that matches admin structure
   const aboutContent = await getAboutContent();

@@ -2,6 +2,16 @@ import { Suspense } from "react";
 import { getPlanMyTripData } from "./actions";
 import PlanMyTripClient from "./components/plan-my-trip-client";
 
+import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/site";
+
+export const metadata: Metadata = buildMetadata({
+    title: "Plan My Trip",
+    description:
+        "Build a custom Bhutan itinerary or choose from curated packages — design your journey with our specialists in a few guided steps.",
+    path: "/plan-my-trip",
+});
+
 export default async function PlanMyTripPage() {
     const data = await getPlanMyTripData();
 

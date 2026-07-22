@@ -5,6 +5,16 @@ import { ArrowUpRight } from "lucide-react";
 import CallToAction from "@/components/common/call-to-action";
 import { HotelsHeader } from "./components/hotels-header";
 
+import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/site";
+
+export const metadata: Metadata = buildMetadata({
+    title: "Bhutan Hotels & Luxury Resorts",
+    description:
+        "A curated collection of Bhutanese sanctuaries — from eco-lodges to five-star resorts — vetted for authentic hospitality across every region of the Kingdom.",
+    path: "/hotels",
+});
+
 export default async function HotelsPage() {
     const hotels = await getAllHotels();
 

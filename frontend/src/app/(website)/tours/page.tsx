@@ -4,6 +4,16 @@ import CallToAction from "@/components/common/call-to-action";
 import { TourCard } from "@/components/common/tour-card";
 import { Tour } from "./schema";
 
+import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/site";
+
+export const metadata: Metadata = buildMetadata({
+    title: "Bhutan Tour Packages | Curated Expeditions",
+    description:
+        "Browse verified Bhutan tour packages from 5 to 15 days — Western Bhutan classics, spiritual heartland immersions, and off-the-beaten-path expeditions, each fully itinerarized.",
+    path: "/tours",
+});
+
 export default async function ToursPage() {
   const tours = await getAllTours();
 

@@ -180,7 +180,10 @@ export async function getExperiencesByDestination(destinationId?: string, slug?:
     }
 
     for (const ref of [destinationId, slug].filter(Boolean) as string[]) {
-        const { data, error } = await supabase.from(TABLE).select("*").contains("destinations", [ref]);
+        const { data, error } = await supabase
+            .from(TABLE)
+            .select("*")
+            .contains("destinations", JSON.stringify([ref]));
         if (error) throw error;
         collect(data);
     }

@@ -3,6 +3,16 @@ import { Destination } from "./schema";
 import { DestinationsGrid } from "./components/destinations-grid";
 import { PageHeader } from "@/components/common/page-header";
 
+import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/site";
+
+export const metadata: Metadata = buildMetadata({
+    title: "Bhutan Travel Destinations by Region",
+    description:
+        "Explore Bhutan's 20 dzongkhags — from Paro's Tiger's Nest and the Thimphu valley to the remote alpine reaches of Haa, Gasa, and Lhuentse. Find your region and start planning.",
+    path: "/destinations",
+});
+
 export default async function DestinationsPage() {
     const destinations = (await getDestinations()) as Destination[];
 
