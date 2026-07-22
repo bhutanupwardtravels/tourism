@@ -6,6 +6,8 @@ import { TourOverview } from "./components/tour-overview";
 import { getTourBySlug, getRelatedTours } from "../actions";
 import CallToAction from "@/components/common/call-to-action";
 import { TourBookingCard } from "./components/tour-booking-card";
+import { JsonLd } from "@/components/common/json-ld";
+import { tourJsonLd, breadcrumbJsonLd } from "@/lib/structured-data";
 
 import type { Metadata } from "next";
 import { listSlugs } from "@/lib/data/slugs";
@@ -45,6 +47,14 @@ export default async function TourPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-white text-black">
+      <JsonLd data={tourJsonLd(tour)} />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Tours", path: "/tours" },
+          { name: tour.title, path: `/tours/${slug}` },
+        ])}
+      />
       <TourHero
         title={tour.title}
         image={tour.image}

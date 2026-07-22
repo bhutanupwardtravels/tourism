@@ -6,6 +6,8 @@ import { VisualGallery } from "@/components/common/visual-gallery";
 import { LocationMap } from "@/components/common/location-map";
 import { RelatedHotels } from "./components/related-hotels";
 import CallToAction from "@/components/common/call-to-action";
+import { JsonLd } from "@/components/common/json-ld";
+import { hotelJsonLd, breadcrumbJsonLd } from "@/lib/structured-data";
 
 import type { Metadata } from "next";
 import { listSlugs } from "@/lib/data/slugs";
@@ -44,6 +46,14 @@ export default async function HotelPage({ params }: PageProps) {
 
     return (
         <div className="min-h-screen bg-white text-black font-sans">
+            <JsonLd data={hotelJsonLd(hotel)} />
+            <JsonLd
+                data={breadcrumbJsonLd([
+                    { name: "Home", path: "/" },
+                    { name: "Hotels", path: "/hotels" },
+                    { name: hotel.name, path: `/hotels/${slug}` },
+                ])}
+            />
             <HotelHero
                 name={hotel.name}
                 image={hotel.image}
@@ -63,6 +73,7 @@ export default async function HotelPage({ params }: PageProps) {
                 images={hotel.gallery && hotel.gallery.length > 0 ? hotel.gallery : [hotel.image]}
                 title="Interior & Soul"
                 subtitle="// architectural narrative"
+                imageAlt={hotel.name}
             />
 
             {/* Map Section */}

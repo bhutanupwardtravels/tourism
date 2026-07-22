@@ -17,6 +17,7 @@ export function ExperienceGallery({ experience }: ExperienceGalleryProps) {
       images={images}
       title="The Visual Experience"
       subtitle={`// journey: ${experience.category}`}
+      imageAlt={experience.title}
     />
   );
 }

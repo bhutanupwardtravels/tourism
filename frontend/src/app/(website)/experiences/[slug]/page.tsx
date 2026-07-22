@@ -7,6 +7,8 @@ import { ExperienceGallery } from "./components/experience-gallery";
 import { getExperienceBySlug, getAllExperiences } from "../actions";
 import { ExperienceCarousel } from "./components/experience-carousel";
 import { ExperienceMap } from "./components/experience-map";
+import { JsonLd } from "@/components/common/json-ld";
+import { experienceJsonLd, breadcrumbJsonLd } from "@/lib/structured-data";
 
 import type { Metadata } from "next";
 import { listSlugs } from "@/lib/data/slugs";
@@ -46,6 +48,14 @@ export default async function ExperienceDetailPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-white text-black">
+      <JsonLd data={experienceJsonLd(experience)} />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Experiences", path: "/experiences" },
+          { name: experience.title, path: `/experiences/${slug}` },
+        ])}
+      />
       <ExperienceHero
         title={experience.title}
         image={experience.image}

@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/common/page-header";
+import { buildMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
     title: "Privacy Policy",
     description:
         "How Bhutan Upward Travels collects, uses, and protects your personal information.",
-};
+    path: "/privacy",
+});
 
 const sections = [
     {

@@ -10,9 +10,14 @@ interface VisualGalleryProps {
     images: string[];
     title?: string;
     subtitle?: string;
+    /** Entity name (hotel/experience title) used to build descriptive alt text per photo. */
+    imageAlt?: string;
 }
 
-export function VisualGallery({ images, title = "Visual Experience", subtitle = "// curated moments" }: VisualGalleryProps) {
+export function VisualGallery({ images, title = "Visual Experience", subtitle = "// curated moments", imageAlt }: VisualGalleryProps) {
+    const altFor = (index: number) =>
+        imageAlt ? `${imageAlt} — photo ${index + 1}` : `Gallery photo ${index + 1}`;
+
     const [selectedImage, setSelectedImage] = useState<number | null>(null);
     const containerRef = useRef(null);
     const { scrollYProgress } = useScroll({
@@ -97,7 +102,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                             style={{ y: useTransform(scrollYProgress, [0, 1], [0, -20]) }}
                             src={images[0]}
                             className="w-full h-full object-cover"
-                            alt="Gallery Hero"
+                            alt={altFor(0)}
                         />
                     </motion.div>
 
@@ -115,7 +120,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                                 style={{ y: useTransform(scrollYProgress, [0, 1], [10, -10]) }}
                                 src={images[1]}
                                 className="w-full h-full object-contain"
-                                alt="Gallery detail L1"
+                                alt={altFor(1)}
                             />
                         </motion.div>
                     )}
@@ -134,7 +139,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                                 style={{ y: useTransform(scrollYProgress, [0, 1], [30, -30]) }}
                                 src={images[2]}
                                 className="w-full h-full object-contain"
-                                alt="Gallery detail L2"
+                                alt={altFor(2)}
                             />
                         </motion.div>
                     )}
@@ -153,7 +158,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                                 style={{ y: useTransform(scrollYProgress, [0, 1], [0, -40]) }}
                                 src={images[3]}
                                 className="w-full h-full object-cover"
-                                alt="Gallery detail BM1"
+                                alt={altFor(3)}
                             />
                         </motion.div>
                     )}
@@ -172,7 +177,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                                 style={{ y: useTransform(scrollYProgress, [0, 1], [20, -50]) }}
                                 src={images[4]}
                                 className="w-full h-full object-cover"
-                                alt="Gallery detail BM2"
+                                alt={altFor(4)}
                             />
                         </motion.div>
                     )}
@@ -191,7 +196,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                                 style={{ y: useTransform(scrollYProgress, [0, 1], [-10, 10]) }}
                                 src={images[5]}
                                 className="w-full h-full object-cover"
-                                alt="Gallery detail R1"
+                                alt={altFor(5)}
                             />
                         </motion.div>
                     )}
@@ -210,7 +215,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                                 style={{ y: useTransform(scrollYProgress, [0, 1], [-20, 20]) }}
                                 src={images[6]}
                                 className="w-full h-full object-cover"
-                                alt="Gallery detail R2"
+                                alt={altFor(6)}
                             />
                         </motion.div>
                     )}
@@ -229,7 +234,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                                 style={{ y: useTransform(scrollYProgress, [0, 1], [-30, 30]) }}
                                 src={images[7]}
                                 className="w-full h-full object-contain"
-                                alt="Gallery detail R3"
+                                alt={altFor(7)}
                             />
                         </motion.div>
                     )}
@@ -285,7 +290,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                                     transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                                     src={images[selectedImage]}
                                     className="max-w-full max-h-full object-contain rounded-sm"
-                                    alt={`Gallery Image ${selectedImage + 1}`}
+                                    alt={altFor(selectedImage)}
                                 />
                             </AnimatePresence>
 
@@ -315,7 +320,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                                         {img && (
                                             <Image
                                                 src={img}
-                                                alt={`Thumbnail ${idx + 1}`}
+                                                alt={altFor(idx)}
                                                 fill
                                                 sizes="80px"
                                                 className="object-cover"

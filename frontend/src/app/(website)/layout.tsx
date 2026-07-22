@@ -2,6 +2,8 @@ import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { PageTransition } from "@/components/layout/page-transition";
 import { getContactContent, ContactContent } from "@/lib/data/contact";
+import { JsonLd } from "@/components/common/json-ld";
+import { organizationJsonLd } from "@/lib/structured-data";
 import NextTopLoader from "nextjs-toploader";
 
 // Public pages are statically rendered and revalidated in the background.
@@ -23,6 +25,7 @@ export default async function SiteLayout({
 
   return (
     <>
+      <JsonLd data={organizationJsonLd(contact)} />
       <NextTopLoader color="#d97706" height={2} showSpinner={false} />
       <Header contact={contact} />
       <main className="min-h-screen">

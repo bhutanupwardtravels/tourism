@@ -85,9 +85,9 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                     <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.6em] block font-bold">
                         // request received
                     </span>
-                    <h1 className="text-5xl font-light tracking-tighter uppercase text-black">
+                    <h2 className="text-5xl font-light tracking-tighter uppercase text-black">
                         Request <span className="italic font-serif normal-case text-amber-600">Confirmed</span>
-                    </h1>
+                    </h2>
                     <p className="text-black leading-relaxed text-xl font-light italic max-w-lg mx-auto">
                         "Your request for {selectedTour?.title} has been received. Our team will review your application and respond shortly."
                     </p>

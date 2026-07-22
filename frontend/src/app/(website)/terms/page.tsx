@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/common/page-header";
+import { buildMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
     title: "Terms & Conditions",
     description:
         "Terms and conditions governing the use of Bhutan Upward Travels services and bookings.",
-};
+    path: "/terms",
+});
 
 const sections = [
     {

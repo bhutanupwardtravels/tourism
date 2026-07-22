@@ -10,8 +10,26 @@ import { TourCarousel } from "../../components/tour-carousel";
 import CallToAction from "@/components/common/call-to-action";
 import { TourBookingCard } from "../../components/tour-booking-card";
 
+import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/site";
+
 interface PageProps {
   params: Promise<{ slug: string; day: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug, day } = await params;
+  const dayNumber = parseInt(day);
+  const data = await getTourDay(slug, dayNumber);
+  if (!data) return {};
+
+  const { dayData, tour } = data;
+  return buildMetadata({
+    title: `Day ${dayNumber}: ${dayData.title} — ${tour.title}`,
+    description: dayData.description,
+    image: dayData.image || tour.image,
+    path: `/tours/${slug}/day/${dayNumber}`,
+  });
 }
 
 export default async function TourDayPage({ params }: PageProps) {

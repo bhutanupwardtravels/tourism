@@ -13,6 +13,8 @@ import { DestinationFestivals } from "./components/destination-festivals";
 import { DestinationHotels } from "./components/destination-hotels";
 import { DestinationCarousel } from "./components/destination-carousel";
 import CallToAction from "@/components/common/call-to-action";
+import { JsonLd } from "@/components/common/json-ld";
+import { destinationJsonLd, breadcrumbJsonLd } from "@/lib/structured-data";
 
 import type { Metadata } from "next";
 import { listSlugs } from "@/lib/data/slugs";
@@ -64,6 +66,14 @@ export default async function DestinationPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-white text-black">
+      <JsonLd data={destinationJsonLd(destination)} />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Destinations", path: "/destinations" },
+          { name: destination.name, path: `/destinations/${slug}` },
+        ])}
+      />
       {/* Hero Banner */}
       <DestinationHero
         name={destination.name}

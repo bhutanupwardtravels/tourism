@@ -12,6 +12,17 @@ import { getFeaturedDestinations } from "./destinations/actions";
 import { ExperienceTypes } from "@/components/home/experience-types";
 import { getFeaturedExperiences, getExperienceTypes } from "./experiences/actions";
 
+import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/site";
+
+export const metadata: Metadata = buildMetadata({
+    title: "Bhutan Tours & Travel Packages",
+    description:
+        "Curated Bhutan tours, custom itineraries, and boutique stays — plan a fully guided journey through Paro, Thimphu, Punakha, and beyond with local specialists.",
+    image: "/images/hero-poster.jpg",
+    path: "/",
+});
+
 export default async function Home() {
   const [
     featuredTours,
