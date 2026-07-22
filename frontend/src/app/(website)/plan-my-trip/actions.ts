@@ -62,7 +62,7 @@ export async function getPlanMyTripData(): Promise<PlanMyTripData> {
 }
 
 import { headers } from "next/headers";
-import { sendMail } from "@/lib/mail";
+import { sendMail, senders } from "@/lib/mail";
 import { emailTemplates } from "@/lib/email/templates";
 import { publicTourRequestSchema } from "./schema";
 import { checkRateLimit } from "@/lib/security/rate-limit";
@@ -130,16 +130,23 @@ export async function submitTourRequest(data: any) {
         //    deliver on serverless, where the function may freeze right after
         //    returning. Email failures are logged but don't fail the request —
         //    the lead is already saved in the DB.
+        const operatorEmail = process.env.OPERATOR_EMAIL || "info@bhutanupwardtravels.com";
         const mailResults = await Promise.allSettled([
             sendMail({
                 to: parsed.data.email,
                 subject: "Your Tour Request - Bhutan Upward Travels",
                 html: emailTemplates.userConfirmation(result),
+                from: senders.confirmation(),
+                // hello@ may not be a monitored inbox yet — route replies to the operator.
+                replyTo: operatorEmail,
             }),
             sendMail({
-                to: process.env.OPERATOR_EMAIL || "info@bhutanupwardtravels.com",
+                to: operatorEmail,
                 subject: "New Tour Request Notification",
                 html: emailTemplates.operatorNotification(result),
+                from: senders.operatorNotification(),
+                // Lets the operator hit "reply" and email the customer directly.
+                replyTo: parsed.data.email,
             }),
         ]);
         mailResults.forEach((r, i) => {

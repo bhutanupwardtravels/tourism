@@ -1,4 +1,4 @@
-import { sendMail } from "../src/lib/mail";
+import { sendMail, senders } from "../src/lib/mail";
 import { emailTemplates } from "../src/lib/email/templates";
 import { RequestStatus } from "../src/app/admin/tour-requests/types";
 import dotenv from "dotenv";
@@ -24,27 +24,54 @@ async function testEmail() {
         updatedAt: new Date().toISOString(),
     };
 
+    const operatorEmail = process.env.OPERATOR_EMAIL || "mahbus.dev@gmail.com";
+
     console.log("1. Testing User Confirmation Email...");
     const userResult = await sendMail({
         to: mockData.email,
         subject: "TEST: Your Tour Request - Bhutan Upward Travels",
         html: emailTemplates.userConfirmation(mockData as any),
+        from: senders.confirmation(),
+        replyTo: operatorEmail,
     });
     console.log("User email result:", userResult);
 
     console.log("\n2. Testing Operator Notification Email...");
     const operatorResult = await sendMail({
-        to: process.env.OPERATOR_EMAIL || "mahbus.dev@gmail.com",
+        to: operatorEmail,
         subject: "TEST: New Tour Request Notification",
         html: emailTemplates.operatorNotification(mockData as any),
+        from: senders.operatorNotification(),
+        replyTo: mockData.email,
     });
     console.log("Operator email result:", operatorResult);
 
-    if (userResult.success && operatorResult.success) {
+    console.log("\n3. Testing Request Approved Email...");
+    const approvedResult = await sendMail({
+        to: mockData.email,
+        subject: "TEST: Your Tour Request is Approved - Bhutan Upward Travels",
+        html: emailTemplates.requestApproved(mockData as any),
+        from: senders.approved(),
+        replyTo: operatorEmail,
+    });
+    console.log("Approved email result:", approvedResult);
+
+    console.log("\n4. Testing Request Rejected Email...");
+    const rejectedResult = await sendMail({
+        to: mockData.email,
+        subject: "TEST: Update on Your Tour Request - Bhutan Upward Travels",
+        html: emailTemplates.requestRejected(mockData as any),
+        from: senders.rejected(),
+        replyTo: operatorEmail,
+    });
+    console.log("Rejected email result:", rejectedResult);
+
+    if (userResult.success && operatorResult.success && approvedResult.success && rejectedResult.success) {
         console.log("\n✅ All tests passed!");
     } else {
         console.log("\n❌ Some tests failed. Check the errors above.");
     }
 }
+
 
 testEmail();
