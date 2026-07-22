@@ -110,6 +110,11 @@ export function Footer({ contact }: FooterProps) {
                   About Us
                 </Link>
               </li>
+              <li>
+                <Link href="/bhutan-travel-guide" className="hover:text-gray-300 transition-colors">
+                  Travel Guide
+                </Link>
+              </li>
             </ul>
           </div>
 

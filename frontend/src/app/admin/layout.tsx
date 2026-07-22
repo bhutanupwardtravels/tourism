@@ -91,6 +91,11 @@ const menuGroups = [
         href: "/admin/contact",
       },
       {
+        iconName: "help-circle" as const,
+        label: "FAQ",
+        href: "/admin/faq",
+      },
+      {
         iconName: "settings" as const,
         label: "Fee Settings",
         href: "/admin/settings",

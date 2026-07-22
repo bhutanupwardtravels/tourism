@@ -22,7 +22,7 @@ export function Header({ contact }: HeaderProps) {
 
   const isHome = pathname === "/";
   // Pages with white backgrounds requiring dark text when not scrolled
-  const lightBgPages = ["/destinations", "/experiences", "/tours", "/hotels", "/terms", "/privacy"];
+  const lightBgPages = ["/destinations", "/experiences", "/tours", "/hotels", "/terms", "/privacy", "/bhutan-travel-guide"];
   const isDarkText = lightBgPages.includes(pathname) && !isScrolled;
 
   useMotionValueEvent(scrollY, "change", (latest) => {

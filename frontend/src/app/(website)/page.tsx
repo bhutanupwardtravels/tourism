@@ -11,6 +11,8 @@ import { CompanyIntro } from "@/components/home/company-intro";
 import { getFeaturedDestinations } from "./destinations/actions";
 import { ExperienceTypes } from "@/components/home/experience-types";
 import { getFeaturedExperiences, getExperienceTypes } from "./experiences/actions";
+import { FaqSection } from "@/components/common/faq-section";
+import { getFaqContent } from "@/lib/data/faq";
 
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/site";
@@ -30,12 +32,14 @@ export default async function Home() {
     featuredExperiences,
     featuredDestinations,
     experienceTypes,
+    faqContent,
   ] = await Promise.all([
     getTopPriorityTours(5),
     getBestHotels(6),
     getFeaturedExperiences(6),
     getFeaturedDestinations(6),
     getExperienceTypes(),
+    getFaqContent(),
   ]);
 
   return (
@@ -48,6 +52,13 @@ export default async function Home() {
       <Experiences experiences={featuredExperiences} />
       <CompanyIntro />
       <BestHotels hotels={bestHotels} />
+      <FaqSection
+        label="// know before you go"
+        title="Bhutan Travel FAQ"
+        bgText="FAQ"
+        items={faqContent.items.filter((item) => item.homepage)}
+        className="border-t border-black/5"
+      />
       <CallToAction />
     </div>
   );

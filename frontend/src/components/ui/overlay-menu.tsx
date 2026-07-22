@@ -122,6 +122,15 @@ export function OverlayMenu({ isOpen, onClose, contact }: OverlayMenuProps) {
                 </motion.div>
                 <motion.div variants={itemVariants}>
                   <Link
+                    href="/bhutan-travel-guide"
+                    className="text-4xl lg:text-6xl font-light hover:text-gray-300 transition-colors"
+                    onClick={onClose}
+                  >
+                    Travel Guide
+                  </Link>
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                  <Link
                     href="/enquire"
                     className="text-4xl lg:text-6xl font-light hover:text-gray-300 transition-colors"
                     onClick={onClose}
