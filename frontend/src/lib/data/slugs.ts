@@ -13,11 +13,16 @@ export async function listSlugEntries(
 ): Promise<SlugEntry[]> {
     try {
         const supabase = supabaseAdmin();
-        const { data } = await supabase.from(table).select("slug, updated_at");
+        const { data, error } = await supabase.from(table).select("slug, updated_at");
+        if (error) {
+            console.error(`listSlugEntries(${table}) failed:`, error.message);
+            return [];
+        }
         return (data ?? [])
             .filter((row) => Boolean(row.slug))
             .map((row) => ({ slug: row.slug, updatedAt: row.updated_at ?? null }));
-    } catch {
+    } catch (err) {
+        console.error(`listSlugEntries(${table}) threw:`, err);
         return [];
     }
 }
@@ -40,7 +45,11 @@ export interface TourDayEntry {
 export async function listTourDayEntries(): Promise<TourDayEntry[]> {
     try {
         const supabase = supabaseAdmin();
-        const { data } = await supabase.from("tours").select("slug, days, updated_at");
+        const { data, error } = await supabase.from("tours").select("slug, days, updated_at");
+        if (error) {
+            console.error("listTourDayEntries failed:", error.message);
+            return [];
+        }
         return (data ?? []).flatMap((row) => {
             const days = Array.isArray(row.days) ? row.days : [];
             return days
@@ -52,7 +61,8 @@ export async function listTourDayEntries(): Promise<TourDayEntry[]> {
                     updatedAt: row.updated_at ?? null,
                 }));
         });
-    } catch {
+    } catch (err) {
+        console.error("listTourDayEntries threw:", err);
         return [];
     }
 }

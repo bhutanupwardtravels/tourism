@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { getPlanMyTripData } from "./actions";
 import PlanMyTripClient from "./components/plan-my-trip-client";
+import { PlanMyTripHero } from "./components/plan-my-trip-hero";
 
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/site";
@@ -16,7 +17,7 @@ export default async function PlanMyTripPage() {
     const data = await getPlanMyTripData();
 
     return (
-        <Suspense fallback={<div className="min-h-screen bg-white" />}>
+        <Suspense fallback={<div className="min-h-screen bg-white pb-32"><PlanMyTripHero /></div>}>
             <PlanMyTripClient
                 packages={data.packages}
                 destinations={data.destinations}

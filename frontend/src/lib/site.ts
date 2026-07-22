@@ -15,7 +15,10 @@ export function siteUrl(): string {
 function truncate(text: string, max = 160): string {
     const clean = text.replace(/\s+/g, " ").trim();
     if (clean.length <= max) return clean;
-    return `${clean.slice(0, max - 1).trimEnd()}…`;
+    const sliced = clean.slice(0, max - 1);
+    const lastSpace = sliced.lastIndexOf(" ");
+    const boundary = lastSpace > 0 ? sliced.slice(0, lastSpace) : sliced;
+    return `${boundary.trimEnd()}…`;
 }
 
 interface PageMeta {

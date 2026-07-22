@@ -44,12 +44,14 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <h1 className="text-6xl md:text-9xl font-light text-white tracking-tighter mb-4 uppercase mix-blend-overlay opacity-90">
-            Bhutan
+          <h1>
+            <span className="block text-6xl md:text-9xl font-light text-white tracking-tighter mb-4 uppercase mix-blend-overlay opacity-90">
+              Bhutan
+            </span>
+            <span className="block font-mono text-sm md:text-lg tracking-[0.3em] uppercase text-white/80 mb-12">
+              Tours, Experiences &amp; Custom Travel Packages
+            </span>
           </h1>
-          <p className="font-mono text-sm md:text-lg tracking-[0.3em] uppercase text-white/80 mb-12">
-            Tours, Experiences &amp; Custom Travel Packages
-          </p>
         </motion.div>
 
         <motion.div

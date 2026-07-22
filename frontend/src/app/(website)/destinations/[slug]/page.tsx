@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const destination = await getDestinationBySlug(slug);
     if (!destination) return {};
     return buildMetadata({
-        title: destination.name,
+        title: `${destination.name} Travel Guide — ${destination.region}`,
         description: destination.description,
         image: destination.image,
         path: `/destinations/${slug}`,

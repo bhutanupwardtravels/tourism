@@ -25,6 +25,46 @@ export function organizationJsonLd(contact: ContactContent | null) {
     };
 }
 
+export function websiteJsonLd() {
+    return {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: SITE_NAME,
+        url: siteUrl(),
+    };
+}
+
+interface CollectionItemLike {
+    name: string;
+    path: string;
+    image?: string;
+}
+
+export function collectionPageJsonLd(params: {
+    name: string;
+    description: string;
+    path: string;
+    items: CollectionItemLike[];
+}) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        name: params.name,
+        description: params.description,
+        url: abs(params.path),
+        mainEntity: {
+            "@type": "ItemList",
+            itemListElement: params.items.map((item, index) => ({
+                "@type": "ListItem",
+                position: index + 1,
+                name: item.name,
+                url: abs(item.path),
+                ...(item.image ? { image: abs(item.image) } : {}),
+            })),
+        },
+    };
+}
+
 export function breadcrumbJsonLd(items: { name: string; path: string }[]) {
     return {
         "@context": "https://schema.org",

@@ -4,6 +4,8 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import CallToAction from "@/components/common/call-to-action";
 import { HotelsHeader } from "./components/hotels-header";
+import { JsonLd } from "@/components/common/json-ld";
+import { collectionPageJsonLd } from "@/lib/structured-data";
 
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/site";
@@ -20,6 +22,18 @@ export default async function HotelsPage() {
 
     return (
         <div className="min-h-screen bg-white text-black overflow-hidden">
+            <JsonLd
+                data={collectionPageJsonLd({
+                    name: "Bhutan Hotels & Luxury Resorts",
+                    description: "Curated Bhutanese hotels, lodges, and resorts across every region.",
+                    path: "/hotels",
+                    items: hotels.map((hotel) => ({
+                        name: hotel.name,
+                        path: `/hotels/${hotel.slug}`,
+                        image: hotel.image,
+                    })),
+                })}
+            />
             <HotelsHeader />
 
             <div className="container mx-auto px-6 pb-40">

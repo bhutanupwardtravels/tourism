@@ -9,6 +9,8 @@ import { TravelMap } from "@/components/common/travel-map";
 import { TourCarousel } from "../../components/tour-carousel";
 import CallToAction from "@/components/common/call-to-action";
 import { TourBookingCard } from "../../components/tour-booking-card";
+import { JsonLd } from "@/components/common/json-ld";
+import { breadcrumbJsonLd } from "@/lib/structured-data";
 
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/site";
@@ -25,7 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const { dayData, tour } = data;
   return buildMetadata({
-    title: `Day ${dayNumber}: ${dayData.title} — ${tour.title}`,
+    title: `Day ${dayNumber} — ${tour.title}`,
     description: dayData.description,
     image: dayData.image || tour.image,
     path: `/tours/${slug}/day/${dayNumber}`,
@@ -49,6 +51,14 @@ export default async function TourDayPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-white text-black">
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Tours", path: "/tours" },
+          { name: tour.title, path: `/tours/${slug}` },
+          { name: `Day ${dayNumber}`, path: `/tours/${slug}/day/${dayNumber}` },
+        ])}
+      />
       <DayHero
         dayNumber={dayNumber}
         title={dayData.title}

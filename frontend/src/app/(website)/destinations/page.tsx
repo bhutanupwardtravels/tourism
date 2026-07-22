@@ -2,6 +2,8 @@ import { getDestinations } from "./actions";
 import { Destination } from "./schema";
 import { DestinationsGrid } from "./components/destinations-grid";
 import { PageHeader } from "@/components/common/page-header";
+import { JsonLd } from "@/components/common/json-ld";
+import { collectionPageJsonLd } from "@/lib/structured-data";
 
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/site";
@@ -18,6 +20,18 @@ export default async function DestinationsPage() {
 
     return (
         <div className="min-h-screen bg-white text-black pb-24 overflow-hidden">
+            <JsonLd
+                data={collectionPageJsonLd({
+                    name: "Bhutan Travel Destinations",
+                    description: "Bhutan's dzongkhags and regions, mapped for travel planning.",
+                    path: "/destinations",
+                    items: destinations.map((destination) => ({
+                        name: destination.name,
+                        path: `/destinations/${destination.slug}`,
+                        image: destination.image,
+                    })),
+                })}
+            />
             <PageHeader
                 label="// explore regions"
                 title="Our Destinations"
