@@ -93,8 +93,8 @@ export async function updateTourRequestStatus(id: string, status: RequestStatus)
                 const mail = await sendMail({
                     to: tourRequest.email,
                     subject: isApproved
-                        ? "Your Tour Request is Approved - Bhutan Upward Travels"
-                        : "Update on Your Tour Request - Bhutan Upward Travels",
+                        ? `Your ${tourRequest.tourName || "Tour Request"} is Approved - Bhutan Upward Travels`
+                        : `Update on Your ${tourRequest.tourName || "Tour Request"} - Bhutan Upward Travels`,
                     html: isApproved
                         ? emailTemplates.requestApproved(tourRequest)
                         : emailTemplates.requestRejected(tourRequest),

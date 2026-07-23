@@ -142,7 +142,7 @@ export async function submitTourRequest(data: any) {
             }),
             sendMail({
                 to: operatorEmail,
-                subject: "New Tour Request Notification",
+                subject: `${parsed.data.firstName} ${parsed.data.lastName} — ${result.tourName || "Custom Trip"}`,
                 html: emailTemplates.operatorNotification(result),
                 from: senders.operatorNotification(),
                 // Lets the operator hit "reply" and email the customer directly.
