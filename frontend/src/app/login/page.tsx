@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { loginAction } from "./actions";
 import { Eye, EyeOff } from "lucide-react";
@@ -9,8 +9,15 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
+/** Only allow same-origin admin paths — never let a callbackUrl bounce the user off-site. */
+function safeCallbackUrl(raw: string | null): string {
+    if (!raw || !raw.startsWith("/admin/")) return "/admin/experiences";
+    return raw;
+}
+
 export default function AdminLoginPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [email, setEmail] = useState("");
@@ -28,7 +35,7 @@ export default function AdminLoginPage() {
                 toast.error(result.error);
             } else {
                 toast.success("Welcome back, Admin");
-                router.push("/admin/experiences");
+                router.push(safeCallbackUrl(searchParams.get("callbackUrl")));
                 router.refresh();
             }
         } catch (error) {

@@ -33,9 +33,11 @@ export async function proxy(request: NextRequest) {
     const role = (user?.app_metadata?.role as string) ?? (user?.user_metadata?.role as string);
 
     if (!user || role !== "admin") {
+        const callbackUrl = `${request.nextUrl.pathname}${request.nextUrl.search}`;
         const loginUrl = request.nextUrl.clone();
         loginUrl.pathname = "/login";
         loginUrl.search = "";
+        loginUrl.searchParams.set("callbackUrl", callbackUrl);
         return NextResponse.redirect(loginUrl);
     }
 
