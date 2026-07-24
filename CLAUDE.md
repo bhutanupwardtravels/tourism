@@ -73,7 +73,7 @@ npm run seed:admin
 - Data access is organized by entity (tours, destinations, experiences, etc.)
 - Each entity has a dedicated file in `src/lib/data/` with CRUD operations
 - Zod schemas are defined in corresponding `schema.ts` files for validation
-- Schema lives in `supabase/migrations/`; run it in the Supabase SQL editor (or via supabase CLI) when creating a project
+- Schema lives in `frontend/supabase/migrations/`; run it in the Supabase SQL editor (or via supabase CLI) when creating a project
 - Admin users live in Supabase Auth (not an app table); role is stored in `app_metadata.role`
 
 ### Authentication
@@ -109,6 +109,16 @@ The public website includes:
 - Interactive map components
 - Enquiry forms with email notifications
 - Responsive design for all device sizes
+
+### SEO / AI Discoverability
+
+- `src/lib/structured-data.ts` builds JSON-LD for tours, destinations, etc.
+- `src/app/llms.txt/route.ts` and `src/app/sitemap.ts` / `robots.ts` are route handlers, not static files
+- `src/lib/content/bhutan-faq.ts` holds FAQ content surfaced on public pages
+
+### Security Utilities
+
+- `src/lib/security/rate-limit.ts` and `src/lib/security/turnstile.ts` back enquiry/contact form abuse protection
 
 ## Testing
 

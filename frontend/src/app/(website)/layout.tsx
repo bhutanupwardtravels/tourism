@@ -4,6 +4,7 @@ import { PageTransition } from "@/components/layout/page-transition";
 import { getContactContent, ContactContent } from "@/lib/data/contact";
 import { JsonLd } from "@/components/common/json-ld";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/structured-data";
+import { ChatWidget } from "@/components/chat/chat-widget";
 import NextTopLoader from "nextjs-toploader";
 
 // Public pages are statically rendered and revalidated in the background.
@@ -33,6 +34,7 @@ export default async function SiteLayout({
         <PageTransition>{children}</PageTransition>
       </main>
       <Footer contact={contact} />
+      <ChatWidget />
     </>
   );
 }
