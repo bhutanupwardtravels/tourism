@@ -6,6 +6,13 @@ import { getAllCosts } from "@/lib/data/settings";
 import { getAboutContent } from "@/lib/data/about";
 import { getContactContent } from "@/lib/data/contact";
 
+// SECURITY BOUNDARY: this file is the entire set of data the chatbot can see.
+// Only fetch tables that are already public-facing content (same info shown
+// elsewhere on the site). Never import tour-requests (customer PII: names,
+// emails, phone numbers) or users/auth data here — the model can't leak what
+// it's never given, so this list is the real access-control boundary, not
+// just the system prompt's wording.
+
 // Cached so a live-catalog fetch isn't triggered on every chat message; the
 // underlying content (tours, destinations, experiences, hotels, costs, about,
 // contact) changes rarely enough that a short TTL keeps the assistant's
