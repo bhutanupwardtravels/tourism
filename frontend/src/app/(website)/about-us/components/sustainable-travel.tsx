@@ -5,11 +5,14 @@ import { SustainabilityItem } from "../schema";
 
 interface SustainableTravelProps {
   items: SustainabilityItem[];
+  title?: string;
   intro?: string;
   subtitle?: string;
 }
 
-export function SustainableTravel({ items, intro, subtitle }: SustainableTravelProps) {
+export function SustainableTravel({ items, title, intro, subtitle }: SustainableTravelProps) {
+  const titleWords = (title || "Conservation Protocol").split(" ");
+
   return (
     <section className="py-40 bg-neutral-900 text-white relative overflow-hidden">
       {/* Background Glow */}
@@ -26,7 +29,7 @@ export function SustainableTravel({ items, intro, subtitle }: SustainableTravelP
             // {subtitle || "philosophical framework"}
           </motion.span>
           <h2 className="text-5xl md:text-8xl font-light tracking-tighter uppercase leading-tight mb-8">
-            Conservation <span className="italic font-serif normal-case text-amber-500">Protocol</span>
+            {titleWords[0]} <span className="italic font-serif normal-case text-amber-500">{titleWords.slice(1).join(" ")}</span>
           </h2>
           {intro && (
             <p className="max-w-3xl mx-auto text-xl text-gray-400 font-light leading-relaxed italic">

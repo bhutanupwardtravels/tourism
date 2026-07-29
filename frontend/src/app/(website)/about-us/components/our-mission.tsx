@@ -5,10 +5,13 @@ import { MissionItem } from "../schema";
 
 interface OurMissionProps {
   items: MissionItem[];
+  title?: string;
   subtitle?: string;
 }
 
-export function OurMission({ items, subtitle }: OurMissionProps) {
+export function OurMission({ items, title, subtitle }: OurMissionProps) {
+  const titleWords = (title || "Mission Parameters").split(" ");
+
   return (
     <section className="py-40 bg-neutral-950 text-white relative overflow-hidden">
       {/* Tactical Background Elements */}
@@ -28,7 +31,7 @@ export function OurMission({ items, subtitle }: OurMissionProps) {
               // {subtitle || "strategic objectives"}
             </span>
             <h2 className="text-5xl md:text-[6rem] font-light tracking-tighter uppercase leading-none">
-              Mission <span className="italic font-serif normal-case text-amber-500">Parameters</span>
+              {titleWords[0]} <span className="italic font-serif normal-case text-amber-500">{titleWords.slice(1).join(" ")}</span>
             </h2>
           </div>
           <div className="hidden md:block text-right">

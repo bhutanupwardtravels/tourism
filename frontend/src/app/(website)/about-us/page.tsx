@@ -58,10 +58,11 @@ export default async function AboutPage() {
       <AboutHero hero={heroProps} />
       <div className="relative">
         <OurStory story={storyProps} />
-        <OurMission items={aboutContent.mission.items} subtitle={aboutContent.mission.subtitle} />
+        <OurMission items={aboutContent.mission.items} title={aboutContent.mission.title} subtitle={aboutContent.mission.subtitle} />
         <OurPurpose purpose={purposeProps} />
         <SustainableTravel
           items={aboutContent.sustainable.items}
+          title={aboutContent.sustainable.title}
           intro={aboutContent.sustainable.intro}
           subtitle={aboutContent.sustainable.subtitle}
         />

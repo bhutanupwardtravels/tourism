@@ -111,7 +111,7 @@ export default function AboutUsPage() {
           image: formData.story.image,
           order: 1,
         }} />
-        <OurMission items={formData.mission.items} subtitle={formData.mission.subtitle} />
+        <OurMission items={formData.mission.items} title={formData.mission.title} subtitle={formData.mission.subtitle} />
         <OurPurpose purpose={{
           id: "our-purpose",
           title: formData.purpose.title,
@@ -122,6 +122,7 @@ export default function AboutUsPage() {
         }} />
         <SustainableTravel
           items={formData.sustainable.items}
+          title={formData.sustainable.title}
           intro={formData.sustainable.intro}
           subtitle={formData.sustainable.subtitle}
         />
