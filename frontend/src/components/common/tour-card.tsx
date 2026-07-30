@@ -46,19 +46,16 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
     const CardContent = (
         <>
             {/* Image Container */}
-            <div className={`relative aspect-16/10 overflow-hidden rounded-XS bg-neutral-100 border transition-colors duration-500 mb-8 ${isSelected ? 'border-amber-600 ring-2 ring-amber-600/20' : 'border-black/5'}`}>
+            <div className={`relative aspect-16/10 overflow-hidden rounded-xs bg-neutral-100 border transition-colors duration-500 mb-8 ${isSelected ? 'border-amber-600 ring-2 ring-amber-600/20' : 'border-black/5'}`}>
                 {tour.image && (
                     <FadeImage
                         src={tour.image}
                         alt={tour.title}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="object-cover transition-[opacity,transform] duration-700 saturate-[1.2] brightness-[1.1] group-hover:opacity-85 group-hover:scale-105"
+                        className="object-cover duration-1000 saturate-[1.2] brightness-[1.1] group-hover:scale-110"
                     />
                 )}
-                {/* Vibrant Overlays - Removing desaturating overlays */}
-                <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-700" />
-                <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity duration-700" />
 
                 {/* Uses priority instead of featured, assuming lower priority means higher importance or similar logic for 'Featured' tag could be derived from priority if needed. For now, checking if featured exists or derived. */}
                 {tour.featured && (

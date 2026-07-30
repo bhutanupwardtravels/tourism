@@ -26,8 +26,11 @@ export function FadeImage({ className, onLoad, priority, ...props }: ImageProps)
         {...props}
         priority={priority}
         className={cn(
+          // Base classes first so caller-provided duration/easing overrides win in twMerge.
+          // Tailwind v4 scale-* utilities animate the native `scale` property (not transform),
+          // so it must be listed explicitly for hover zooms to transition smoothly.
+          "transition-[opacity,transform,translate,scale,rotate] duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]",
           className,
-          "transition-[opacity,transform] duration-700 ease-out",
           !priority && !loaded ? "opacity-0" : "opacity-100"
         )}
         onLoad={(e) => {

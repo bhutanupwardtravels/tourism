@@ -16,11 +16,9 @@ export function ExperienceCard({ experience }: ExperienceCardProps) {
                 alt={experience.title}
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-cover transition-all duration-1000 saturate-[0.7] brightness-[1.05] group-hover:saturate-[1.2] group-hover:scale-110"
+                className="object-cover transition-transform duration-1000 group-hover:scale-110"
             />
         )}
-        <div className="absolute inset-0 bg-white/40 group-hover:bg-transparent transition-colors duration-700" />
-        <div className="absolute inset-0 bg-linear-to-t from-white via-white/5 to-transparent opacity-60 group-hover:opacity-20 transition-opacity duration-700" />
 
         {experience.category && (
           <div className="absolute top-6 left-6">

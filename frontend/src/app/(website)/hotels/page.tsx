@@ -66,11 +66,9 @@ export default async function HotelsPage() {
                                         alt={hotel.name}
                                         fill
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                        className="object-cover transition-all duration-1000 saturate-[0.8] group-hover:saturate-[1.2] group-hover:scale-110"
+                                        className="object-cover transition-transform duration-1000 group-hover:scale-110"
                                     />
                                 )}
-                                <div className="absolute inset-0 bg-white/20 group-hover:bg-transparent transition-colors duration-700" />
-                                <div className="absolute inset-0 bg-linear-to-t from-white via-white/5 to-transparent opacity-60 group-hover:opacity-10 transition-opacity duration-700" />
 
                                 <div className="absolute top-6 right-6 flex flex-col items-end gap-2">
                                     <span className="bg-black text-white px-3 py-1 font-mono text-[8px] uppercase tracking-[0.4em] z-20">

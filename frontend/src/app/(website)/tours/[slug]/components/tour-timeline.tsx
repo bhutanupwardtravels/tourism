@@ -45,12 +45,9 @@ export function TourTimeline({ days, slug }: TourTimelineProps) {
                           alt={day.title}
                           fill
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                          className="object-cover transition-all duration-1000 group-hover:scale-105"
+                          className="object-cover transition-transform duration-1000 group-hover:scale-110"
                       />
                   )}
-                  {/* Vibrant Overlays - Removing desaturating overlays */}
-                  <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-700" />
-                  <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity duration-700" />
 
                   <div className="absolute bottom-4 left-4">
                     <span className="font-mono text-[10px] text-white tracking-widest uppercase bg-black/40 backdrop-blur-md px-3 py-1.5 font-bold">
