@@ -9,11 +9,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AboutHero } from "@/app/(website)/about-us/components/about-hero";
 import { OurStory } from "@/app/(website)/about-us/components/our-story";
+import { Founder } from "@/app/(website)/about-us/components/founder";
 import { OurMission } from "@/app/(website)/about-us/components/our-mission";
 import { OurPurpose } from "@/app/(website)/about-us/components/our-purpose";
-import { SustainableTravel } from "@/app/(website)/about-us/components/sustainable-travel";
+import { TrustCredentials } from "@/app/(website)/about-us/components/trust-credentials";
 import { WhyBhutan } from "@/app/(website)/about-us/components/why-bhutan";
 import { getAboutContentAction, updateAboutContentAction } from "./actions";
 import { ImageUpload } from "@/components/admin/image-upload";
@@ -29,9 +31,11 @@ export default function AboutUsPage() {
   const [formData, setFormData] = useState<AboutContent>({
     hero: { title: "", subtitle: "", content: "", image: "" },
     story: { title: "", subtitle: "", content: "", image: "" },
+    founder: { title: "", subtitle: "", name: "", role: "", nationality: "", experience: "", bio: "", image: "" },
     mission: { title: "", subtitle: "", image: "", items: [] },
     purpose: { title: "", subtitle: "", content: "", image: "" },
-    sustainable: { title: "", subtitle: "", intro: "", image: "", items: [] },
+    credentials: { title: "", subtitle: "", licenseNumber: "", foundingYear: "", guideCredentials: "", emergencySupport: "", items: [] },
+    whyBhutan: { title: "", subtitle: "", items: [] },
   });
 
   useEffect(() => {
@@ -57,8 +61,8 @@ export default function AboutUsPage() {
       // Add existing images as fallback (if not changed in ImageUpload)
       formDataToSubmit.append("existingHeroImage", formData.hero.image);
       formDataToSubmit.append("existingStoryImage", formData.story.image);
+      formDataToSubmit.append("existingFounderImage", formData.founder.image);
       formDataToSubmit.append("existingPurposeImage", formData.purpose.image);
-      formDataToSubmit.append("existingSustainableImage", formData.sustainable.image);
 
       const result = await updateAboutContentAction(formDataToSubmit);
       if (result.success) {
@@ -111,6 +115,7 @@ export default function AboutUsPage() {
           image: formData.story.image,
           order: 1,
         }} />
+        <Founder founder={formData.founder} />
         <OurMission items={formData.mission.items} title={formData.mission.title} subtitle={formData.mission.subtitle} />
         <OurPurpose purpose={{
           id: "our-purpose",
@@ -120,56 +125,8 @@ export default function AboutUsPage() {
           image: formData.purpose.image,
           order: 2,
         }} />
-        <SustainableTravel
-          items={formData.sustainable.items}
-          title={formData.sustainable.title}
-          intro={formData.sustainable.intro}
-          subtitle={formData.sustainable.subtitle}
-        />
-        <WhyBhutan items={[
-          {
-            id: "gross-national-happiness",
-            title: "Gross National Happiness",
-            icon: "smile",
-            description: "Bhutan measures progress through Gross National Happiness rather than GDP, prioritizing the wellbeing of its people and environment over economic growth alone.",
-            order: 1
-          },
-          {
-            id: "pristine-nature",
-            title: "Pristine Nature",
-            icon: "mountain",
-            description: "With 72% forest coverage and a constitutional mandate to maintain at least 60% of the land under forest cover, Bhutan offers some of the world's most pristine landscapes.",
-            order: 2
-          },
-          {
-            id: "living-culture",
-            title: "Living Culture",
-            icon: "heart",
-            description: "In Bhutan, culture isn't preserved in museums—it's alive in daily life. From traditional dress to ancient festivals, Bhutanese culture thrives in the modern world.",
-            order: 3
-          },
-          {
-            id: "spiritual-heritage",
-            title: "Spiritual Heritage",
-            icon: "sparkles",
-            description: "Buddhism permeates every aspect of Bhutanese life, offering travelers a chance to explore profound spiritual traditions and practices in their authentic context.",
-            order: 4
-          },
-          {
-            id: "sustainable-development",
-            title: "Sustainable Development",
-            icon: "leaf",
-            description: "Bhutan's approach to development balances modernization with tradition, proving that progress and preservation can coexist harmoniously.",
-            order: 5
-          },
-          {
-            id: "exclusive-access",
-            title: "Exclusive Access",
-            icon: "key",
-            description: "Bhutan's high-value tourism policy means fewer crowds and more meaningful interactions, offering an exclusive and intimate travel experience.",
-            order: 6
-          }
-        ]} />
+        <TrustCredentials credentials={formData.credentials} />
+        <WhyBhutan items={formData.whyBhutan.items} title={formData.whyBhutan.title} subtitle={formData.whyBhutan.subtitle} />
       </div>
     );
   }
@@ -178,7 +135,8 @@ export default function AboutUsPage() {
   return (
     <form onSubmit={handleSave} className="h-full max-w-7xl mx-auto w-full flex-1 flex-col space-y-6 flex md:p-8 pt-6">
       <input type="hidden" name="missionItems" value={JSON.stringify(formData.mission.items)} />
-      <input type="hidden" name="sustainableItems" value={JSON.stringify(formData.sustainable.items)} />
+      <input type="hidden" name="trustItems" value={JSON.stringify(formData.credentials.items)} />
+      <input type="hidden" name="whyBhutanItems" value={JSON.stringify(formData.whyBhutan.items)} />
 
       <div className="flex items-center justify-between">
         <div>
@@ -242,6 +200,53 @@ export default function AboutUsPage() {
               <Textarea id="story-content" name="story-content" value={formData.story.content} onChange={(e) => setFormData({ ...formData, story: { ...formData.story, content: e.target.value } })} className="min-h-[150px]" />
             </div>
             <ImageUpload name="storyImage" label="Sidebar Image" defaultPreview={formData.story.image} />
+          </CardContent>
+        </Card>
+
+        {/* Founder */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Founder</CardTitle>
+            <p className="text-sm text-gray-500">
+              Who founded the company, their background, and why travelers should trust them. Leave a field blank to hide it on the public page.
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="founder-title">Section Title</Label>
+                <Input id="founder-title" name="founder-title" value={formData.founder.title} onChange={(e) => setFormData({ ...formData, founder: { ...formData.founder, title: e.target.value } })} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="founder-subtitle">Subtitle Label</Label>
+                <Input id="founder-subtitle" name="founder-subtitle" value={formData.founder.subtitle} onChange={(e) => setFormData({ ...formData, founder: { ...formData.founder, subtitle: e.target.value } })} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="founder-name">Founder Name</Label>
+                <Input id="founder-name" name="founder-name" placeholder="e.g. Ms. Lhamchu Delma" value={formData.founder.name} onChange={(e) => setFormData({ ...formData, founder: { ...formData.founder, name: e.target.value } })} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="founder-role">Role / Title</Label>
+                <Input id="founder-role" name="founder-role" placeholder="e.g. Founder & Managing Director" value={formData.founder.role} onChange={(e) => setFormData({ ...formData, founder: { ...formData.founder, role: e.target.value } })} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="founder-nationality">Nationality</Label>
+                <Input id="founder-nationality" name="founder-nationality" placeholder="e.g. Bhutanese" value={formData.founder.nationality} onChange={(e) => setFormData({ ...formData, founder: { ...formData.founder, nationality: e.target.value } })} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="founder-experience">Years of Experience</Label>
+                <Input id="founder-experience" name="founder-experience" placeholder="e.g. 14 years" value={formData.founder.experience} onChange={(e) => setFormData({ ...formData, founder: { ...formData.founder, experience: e.target.value } })} />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="founder-bio">Founder Bio</Label>
+              <Textarea id="founder-bio" name="founder-bio" value={formData.founder.bio} onChange={(e) => setFormData({ ...formData, founder: { ...formData.founder, bio: e.target.value } })} className="min-h-[120px]" />
+            </div>
+            <ImageUpload name="founderImage" label="Founder Portrait" defaultPreview={formData.founder.image} />
           </CardContent>
         </Card>
 
@@ -312,51 +317,141 @@ export default function AboutUsPage() {
           </CardContent>
         </Card>
 
-        {/* Sustainable Travel */}
+        {/* Credentials & Trust */}
         <Card>
-          <CardHeader><CardTitle>Sustainable Travel</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle>Credentials & Trust</CardTitle>
+            <p className="text-sm text-gray-500">
+              License number, founding year, guide credentials, and emergency support. Only enter real, verifiable details — leave a field blank rather than guess; it simply won&apos;t show on the public page.
+              Office address and phone are managed under Contact settings.
+            </p>
+          </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="sustainable-title">Title</Label>
-                <Input id="sustainable-title" name="sustainable-title" value={formData.sustainable.title} onChange={(e) => setFormData({ ...formData, sustainable: { ...formData.sustainable, title: e.target.value } })} />
+                <Label htmlFor="credentials-title">Section Title</Label>
+                <Input id="credentials-title" name="credentials-title" value={formData.credentials.title} onChange={(e) => setFormData({ ...formData, credentials: { ...formData.credentials, title: e.target.value } })} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="sustainable-subtitle">Subtitle</Label>
-                <Input id="sustainable-subtitle" name="sustainable-subtitle" value={formData.sustainable.subtitle} onChange={(e) => setFormData({ ...formData, sustainable: { ...formData.sustainable, subtitle: e.target.value } })} />
+                <Label htmlFor="credentials-subtitle">Subtitle Label</Label>
+                <Input id="credentials-subtitle" name="credentials-subtitle" value={formData.credentials.subtitle} onChange={(e) => setFormData({ ...formData, credentials: { ...formData.credentials, subtitle: e.target.value } })} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="credentials-license">Tour Operator License Number</Label>
+                <Input id="credentials-license" name="credentials-license" placeholder="e.g. TCB/L-1234" value={formData.credentials.licenseNumber} onChange={(e) => setFormData({ ...formData, credentials: { ...formData.credentials, licenseNumber: e.target.value } })} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="credentials-founding-year">Founding Year</Label>
+                <Input id="credentials-founding-year" name="credentials-founding-year" placeholder="e.g. 2015" value={formData.credentials.foundingYear} onChange={(e) => setFormData({ ...formData, credentials: { ...formData.credentials, foundingYear: e.target.value } })} />
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="sustainable-intro">Intro Text</Label>
-              <Textarea id="sustainable-intro" name="sustainable-intro" value={formData.sustainable.intro} onChange={(e) => setFormData({ ...formData, sustainable: { ...formData.sustainable, intro: e.target.value } })} className="min-h-[100px]" />
+              <Label htmlFor="credentials-guides">Guide Credentials</Label>
+              <Textarea id="credentials-guides" name="credentials-guides" placeholder="e.g. All guides are licensed by the Tourism Council of Bhutan and trained in first aid" value={formData.credentials.guideCredentials} onChange={(e) => setFormData({ ...formData, credentials: { ...formData.credentials, guideCredentials: e.target.value } })} className="min-h-[80px]" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="credentials-emergency">Emergency Support</Label>
+              <Textarea id="credentials-emergency" name="credentials-emergency" placeholder="e.g. 24/7 emergency line for travelers on-trip: +975-XX-XXXXXX" value={formData.credentials.emergencySupport} onChange={(e) => setFormData({ ...formData, credentials: { ...formData.credentials, emergencySupport: e.target.value } })} className="min-h-[80px]" />
             </div>
 
             <div className="space-y-4 mt-4">
-              <Label>Sustainability Items</Label>
-              {formData.sustainable.items.map((item, index) => (
+              <Label>Additional Trust Badges (optional)</Label>
+              {formData.credentials.items.map((item, index) => (
                 <div key={item.id} className="p-4 border space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="font-mono text-xs text-gray-400">ITEM #{index + 1}</span>
                     <Button type="button" variant="outline" size="icon" className="text-red-500 hover:text-red-700 h-8" onClick={() => {
-                      const newItems = formData.sustainable.items.filter((_, i) => i !== index);
-                      setFormData({ ...formData, sustainable: { ...formData.sustainable, items: newItems } });
+                      const newItems = formData.credentials.items.filter((_, i) => i !== index);
+                      setFormData({ ...formData, credentials: { ...formData.credentials, items: newItems } });
                     }}><Trash2 className="w-4 h-4" /></Button>
                   </div>
                   <Input placeholder="Item Title" value={item.title} onChange={(e) => {
-                    const newItems = [...formData.sustainable.items];
+                    const newItems = [...formData.credentials.items];
                     newItems[index].title = e.target.value;
-                    setFormData({ ...formData, sustainable: { ...formData.sustainable, items: newItems } });
+                    setFormData({ ...formData, credentials: { ...formData.credentials, items: newItems } });
                   }} />
                   <Textarea placeholder="Item Description" value={item.description} onChange={(e) => {
-                    const newItems = [...formData.sustainable.items];
+                    const newItems = [...formData.credentials.items];
                     newItems[index].description = e.target.value;
-                    setFormData({ ...formData, sustainable: { ...formData.sustainable, items: newItems } });
+                    setFormData({ ...formData, credentials: { ...formData.credentials, items: newItems } });
                   }} />
                 </div>
               ))}
               <Button type="button" size="icon" className="w-full" onClick={() => {
-                const newItems = [...formData.sustainable.items, { id: `sust-${Date.now()}`, title: "New Sustainability Item", description: "", order: formData.sustainable.items.length + 1 }];
-                setFormData({ ...formData, sustainable: { ...formData.sustainable, items: newItems } });
+                const newItems = [...formData.credentials.items, { id: `trust-${Date.now()}`, title: "New Trust Badge", description: "", order: formData.credentials.items.length + 1 }];
+                setFormData({ ...formData, credentials: { ...formData.credentials, items: newItems } });
+              }}><Plus className="w-4 h-4" />Add Item</Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Why Bhutan */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Why Bhutan</CardTitle>
+            <p className="text-sm text-gray-500">
+              The closing section of the page — facts about the Kingdom itself, not your company.
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="whybhutan-title">Section Title</Label>
+                <Input id="whybhutan-title" name="whybhutan-title" value={formData.whyBhutan.title} onChange={(e) => setFormData({ ...formData, whyBhutan: { ...formData.whyBhutan, title: e.target.value } })} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="whybhutan-subtitle">Subtitle Label</Label>
+                <Input id="whybhutan-subtitle" name="whybhutan-subtitle" value={formData.whyBhutan.subtitle} onChange={(e) => setFormData({ ...formData, whyBhutan: { ...formData.whyBhutan, subtitle: e.target.value } })} />
+              </div>
+            </div>
+            <div className="space-y-4 mt-4">
+              <Label>Identifier Items</Label>
+              {formData.whyBhutan.items.map((item, index) => (
+                <div key={item.id} className="p-4 border space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="font-mono text-xs text-gray-400">ITEM #{index + 1}</span>
+                    <Button type="button" variant="outline" size="icon" className="text-red-500 hover:text-red-700 h-8" onClick={() => {
+                      const newItems = formData.whyBhutan.items.filter((_, i) => i !== index);
+                      setFormData({ ...formData, whyBhutan: { ...formData.whyBhutan, items: newItems } });
+                    }}><Trash2 className="w-4 h-4" /></Button>
+                  </div>
+                  <Input placeholder="Item Title" value={item.title} onChange={(e) => {
+                    const newItems = [...formData.whyBhutan.items];
+                    newItems[index].title = e.target.value;
+                    setFormData({ ...formData, whyBhutan: { ...formData.whyBhutan, items: newItems } });
+                  }} />
+                  <Textarea placeholder="Item Description" value={item.description} onChange={(e) => {
+                    const newItems = [...formData.whyBhutan.items];
+                    newItems[index].description = e.target.value;
+                    setFormData({ ...formData, whyBhutan: { ...formData.whyBhutan, items: newItems } });
+                  }} />
+                  <div className="space-y-2">
+                    <Label>Icon</Label>
+                    <Select
+                      value={item.icon}
+                      onValueChange={(value) => {
+                        const newItems = [...formData.whyBhutan.items];
+                        newItems[index].icon = value;
+                        setFormData({ ...formData, whyBhutan: { ...formData.whyBhutan, items: newItems } });
+                      }}
+                    >
+                      <SelectTrigger className="bg-white border-gray-200 text-black w-full">
+                        <SelectValue placeholder="Select icon" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {WHY_BHUTAN_ICON_OPTIONS.map((opt) => (
+                          <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              ))}
+              <Button type="button" size="icon" className="w-full" onClick={() => {
+                const newItems = [...formData.whyBhutan.items, { id: `whybhutan-${Date.now()}`, title: "New Identifier", description: "", icon: "smile", order: formData.whyBhutan.items.length + 1 }];
+                setFormData({ ...formData, whyBhutan: { ...formData.whyBhutan, items: newItems } });
               }}><Plus className="w-4 h-4" />Add Item</Button>
             </div>
           </CardContent>
@@ -365,3 +460,12 @@ export default function AboutUsPage() {
     </form>
   );
 }
+
+const WHY_BHUTAN_ICON_OPTIONS = [
+  { value: "smile", label: "Smile" },
+  { value: "mountain", label: "Mountain" },
+  { value: "heart", label: "Heart" },
+  { value: "sparkles", label: "Sparkles" },
+  { value: "leaf", label: "Leaf" },
+  { value: "key", label: "Key" },
+];

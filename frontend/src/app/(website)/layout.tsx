@@ -2,6 +2,7 @@ import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { PageTransition } from "@/components/layout/page-transition";
 import { getContactContent, ContactContent } from "@/lib/data/contact";
+import { getAboutContent } from "@/lib/data/about";
 import { JsonLd } from "@/components/common/json-ld";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/structured-data";
 import { ChatWidget } from "@/components/chat/chat-widget";
@@ -18,15 +19,22 @@ export default async function SiteLayout({
   children: React.ReactNode;
 }>) {
   let contact: ContactContent | null = null;
+  let credentials: { founderName?: string; foundingYear?: string; licenseNumber?: string } | undefined;
   try {
-    contact = await getContactContent();
+    const [contactContent, aboutContent] = await Promise.all([getContactContent(), getAboutContent()]);
+    contact = contactContent;
+    credentials = {
+      founderName: aboutContent.founder.name || undefined,
+      foundingYear: aboutContent.credentials.foundingYear || undefined,
+      licenseNumber: aboutContent.credentials.licenseNumber || undefined,
+    };
   } catch {
-    // Site must render even if the contact table is missing/unreachable
+    // Site must render even if the contact/about tables are missing/unreachable
   }
 
   return (
     <>
-      <JsonLd data={organizationJsonLd(contact)} />
+      <JsonLd data={organizationJsonLd(contact, credentials)} />
       <JsonLd data={websiteJsonLd()} />
       <NextTopLoader color="#d97706" height={2} showSpinner={false} />
       <Header contact={contact} />

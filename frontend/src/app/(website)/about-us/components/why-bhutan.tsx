@@ -14,6 +14,8 @@ import { WhyBhutanItem } from "../schema";
 
 interface WhyBhutanProps {
   items: WhyBhutanItem[];
+  title?: string;
+  subtitle?: string;
 }
 
 const iconMap: Record<string, LucideIcon> = {
@@ -25,7 +27,9 @@ const iconMap: Record<string, LucideIcon> = {
   key: Key,
 };
 
-export function WhyBhutan({ items }: WhyBhutanProps) {
+export function WhyBhutan({ items, title, subtitle }: WhyBhutanProps) {
+  const titleWords = (title || "The Kingdom of Happiness").split(" ");
+
   return (
     <section className="py-40 bg-white relative overflow-hidden">
       {/* Background Accents */}
@@ -40,10 +44,13 @@ export function WhyBhutan({ items }: WhyBhutanProps) {
             viewport={{ once: true }}
             className="block font-mono text-amber-600 text-xs uppercase tracking-[0.5em] mb-4"
           >
-            // unique identifiers
+            // {subtitle || "unique identifiers"}
           </motion.span>
           <h2 className="text-5xl md:text-7xl font-light tracking-tighter uppercase leading-tight text-black">
-            The Kingdom of <span className="italic font-serif normal-case text-amber-600">Happiness</span>
+            {titleWords.slice(0, -1).join(" ")}{" "}
+            <span className="italic font-serif normal-case text-amber-600">
+              {titleWords[titleWords.length - 1]}
+            </span>
           </h2>
         </div>
 

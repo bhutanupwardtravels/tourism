@@ -105,9 +105,6 @@ export async function getCatalogContext(): Promise<string> {
                       about.mission?.items?.length
                           ? `Our mission: ${about.mission.items.map((m) => m.title).join("; ")}`
                           : "",
-                      about.sustainable?.items?.length
-                          ? `Sustainability commitments: ${about.sustainable.items.map((s) => s.title).join("; ")}`
-                          : "",
                   ].filter(Boolean)
                 : []),
 
