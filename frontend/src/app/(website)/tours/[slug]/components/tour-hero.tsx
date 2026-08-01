@@ -120,6 +120,7 @@ export function TourHero({
                                     <div className="text-left">
                                         <span className="block font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1">Pricing From</span>
                                         <span className="font-light tracking-widest text-lg md:text-xl uppercase text-white">{formatPrice(price)}</span>
+                                        <span className="block font-mono text-[9px] text-gray-500 tracking-wider mt-1 normal-case">per person · Sustainable Development Fee included</span>
                                     </div>
                                 </div>
                             </>

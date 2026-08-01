@@ -34,6 +34,11 @@ export function CompanyIntro() {
             create meaningful connections between travelers and the Kingdom of the Thunder Dragon."
           </p>
 
+          <p className="mt-10 text-sm md:text-base font-light text-neutral-500 leading-relaxed max-w-2xl mx-auto">
+            Every journey here contributes directly to Bhutan's Sustainable Development Fee —
+            funding free healthcare and education for its people, and conservation for its land.
+          </p>
+
           <div className="mt-20 flex justify-center gap-12 opacity-30 select-none pointer-events-none">
             <span className="font-mono text-[8px] uppercase tracking-widest text-neutral-500">Cultural Preservation</span>
             <span className="font-mono text-[8px] uppercase tracking-widest text-neutral-500">Environmental Integrity</span>

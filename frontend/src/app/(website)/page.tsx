@@ -45,12 +45,12 @@ export default async function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       < Hero />
+      <CompanyIntro />
       <ExperienceTypes experienceTypes={experienceTypes} />
       <FeaturedItinerary itineraries={featuredTours.slice(0, 5)} />
       <Destinations destinations={featuredDestinations} />
       {/* <LuxuryBridge /> */}
       <Experiences experiences={featuredExperiences} />
-      <CompanyIntro />
       <BestHotels hotels={bestHotels} />
       <FaqSection
         label="// know before you go"

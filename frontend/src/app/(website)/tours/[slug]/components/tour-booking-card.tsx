@@ -28,9 +28,16 @@ export function TourBookingCard({ slug, className = "" }: TourBookingCardProps) 
                     Plan Your <span className="font-serif normal-case">Adventure</span>
                 </h3>
 
-                <p className="text-gray-600 font-light leading-relaxed mb-12 italic text-sm">
+                <p className="text-gray-600 font-light leading-relaxed mb-8 italic text-sm">
                     "Our travel specialists will weave this tour into your personal Bhutanese story. Secure your place in the Kingdom."
                 </p>
+
+                <div className="mb-10 space-y-3 font-mono text-[9px] uppercase tracking-widest">
+                    <div className="flex items-start gap-3 text-gray-600">
+                        <span className="mt-1 w-1.5 h-1.5 rounded-full bg-amber-600 shrink-0" />
+                        <span>Included: licensed guide, private transport, entry &amp; monument fees, Sustainable Development Fee</span>
+                    </div>
+                </div>
 
                 <div className="space-y-6">
                     <a

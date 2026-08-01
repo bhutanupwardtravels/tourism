@@ -96,6 +96,7 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
                             <div className="flex items-center gap-2 px-3 py-1 bg-amber-600/10 rounded-xs text-black border border-amber-600/20 shadow-xs">
                                 <DollarSign className="w-3.5 h-3.5 text-amber-600" />
                                 {formatPrice(tour.price)}
+                                <span className="text-gray-500 font-normal normal-case tracking-normal">SDF incl.</span>
                             </div>
                         </div>
                     </div>
