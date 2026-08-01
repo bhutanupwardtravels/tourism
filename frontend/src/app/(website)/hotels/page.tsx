@@ -40,7 +40,7 @@ export default async function HotelsPage() {
                 <div className="flex flex-col md:flex-row justify-between items-end mb-24 border-b border-black/5 pb-12 gap-8">
                     <div className="max-w-xl">
                         <h2 className="text-4xl md:text-5xl font-light tracking-tighter uppercase mb-2">
-                            The <span className="italic font-serif normal-case">Hospitality</span> Collection
+                            The <span className="italic font-serif text-amber-600 normal-case">Hospitality</span> Collection
                         </h2>
                         <p className="text-gray-500 font-light italic">
                             "A curated selection of sanctuaries offering authentic Bhutanese hospitality."
@@ -113,7 +113,7 @@ export default async function HotelsPage() {
                                 </div>
                             </div>
 
-                            <p className="mt-6 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-sm">
+                            <p className="mt-6 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-md">
                                 "{hotel.description}"
                             </p>
 

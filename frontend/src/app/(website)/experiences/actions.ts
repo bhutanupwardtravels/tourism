@@ -26,8 +26,11 @@ export async function getExperiences(): Promise<Experience[]> {
   }
 }
 
+// Supabase experience-type ids are uuids; 24-hex ids are legacy Mongo ObjectIds.
+const CATEGORY_ID_RE = /^([0-9a-f]{24}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
+
 async function resolveExperienceCategory(experience: any) {
-  if (experience && experience.category && experience.category.length === 24) {
+  if (experience && experience.category && CATEGORY_ID_RE.test(experience.category)) {
     const categoryDoc = await typeDb.getExperienceTypeById(experience.category);
     if (categoryDoc) {
       experience.category = categoryDoc.title;

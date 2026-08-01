@@ -28,7 +28,7 @@ export function CompanyIntro() {
             Crafting <span className="italic font-serif normal-case text-amber-500">Transformative</span> Journeys
           </h2>
 
-          <p className="text-xl md:text-2xl font-light text-neutral-400 leading-relaxed max-w-4xl mx-auto italic font-serif">
+          <p className="text-md font-light text-neutral-400 leading-relaxed max-w-4xl mx-auto italic font-serif">
             "We are dedicated to honoring Bhutan's rich cultural heritage, pristine environment, and the
             philosophy of Gross National Happiness. Each experience is thoughtfully curated to
             create meaningful connections between travelers and the Kingdom of the Thunder Dragon."
@@ -40,9 +40,9 @@ export function CompanyIntro() {
           </p>
 
           <div className="mt-20 flex justify-center gap-12 opacity-30 select-none pointer-events-none">
-            <span className="font-mono text-[8px] uppercase tracking-widest text-neutral-500">Cultural Preservation</span>
-            <span className="font-mono text-[8px] uppercase tracking-widest text-neutral-500">Environmental Integrity</span>
-            <span className="font-mono text-[8px] uppercase tracking-widest text-neutral-500">Soulful Exploration</span>
+            <span className="font-mono text-[8px] uppercase tracking-widest text-neutral-300">Cultural Preservation</span>
+            <span className="font-mono text-[8px] uppercase tracking-widest text-neutral-300">Environmental Integrity</span>
+            <span className="font-mono text-[8px] uppercase tracking-widest text-neutral-300">Soulful Exploration</span>
           </div>
         </motion.div>
       </div>
