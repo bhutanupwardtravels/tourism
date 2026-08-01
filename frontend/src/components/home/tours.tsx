@@ -77,7 +77,7 @@ export function FeaturedItinerary({ itineraries }: FeaturedItineraryProps) {
                                         initial={{ opacity: 0, y: 30 }}
                                         whileInView={{ opacity: 1, y: 0 }}
                                         transition={{ duration: 0.8, delay: 0.2 }}
-                                        className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter leading-tight mb-8 md:mb-12 uppercase"
+                                        className="text-4xl md:text-6xl font-light tracking-tighter text leading-tight mb-8 md:mb-12 uppercase"
                                     >
                                         {itinerary.title.split(' ').map((word, i) => (
                                             <span key={i} className={i % 2 !== 0 ? "italic font-serif normal-case text-amber-500 block md:inline" : ""}>
@@ -90,7 +90,7 @@ export function FeaturedItinerary({ itineraries }: FeaturedItineraryProps) {
                                         initial={{ opacity: 0 }}
                                         whileInView={{ opacity: 1 }}
                                         transition={{ duration: 0.8, delay: 0.4 }}
-                                        className="text-lg md:text-xl text-gray-300 leading-relaxed mb-12 font-light max-w-2xl italic line-clamp-4"
+                                        className="text-md text-gray-300 leading-relaxed mb-12 font-light max-w-2xl italic line-clamp-4"
                                     >
                                         "{itinerary.description}"
                                     </motion.p>

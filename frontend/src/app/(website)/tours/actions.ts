@@ -8,8 +8,11 @@ import { Tour, TourDay } from "./schema";
 
 import * as experienceTypeDb from "@/lib/data/experience-types";
 
+// Supabase experience-type ids are uuids; 24-hex ids are legacy Mongo ObjectIds.
+const CATEGORY_ID_RE = /^([0-9a-f]{24}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
+
 async function resolveTourCategory(tour: any) {
-  if (tour && tour.category && tour.category.length === 24) {
+  if (tour && tour.category && CATEGORY_ID_RE.test(tour.category)) {
     const categoryDoc = await experienceTypeDb.getExperienceTypeById(tour.category);
     if (categoryDoc) {
       tour.category = categoryDoc.title;
@@ -139,7 +142,8 @@ export async function getTourDay(
 export async function getRelatedTours(currentSlug: string, limit: number = 3): Promise<Tour[]> {
   try {
     const tours = await tourDb.getRelatedTours(currentSlug, limit);
-    return tours as Tour[];
+    const resolved = await Promise.all(tours.map(resolveTourCategory));
+    return resolved as Tour[];
   } catch (error) {
     console.error("Error fetching related tours:", error);
     throw new Error("Failed to fetch related tours");
@@ -160,7 +164,7 @@ export async function getFeaturedTour(): Promise<Tour> {
   try {
     const all = await tourDb.getAllTours();
     const featured = all.find((tour: any) => tour.featured);
-    return (featured || all[0]) as Tour;
+    return (await resolveTourCategory(featured || all[0])) as Tour;
   } catch (error) {
     console.error("Error fetching featured tour:", error);
     throw new Error("Failed to fetch featured tour");

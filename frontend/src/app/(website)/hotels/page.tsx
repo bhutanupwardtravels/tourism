@@ -113,7 +113,7 @@ export default async function HotelsPage() {
                                 </div>
                             </div>
 
-                            <p className="mt-6 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-sm">
+                            <p className="mt-6 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-md">
                                 "{hotel.description}"
                             </p>
 

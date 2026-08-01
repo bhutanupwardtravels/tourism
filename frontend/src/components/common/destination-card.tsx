@@ -39,10 +39,10 @@ export function DestinationCard({ destination, index, className, onClick, disabl
             {/* Metadata */}
             <div className="flex justify-between items-start">
                 <div>
-                    <span className="font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-2 block font-bold">
-                        Region: {destination.region}
+                    <span className="font-mono text-[10px] text-gray-500 uppercase tracking-widest font-bold">
+                        {destination.region}
                     </span>
-                    <h2 className="text-4xl md:text-5xl font-light tracking-tighter group-hover:italic transition-all duration-500 text-black">
+                    <h2 className="text-3xl md:text-4xl font-light tracking-tighter text-black group-hover:italic transition-all duration-500 line-clamp-2 uppercase">
                         {destination.name}
                     </h2>
                 </div>
@@ -51,7 +51,7 @@ export function DestinationCard({ destination, index, className, onClick, disabl
                 </div>
             </div>
 
-            <p className="mt-6 text-gray-600 font-light leading-relaxed max-w-md line-clamp-2 italic text-lg">
+            <p className="mt-6 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-md">
                 "{destination.description}"
             </p>
 
