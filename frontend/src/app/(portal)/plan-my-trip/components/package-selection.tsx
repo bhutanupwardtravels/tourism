@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Tour } from "../../tours/schema";
+import { Tour } from "@/app/(website)/tours/schema";
 import { TourCard } from "@/components/common/tour-card";
 
 interface PackageSelectionProps {

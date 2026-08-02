@@ -8,7 +8,7 @@ import { ArrowRight, Check, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Turnstile } from "@/components/turnstile";
-import { submitTourRequest } from "../../plan-my-trip/actions";
+import { submitTourRequest } from "@/app/(portal)/plan-my-trip/actions";
 
 export default function EnquireClient() {
     const [formState, setFormState] = useState({

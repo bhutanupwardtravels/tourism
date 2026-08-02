@@ -4,9 +4,9 @@ import * as tourDb from "@/lib/data/tours";
 import * as destinationDb from "@/lib/data/destinations";
 import * as experienceDb from "@/lib/data/experiences";
 import { tourRequestDb } from "@/lib/data/tour-requests";
-import { Tour } from "../tours/schema";
-import { Destination } from "../destinations/schema";
-import { Experience } from "../experiences/schema";
+import { Tour } from "@/app/(website)/tours/schema";
+import { Destination } from "@/app/(website)/destinations/schema";
+import { Experience } from "@/app/(website)/experiences/schema";
 
 import * as hotelDb from "@/lib/data/hotels";
 import { Hotel } from "../../admin/hotels/schema";

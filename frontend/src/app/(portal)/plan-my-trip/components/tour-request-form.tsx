@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { submitTourRequest } from "../actions";
-import { Tour } from "../../tours/schema";
+import { Tour } from "@/app/(website)/tours/schema";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Turnstile } from "@/components/turnstile";
 

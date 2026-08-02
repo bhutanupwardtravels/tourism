@@ -8,9 +8,9 @@ import { PackageSelection } from "./package-selection";
 import { CustomItineraryBuilder } from "./custom-itinerary-builder";
 import { TourRequestForm } from "./tour-request-form";
 import { PlanMyTripHero } from "./plan-my-trip-hero";
-import { Tour } from "../../tours/schema";
-import { Destination } from "../../destinations/schema";
-import { Experience } from "../../experiences/schema";
+import { Tour } from "@/app/(website)/tours/schema";
+import { Destination } from "@/app/(website)/destinations/schema";
+import { Experience } from "@/app/(website)/experiences/schema";
 import { Hotel } from "../../../admin/hotels/schema";
 import { Cost } from "../../../admin/settings/schema";
 
@@ -54,12 +54,12 @@ export default function PlanMyTripClient({
     };
 
     return (
-        <div className="min-h-screen bg-white pb-32">
+        <div className="pb-32">
             <PlanMyTripHero />
 
             {/* Mode Selection / Interface Area */}
-            <section className="relative -mt-12 px-6">
-                <div className="container mx-auto">
+            <section className="relative px-4 sm:px-6">
+                <div className="max-w-7xl mx-auto">
                     <AnimatePresence mode="wait">
                         {step === "mode_selection" ? (
                             <motion.div
@@ -131,7 +131,7 @@ export default function PlanMyTripClient({
                                 </motion.button>
                             </motion.div>
                         ) : step === "package_list" ? (
-                            <div className="py-24">
+                            <div className="bg-white text-black shadow-2xl p-6 md:p-16 my-8">
                                 <PackageSelection
                                     packages={packages}
                                     selectedPackage={selectedTour}
@@ -140,7 +140,7 @@ export default function PlanMyTripClient({
                                 />
                             </div>
                         ) : step === "custom_builder" ? (
-                            <div className="py-24">
+                            <div className="bg-white text-black shadow-2xl p-6 md:p-16 my-8">
                                 <CustomItineraryBuilder
                                     experiences={experiences}
                                     destinations={destinations}
@@ -151,7 +151,7 @@ export default function PlanMyTripClient({
                                 />
                             </div>
                         ) : step === "inquiry_form" ? (
-                            <div className="py-24">
+                            <div className="bg-white text-black shadow-2xl p-6 md:p-16 my-8">
                                 <TourRequestForm
                                     selectedTour={selectedTour}
                                     onBack={() => setStep("package_list")}

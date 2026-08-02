@@ -1,0 +1,34 @@
+"use client";
+
+import { motion } from "framer-motion";
+
+// Rendered both inside PlanMyTripClient and as the Suspense fallback in
+// page.tsx — it doesn't read searchParams, so it always server-renders
+// even while PlanMyTripClient (which does) is deferred to the client.
+// Sits directly below the portal top bar as a compact workspace header;
+// the background image is provided by the portal layout, so this is a
+// transparent text block.
+export function PlanMyTripHero() {
+    return (
+        <section className="relative flex items-center pt-16 pb-24 md:pt-24 md:pb-32">
+            <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.7, ease: "easeOut" }}
+                >
+                    <span className="font-mono text-amber-500 text-[10px] font-bold tracking-[0.5em] uppercase block mb-4">
+                        // your workspace
+                    </span>
+                    <h1 className="text-4xl md:text-6xl font-light tracking-tighter text-white uppercase leading-none">
+                        Plan Your{" "}
+                        <span className="italic font-serif normal-case text-amber-500">Bhutan Trip</span>
+                    </h1>
+                    <p className="mt-5 text-base md:text-lg text-white/75 font-light max-w-xl leading-relaxed italic">
+                        Choose a curated collection or craft a custom journey — pick a starting point below to begin.
+                    </p>
+                </motion.div>
+            </div>
+        </section>
+    );
+}
