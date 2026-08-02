@@ -23,7 +23,7 @@ export function TravelMap({ from, to, fromCoordinates, toCoordinates }: TravelMa
     const displayCoordinates = fromCoordinates || toCoordinates;
 
     return (
-        <div className="relative w-full aspect-video bg-neutral-100 border border-black/5 rounded-xs overflow-hidden group">
+        <div className="relative w-full aspect-4/3 sm:aspect-video bg-neutral-100 border border-black/5 rounded-xs overflow-hidden group">
             {/* Map Layer */}
             <div className="absolute inset-0 opacity-60 grayscale group-hover:grayscale-0 transition-all duration-1000">
                 {hasCoordinates ? (
@@ -47,9 +47,9 @@ export function TravelMap({ from, to, fromCoordinates, toCoordinates }: TravelMa
             </div>
 
             {/* Info Overlay */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 bg-linear-to-t from-black/80 to-transparent">
+            <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-linear-to-t from-black/80 to-transparent">
                 <div className="flex items-center justify-between text-white">
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                         <div>
                             <span className="text-[9px] font-mono text-white/50 uppercase tracking-widest block mb-1">Origin</span>
                             <span className="text-sm font-bold uppercase tracking-wider">{from}</span>

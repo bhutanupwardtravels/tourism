@@ -67,7 +67,7 @@ export function Header({ contact }: HeaderProps) {
               />
             </span>
             <span className="flex flex-col">
-              <span className="text-2xl font-bold tracking-widest uppercase">
+              <span className="text-lg sm:text-xl lg:text-2xl font-bold tracking-widest uppercase">
                 Bhutan Upward
               </span>
               <span
@@ -84,7 +84,7 @@ export function Header({ contact }: HeaderProps) {
           </Link>
 
           {/* Desktop Nav (Minimal) */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-8">
             <Link
               href="/destinations"
               className={cn(
@@ -182,7 +182,7 @@ export function Header({ contact }: HeaderProps) {
               )}
             >
               <Menu className="w-6 h-6" />
-              <span className="hidden md:inline text-sm font-medium uppercase tracking-wider">
+              <span className="hidden lg:inline text-sm font-medium uppercase tracking-wider">
                 Menu
               </span>
             </button>
