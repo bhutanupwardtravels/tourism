@@ -219,7 +219,7 @@ export default async function AdminLayout({
             </form>
           </div>
         </header>
-        <div className="bg-gray-50 min-h-[calc(100svh-4rem)]">
+        <div className="shrink-0 bg-gray-50 min-h-[calc(100svh-4rem)]">
           <div className="p-8 overflow-x-auto">{children}</div>
         </div>
       </SidebarInset>
