@@ -58,7 +58,7 @@ export function RequestHeader({ request, onStatusUpdate, onDeleteClick }: Reques
                 {request.status !== RequestStatus.APPROVED && (
                     <Button
                         onClick={() => onStatusUpdate(RequestStatus.APPROVED)}
-                        className="bg-black text-white hover:bg-gray-800 rounded-none shadow-sm px-6"
+                        className="bg-emerald-600 text-white hover:bg-emerald-700 rounded-none shadow-sm px-6"
                     >
                         <CheckCircle2 className="mr-2 h-4 w-4" /> Approve
                     </Button>

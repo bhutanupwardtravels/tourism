@@ -70,7 +70,7 @@ export function FaqSection({ label, title, bgText, items, className }: FaqSectio
                     </motion.h2>
                 </div>
 
-                <div className="max-w-3xl divide-y divide-black/10 border-t border-b border-black/10">
+                <div className="divide-y divide-black/10 border-t border-b border-black/10">
                     {items.map((item, index) => {
                         const isOpen = openIndex === index;
                         return (
@@ -106,7 +106,7 @@ export function FaqSection({ label, title, bgText, items, className }: FaqSectio
                                             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                                             className="overflow-hidden"
                                         >
-                                            <p className="pt-4 text-base leading-relaxed text-black/70">
+                                            <p className="mt-6 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-md">
                                                 {item.answer}
                                             </p>
                                         </motion.div>

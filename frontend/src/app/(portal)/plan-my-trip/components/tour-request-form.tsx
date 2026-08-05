@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { submitTourRequest } from "../actions";
-import { Tour } from "../../tours/schema";
+import { Tour } from "@/app/(website)/tours/schema";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Turnstile } from "@/components/turnstile";
 
@@ -139,7 +139,7 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                                 alt={selectedTour?.title}
                                 fill
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                className="absolute inset-0 object-cover transition-transform duration-700 group-hover:scale-105"
+                                className="absolute inset-0 object-cover transition-transform duration-700 group-hover:scale-110"
                             />
                         )}
                         <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />

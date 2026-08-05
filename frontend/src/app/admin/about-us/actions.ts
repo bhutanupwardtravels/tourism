@@ -31,11 +31,12 @@ export async function updateAboutContentAction(formData: FormData) {
 
     const heroImage = await handleImage("heroImage", "existingHeroImage");
     const storyImage = await handleImage("storyImage", "existingStoryImage");
+    const founderImage = await handleImage("founderImage", "existingFounderImage");
     const purposeImage = await handleImage("purposeImage", "existingPurposeImage");
-    const sustainableImage = await handleImage("sustainableImage", "existingSustainableImage");
 
     const missionItems = JSON.parse(getValue("missionItems") || "[]");
-    const sustainableItems = JSON.parse(getValue("sustainableItems") || "[]");
+    const trustItems = JSON.parse(getValue("trustItems") || "[]");
+    const whyBhutanItems = JSON.parse(getValue("whyBhutanItems") || "[]");
 
     const data: AboutContent = {
       hero: {
@@ -50,6 +51,16 @@ export async function updateAboutContentAction(formData: FormData) {
         content: getValue("story-content"),
         image: storyImage,
       },
+      founder: {
+        title: getValue("founder-title"),
+        subtitle: getValue("founder-subtitle"),
+        name: getValue("founder-name"),
+        role: getValue("founder-role"),
+        nationality: getValue("founder-nationality"),
+        experience: getValue("founder-experience"),
+        bio: getValue("founder-bio"),
+        image: founderImage,
+      },
       mission: {
         title: getValue("mission-title"),
         subtitle: getValue("mission-subtitle"),
@@ -62,12 +73,19 @@ export async function updateAboutContentAction(formData: FormData) {
         content: getValue("purpose-content"),
         image: purposeImage,
       },
-      sustainable: {
-        title: getValue("sustainable-title"),
-        subtitle: getValue("sustainable-subtitle"),
-        intro: getValue("sustainable-intro"),
-        image: sustainableImage,
-        items: sustainableItems,
+      credentials: {
+        title: getValue("credentials-title"),
+        subtitle: getValue("credentials-subtitle"),
+        licenseNumber: getValue("credentials-license"),
+        foundingYear: getValue("credentials-founding-year"),
+        guideCredentials: getValue("credentials-guides"),
+        emergencySupport: getValue("credentials-emergency"),
+        items: trustItems,
+      },
+      whyBhutan: {
+        title: getValue("whybhutan-title"),
+        subtitle: getValue("whybhutan-subtitle"),
+        items: whyBhutanItems,
       },
     };
 
@@ -75,6 +93,9 @@ export async function updateAboutContentAction(formData: FormData) {
 
     revalidatePath("/admin/about-us");
     revalidatePath("/about-us");
+    // Founder/license/foundingYear also feed the sitewide Organization JSON-LD
+    // rendered from the (website) layout — bust that too, same as contact does.
+    revalidatePath("/", "layout");
 
     return { success: true, message: "Content updated successfully" };
   } catch (error) {

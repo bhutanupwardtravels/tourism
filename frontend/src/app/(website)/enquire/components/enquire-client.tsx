@@ -5,7 +5,10 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Check, ChevronDown } from "lucide-react";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Turnstile } from "@/components/turnstile";
+import { submitTourRequest } from "@/app/(portal)/plan-my-trip/actions";
 
 export default function EnquireClient() {
     const [formState, setFormState] = useState({
@@ -18,6 +21,9 @@ export default function EnquireClient() {
         travelers: "",
         message: "",
     });
+
+    const [company, setCompany] = useState(""); // honeypot — hidden from real users
+    const [turnstileToken, setTurnstileToken] = useState("");
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -32,10 +38,20 @@ export default function EnquireClient() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+
+        const result = await submitTourRequest({
+            ...formState,
+            company,
+            turnstileToken,
+            tourName: "General Enquiry",
+        });
+
         setIsSubmitting(false);
-        setIsSubmitted(true);
+        if (result.success) {
+            setIsSubmitted(true);
+        } else {
+            toast.error(result.error || "Failed to submit enquiry. Please try again.");
+        }
     };
 
     if (isSubmitted) {
@@ -262,6 +278,28 @@ export default function EnquireClient() {
                                     onChange={handleChange}
                                     className="w-full border-b border-black/10 py-4 text-lg font-light text-black focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none resize-none placeholder:text-gray-300 italic serif"
                                     placeholder="Describe your vision, interests, or any special moments you wish to experience..."
+                                />
+                            </div>
+
+                            {/* Honeypot — hidden from real users, catches bots */}
+                            <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden">
+                                <label>
+                                    Company
+                                    <input
+                                        type="text"
+                                        name="company"
+                                        tabIndex={-1}
+                                        autoComplete="off"
+                                        value={company}
+                                        onChange={(e) => setCompany(e.target.value)}
+                                    />
+                                </label>
+                            </div>
+
+                            <div className="flex justify-center">
+                                <Turnstile
+                                    onVerify={setTurnstileToken}
+                                    onExpire={() => setTurnstileToken("")}
                                 />
                             </div>
 

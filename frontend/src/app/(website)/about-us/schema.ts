@@ -31,15 +31,38 @@ export const whyBhutanItemSchema = z.object({
   order: z.number(),
 });
 
-export const sustainabilityItemSchema = z.object({
+export const trustItemSchema = z.object({
   id: z.string(),
   title: z.string(),
   description: z.string(),
   order: z.number(),
 });
 
+export const founderSchema = z.object({
+  title: z.string(),
+  subtitle: z.string().optional(),
+  name: z.string(),
+  role: z.string().optional(),
+  nationality: z.string().optional(),
+  experience: z.string().optional(),
+  bio: z.string(),
+  image: z.string().optional(),
+});
+
+export const credentialsSchema = z.object({
+  title: z.string(),
+  subtitle: z.string().optional(),
+  licenseNumber: z.string().optional(),
+  foundingYear: z.string().optional(),
+  guideCredentials: z.string().optional(),
+  emergencySupport: z.string().optional(),
+  items: z.array(trustItemSchema),
+});
+
 export type AboutSection = z.infer<typeof aboutSectionSchema>;
 export type MissionItem = z.infer<typeof missionItemSchema>;
 export type Hero = z.infer<typeof heroSchema>;
 export type WhyBhutanItem = z.infer<typeof whyBhutanItemSchema>;
-export type SustainabilityItem = z.infer<typeof sustainabilityItemSchema>;
+export type TrustItem = z.infer<typeof trustItemSchema>;
+export type Founder = z.infer<typeof founderSchema>;
+export type Credentials = z.infer<typeof credentialsSchema>;

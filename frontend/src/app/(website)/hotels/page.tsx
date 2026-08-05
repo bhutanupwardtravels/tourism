@@ -40,7 +40,7 @@ export default async function HotelsPage() {
                 <div className="flex flex-col md:flex-row justify-between items-end mb-24 border-b border-black/5 pb-12 gap-8">
                     <div className="max-w-xl">
                         <h2 className="text-4xl md:text-5xl font-light tracking-tighter uppercase mb-2">
-                            The <span className="italic font-serif normal-case">Hospitality</span> Collection
+                            The <span className="italic font-serif text-amber-600 normal-case">Hospitality</span> Collection
                         </h2>
                         <p className="text-gray-500 font-light italic">
                             "A curated selection of sanctuaries offering authentic Bhutanese hospitality."
@@ -66,11 +66,9 @@ export default async function HotelsPage() {
                                         alt={hotel.name}
                                         fill
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                        className="object-cover transition-all duration-1000 saturate-[0.8] group-hover:saturate-[1.2] group-hover:scale-110"
+                                        className="object-cover transition-transform duration-1000 group-hover:scale-110"
                                     />
                                 )}
-                                <div className="absolute inset-0 bg-white/20 group-hover:bg-transparent transition-colors duration-700" />
-                                <div className="absolute inset-0 bg-linear-to-t from-white via-white/5 to-transparent opacity-60 group-hover:opacity-10 transition-opacity duration-700" />
 
                                 <div className="absolute top-6 right-6 flex flex-col items-end gap-2">
                                     <span className="bg-black text-white px-3 py-1 font-mono text-[8px] uppercase tracking-[0.4em] z-20">
@@ -115,7 +113,7 @@ export default async function HotelsPage() {
                                 </div>
                             </div>
 
-                            <p className="mt-6 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-sm">
+                            <p className="mt-6 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-md">
                                 "{hotel.description}"
                             </p>
 

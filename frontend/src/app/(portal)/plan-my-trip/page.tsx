@@ -17,7 +17,7 @@ export default async function PlanMyTripPage() {
     const data = await getPlanMyTripData();
 
     return (
-        <Suspense fallback={<div className="min-h-screen bg-white pb-32"><PlanMyTripHero /></div>}>
+        <Suspense fallback={<div className="pb-32"><PlanMyTripHero /></div>}>
             <PlanMyTripClient
                 packages={data.packages}
                 destinations={data.destinations}

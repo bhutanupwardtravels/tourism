@@ -8,8 +8,11 @@ import { Tour, TourDay } from "./schema";
 
 import * as experienceTypeDb from "@/lib/data/experience-types";
 
+// Supabase ids are uuids; 24-hex ids are legacy Mongo ObjectIds.
+const DB_ID_RE = /^([0-9a-f]{24}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
+
 async function resolveTourCategory(tour: any) {
-  if (tour && tour.category && tour.category.length === 24) {
+  if (tour && tour.category && DB_ID_RE.test(tour.category)) {
     const categoryDoc = await experienceTypeDb.getExperienceTypeById(tour.category);
     if (categoryDoc) {
       tour.category = categoryDoc.title;
@@ -62,6 +65,22 @@ export async function getTourById(id: string): Promise<Tour | null> {
   }
 }
 
+// Fills in travel.from/to (name) and travel.fromCoordinates/toCoordinates for one
+// endpoint of a travel item. The destination id comes from destinationFromId/ToId
+// when present, otherwise from an id-shaped travel.from/to value (legacy data).
+async function resolveTravelPoint(item: any, side: "from" | "to") {
+  const explicitId = side === "from" ? item.destinationFromId : item.destinationToId;
+  const value = item.travel[side];
+  const id = explicitId || (value && DB_ID_RE.test(value) ? value : null);
+  if (!id) return;
+
+  const dest = await destinationDb.getDestinationById(id);
+  if (!dest) return;
+
+  if (!value || DB_ID_RE.test(value)) item.travel[side] = dest.name;
+  if (dest.coordinates) item.travel[`${side}Coordinates`] = dest.coordinates;
+}
+
 export async function getTourDay(
   slug: string,
   dayNumber: number
@@ -95,28 +114,11 @@ export async function getTourDay(
             return experienceDb.getExperienceById(item.experienceId);
           }
           if (item.type === "travel" && item.travel && !item.hotelId) {
-            // Resolve From coordinates — new builder uses destinationFromId, legacy used travel.from as ID
-            if (item.destinationFromId) {
-              const dest = await destinationDb.getDestinationById(item.destinationFromId);
-              if (dest?.coordinates) item.travel.fromCoordinates = dest.coordinates;
-            } else if (item.travel.from && item.travel.from.length === 24) {
-              const dest = await destinationDb.getDestinationById(item.travel.from);
-              if (dest) {
-                item.travel.from = dest.name;
-                if (dest.coordinates) item.travel.fromCoordinates = dest.coordinates;
-              }
-            }
-            // Resolve To coordinates — new builder uses destinationToId, legacy used travel.to as ID
-            if (item.destinationToId) {
-              const dest = await destinationDb.getDestinationById(item.destinationToId);
-              if (dest?.coordinates) item.travel.toCoordinates = dest.coordinates;
-            } else if (item.travel.to && item.travel.to.length === 24) {
-              const dest = await destinationDb.getDestinationById(item.travel.to);
-              if (dest) {
-                item.travel.to = dest.name;
-                if (dest.coordinates) item.travel.toCoordinates = dest.coordinates;
-              }
-            }
+            // New builder stores destinationFromId/destinationToId; legacy stored the ID in travel.from/to
+            await Promise.all([
+              resolveTravelPoint(item, "from"),
+              resolveTravelPoint(item, "to"),
+            ]);
           }
           return null;
         })
@@ -139,7 +141,8 @@ export async function getTourDay(
 export async function getRelatedTours(currentSlug: string, limit: number = 3): Promise<Tour[]> {
   try {
     const tours = await tourDb.getRelatedTours(currentSlug, limit);
-    return tours as Tour[];
+    const resolved = await Promise.all(tours.map(resolveTourCategory));
+    return resolved as Tour[];
   } catch (error) {
     console.error("Error fetching related tours:", error);
     throw new Error("Failed to fetch related tours");
@@ -160,7 +163,7 @@ export async function getFeaturedTour(): Promise<Tour> {
   try {
     const all = await tourDb.getAllTours();
     const featured = all.find((tour: any) => tour.featured);
-    return (featured || all[0]) as Tour;
+    return (await resolveTourCategory(featured || all[0])) as Tour;
   } catch (error) {
     console.error("Error fetching featured tour:", error);
     throw new Error("Failed to fetch featured tour");

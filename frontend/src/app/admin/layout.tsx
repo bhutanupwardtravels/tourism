@@ -198,7 +198,7 @@ export default async function AdminLayout({
       </Sidebar>
 
       <SidebarInset className="h-svh overflow-y-auto">
-        <header className="h-16 bg-white border-b border-gray-200 sticky top-0 z-20 px-8 flex items-center justify-between">
+        <header className="h-16 shrink-0 bg-white border-b border-gray-200 sticky top-0 z-20 px-8 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <SidebarTrigger className="hover:bg-gray-100 border border-gray-300 text-gray-700 rounded-none" />
             <AdminBreadcrumbs />
@@ -224,7 +224,7 @@ export default async function AdminLayout({
             </form>
           </div>
         </header>
-        <div className="bg-gray-50 min-h-[calc(100svh-4rem)]">
+        <div className="shrink-0 bg-gray-50 min-h-[calc(100svh-4rem)]">
           <div className="p-8 overflow-x-auto">{children}</div>
         </div>
       </SidebarInset>

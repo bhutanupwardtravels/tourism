@@ -9,12 +9,12 @@ export const bhutanFaqs: FaqItem[] = [
     {
         question: "What is the Sustainable Development Fee (SDF) for Bhutan?",
         answer:
-            "The SDF is a mandatory government fee charged per person, per night, for all international tourists visiting Bhutan. As of 2026 it is US$100 per night, reduced from US$200, and this rate is set to run through August 31, 2027. It funds free healthcare, education, and environmental conservation.",
+            "The SDF makes every visitor a direct contributor to Bhutan's wellbeing, funding free healthcare, education, and environmental conservation nationwide. It's a per-person, per-night government fee included in your Bhutan Upward Travels tour package: US$100 per night as of 2026, reduced from US$200, running through August 31, 2027.",
     },
     {
         question: "How much does a Bhutan tour package cost?",
         answer:
-            "Bhutan tour packages typically range from US$250 to US$2,000 per person per night depending on accommodation and service level, on top of the US$100/night SDF. A standard 5-day guided tour with private transport, a licensed guide, meals, and monument fees commonly runs around US$1,500-1,700 per person.",
+            "Bhutan tour packages typically range from US$250 to US$2,000 per person per night depending on accommodation and service level, including Bhutan's US$100/night Sustainable Development Fee, which directly funds free healthcare and education nationwide. A standard 5-day guided tour with private transport, a licensed guide, meals, and monument fees commonly runs around US$1,500-1,700 per person.",
     },
     {
         question: "Do I need a visa to visit Bhutan?",
@@ -39,7 +39,7 @@ export const bhutanFaqs: FaqItem[] = [
     {
         question: "What currency is used in Bhutan and how do I pay for a tour?",
         answer:
-            "Bhutan's currency is the Ngultrum (BTN), pegged 1:1 to the Indian Rupee, though US dollars are widely accepted for tourism payments. Tour packages, including the SDF, are typically paid in USD by bank transfer to the licensed tour operator before or upon arrival; carry cash for small personal purchases.",
+            "Bhutan's currency is the Ngultrum (BTN), pegged 1:1 to the Indian Rupee, though US dollars are widely accepted for tourism payments. Tour packages, including the Sustainable Development Fee, are typically paid in USD by bank transfer to the licensed tour operator; carry cash for small personal purchases.",
     },
     {
         question: "Can I travel to Bhutan independently, without a tour operator?",

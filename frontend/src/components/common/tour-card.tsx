@@ -6,8 +6,6 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, Calendar, DollarSign, Check } from "lucide-react";
 import { Tour } from "@/app/(website)/tours/schema";
-import { useState, useEffect } from "react";
-import { getExperienceTypeById } from "@/app/admin/experience-types/actions";
 
 interface TourCardProps {
     tour: Tour;
@@ -17,23 +15,8 @@ interface TourCardProps {
 }
 
 export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
-    const [categoryTitle, setCategoryTitle] = useState(tour.category || "Expedition");
+    const categoryTitle = tour.category || "Expedition";
 
-    useEffect(() => {
-        async function fetchCategory() {
-            if (tour.category && tour.category.length === 24) {
-                try {
-                    const type = await getExperienceTypeById(tour.category);
-                    if (type) {
-                        setCategoryTitle(type.title);
-                    }
-                } catch (error) {
-                    console.error("Error fetching experience type:", error);
-                }
-            }
-        }
-        fetchCategory();
-    }, [tour.category]);
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
@@ -46,23 +29,23 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
     const CardContent = (
         <>
             {/* Image Container */}
-            <div className={`relative aspect-16/10 overflow-hidden rounded-XS bg-neutral-100 border transition-colors duration-500 mb-8 ${isSelected ? 'border-amber-600 ring-2 ring-amber-600/20' : 'border-black/5'}`}>
+            <div className={`relative aspect-16/10 overflow-hidden rounded-xs bg-neutral-100 border transition-colors duration-500 mb-8 ${isSelected ? 'border-amber-600 ring-2 ring-amber-600/20' : 'border-black/5'}`}>
                 {tour.image && (
                     <FadeImage
                         src={tour.image}
                         alt={tour.title}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="object-cover transition-[opacity,transform] duration-700 saturate-[1.2] brightness-[1.1] group-hover:opacity-85 group-hover:scale-105"
+                        className="object-cover duration-1000 saturate-[1.2] brightness-[1.1] group-hover:scale-110"
                     />
                 )}
-                {/* Vibrant Overlays - Removing desaturating overlays */}
-                <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-700" />
-                <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity duration-700" />
 
-                {/* Uses priority instead of featured, assuming lower priority means higher importance or similar logic for 'Featured' tag could be derived from priority if needed. For now, checking if featured exists or derived. */}
+                <span className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm text-amber-700 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.3em] font-bold z-20 shadow-lg">
+                    {categoryTitle}
+                </span>
+
                 {tour.featured && (
-                    <span className="absolute top-6 right-6 bg-amber-600 text-white px-3 py-1 font-mono text-[8px] uppercase tracking-[0.4em] z-20 shadow-lg">
+                    <span className="absolute top-6 left-6 bg-amber-600 text-white px-3 py-1 font-mono text-[8px] uppercase tracking-[0.4em] z-20 shadow-lg">
                         Featured
                     </span>
                 )}
@@ -86,38 +69,33 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
             {/* Metadata */}
             <div className="flex justify-between items-start">
                 <div className="flex-1">
-                    <div className="flex items-center gap-6 mb-4">
-                        <span className="font-mono text-[11px] text-amber-600 uppercase tracking-[0.3em] font-bold">
-                            {categoryTitle}
-                        </span>
-                        <span className="w-1 h-1 bg-black/20 rounded-full" />
-                        <div className="flex flex-wrap items-center gap-6 text-[11px] font-mono text-gray-500 uppercase tracking-widest font-medium">
-                            <div className="flex items-center gap-2">
-                                <Calendar className="w-3.5 h-3.5 text-amber-600/60" />
-                                {tour.duration}
-                            </div>
-                            <div className="flex items-center gap-2 px-3 py-1 bg-amber-600/10 rounded-xs text-black border border-amber-600/20 shadow-xs">
-                                <DollarSign className="w-3.5 h-3.5 text-amber-600" />
-                                {formatPrice(tour.price)}
-                            </div>
+                    <div className="flex items-center justify-between gap-6 mb-4 text-[11px] font-mono text-gray-500 uppercase tracking-widest font-medium">
+                        <div className="flex items-center gap-2">
+                            <Calendar className="w-3.5 h-3.5 text-amber-600/60" />
+                            {tour.duration}
+                        </div>
+                        <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-600/10 rounded-xs text-black border border-amber-600/20 shadow-xs whitespace-nowrap">
+                            <DollarSign className="w-3.5 h-3.5 text-amber-600" />
+                            {formatPrice(tour.price)}
+                            <span className="text-gray-400 font-normal">/person · SDF incl.</span>
                         </div>
                     </div>
 
-                    <h3 className="text-4xl md:text-5xl font-light tracking-tighter text-black k group-hover:italic transition-all duration-500 line-clamp-1 uppercase group-hover:translate-x-3 origin-left">
+                    <h3 className="text-3xl md:text-4xl font-light tracking-tighter text-black group-hover:italic transition-all duration-500 line-clamp-2 uppercase">
                         {tour.title}
                     </h3>
                 </div>
 
-                <div className={`w-14 h-14 rounded-full border flex items-center justify-center transition-all duration-500 ml-6 shrink-0 shadow-xs ${isSelected ? 'bg-amber-600 border-amber-600 text-white' : 'border-black/10 group-hover:border-amber-500 group-hover:bg-amber-500/5'}`}>
+                <div className={`w-12 h-12 rounded-full border flex items-center justify-center transition-colors ml-6 shrink-0 ${isSelected ? 'bg-amber-600 border-amber-600 text-white' : 'border-black/10 group-hover:border-amber-500'}`}>
                     {isSelected ? (
-                        <Check className="w-6 h-6" />
+                        <Check className="w-5 h-5" />
                     ) : (
-                        <ArrowUpRight className="w-6 h-6 text-amber-600 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                        <ArrowUpRight className="w-5 h-5 text-black transition-transform group-hover:text-amber-500 group-hover:translate-x-1 group-hover:-translate-y-1" />
                     )}
                 </div>
             </div>
 
-            <p className="mt-6 text-gray-600 font-light leading-relaxed max-w-xl line-clamp-2 italic text-lg opacity-80 group-hover:opacity-100 transition-opacity">
+            <p className="mt-6 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-md">
                 "{tour.description}"
             </p>
 

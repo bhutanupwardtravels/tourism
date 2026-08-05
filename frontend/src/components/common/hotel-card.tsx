@@ -32,7 +32,7 @@ export function HotelCard({ hotel, index, className, disableLink, onClick }: Hot
                     alt={hotel.name}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="absolute inset-0 object-cover transition-[opacity,transform] duration-700 group-hover:opacity-85 group-hover:scale-105"
+                    className="absolute inset-0 object-cover duration-700 group-hover:scale-110"
                 />
             )}
 
@@ -59,7 +59,7 @@ export function HotelCard({ hotel, index, className, disableLink, onClick }: Hot
                     <h4 className="text-3xl font-light tracking-tighter text-white mb-6 group-hover:italic transition-all duration-500 line-clamp-2 uppercase">
                         {hotel.name}
                     </h4>
-                    <p className="text-xs text-white/60 font-light leading-relaxed line-clamp-2 italic mb-6">
+                    <p className="text-md text-white/60 font-light leading-relaxed line-clamp-2 italic mb-6">
                         "{hotel.description}"
                     </p>
                     <div className="flex items-center gap-4 text-white/50 group-hover:text-white transition-colors duration-500">

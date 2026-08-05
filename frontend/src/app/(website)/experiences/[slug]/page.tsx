@@ -6,7 +6,6 @@ import { ExperienceDetails } from "./components/experience-details";
 import { ExperienceGallery } from "./components/experience-gallery";
 import { getExperienceBySlug, getAllExperiences } from "../actions";
 import { ExperienceCarousel } from "./components/experience-carousel";
-import { ExperienceMap } from "./components/experience-map";
 import { JsonLd } from "@/components/common/json-ld";
 import { experienceJsonLd, breadcrumbJsonLd } from "@/lib/structured-data";
 
@@ -70,7 +69,12 @@ export default async function ExperienceDetailPage({ params }: PageProps) {
         <ExperienceDetails experience={experience} />
 
         {/* Map Section */}
-        <ExperienceMap name={experience.title} coordinates={experience.coordinates} />
+        <LocationMap
+          name={experience.title}
+          coordinates={experience.coordinates}
+          title="Experience Location"
+          subtitle="// precise coordinates"
+        />
 
         {/* Gallery Section */}
         {experience.gallery && (

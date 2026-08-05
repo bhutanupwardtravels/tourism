@@ -5,14 +5,16 @@ import { BhutanMap } from "@/components/ui/BhutanMap";
 
 interface LocationMapProps {
     name: string;
-    coordinates: [number, number];
+    coordinates?: [number, number] | null;
     title?: string;
     subtitle?: string;
 }
 
 export function LocationMap({ name, coordinates, title = "Map Location", subtitle = "// location details" }: LocationMapProps) {
+    if (!coordinates) return null;
+
     return (
-        <section className="py-40 bg-white relative overflow-hidden">
+        <section className="py-20 md:py-40 bg-white relative overflow-hidden">
             {/* Tactical Background Elements */}
             <div className="absolute inset-0 opacity-10 pointer-events-none">
                 <svg width="100%" height="100%">
@@ -37,8 +39,8 @@ export function LocationMap({ name, coordinates, title = "Map Location", subtitl
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-amber-500/10 rounded-full animate-pulse pointer-events-none" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] border border-amber-500/5 rounded-full animate-pulse delay-500 pointer-events-none" />
 
-            <div className="container mx-auto px-6 relative z-10">
-                <div className="text-center mb-24">
+            <div className="container mx-auto px-4 md:px-6 relative z-10">
+                <div className="text-center mb-12 md:mb-24">
                     <motion.span
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
@@ -46,12 +48,12 @@ export function LocationMap({ name, coordinates, title = "Map Location", subtitl
                     >
                         {subtitle}
                     </motion.span>
-                    <h2 className="text-5xl md:text-7xl font-light text-black tracking-tighter uppercase whitespace-nowrap">
+                    <h2 className="text-4xl sm:text-5xl md:text-7xl font-light text-black tracking-tighter uppercase">
                         {title.split(' ')[0]} <span className="italic font-serif normal-case text-amber-600">{title.split(' ').slice(1).join(' ')}</span>
                     </h2>
                 </div>
 
-                <div className="relative aspect-video lg:aspect-21/9 bg-neutral-100 border border-black/5 rounded-sm overflow-hidden flex items-center justify-center p-12 group transition-all duration-700 hover:border-amber-500/20">
+                <div className="relative aspect-4/3 sm:aspect-video lg:aspect-21/9 bg-neutral-100 border border-black/5 rounded-sm overflow-hidden flex items-center justify-center p-4 sm:p-8 md:p-12 group transition-all duration-700 hover:border-amber-500/20">
                     {/* Scanning Line Effect */}
                     <motion.div
                         animate={{ top: ["100%", "-10%"] }}
@@ -67,22 +69,22 @@ export function LocationMap({ name, coordinates, title = "Map Location", subtitl
                     {/* Tactical Overlay UI */}
                     <div className="absolute inset-0 pointer-events-none">
                         {/* Corner brackets */}
-                        <div className="absolute top-8 left-8 w-12 h-12 border-t border-l border-black/20" />
-                        <div className="absolute top-8 right-8 w-12 h-12 border-t border-r border-black/20" />
-                        <div className="absolute bottom-8 left-8 w-12 h-12 border-b border-l border-black/20" />
-                        <div className="absolute bottom-8 right-8 w-12 h-12 border-b border-r border-black/20" />
+                        <div className="absolute top-3 left-3 md:top-8 md:left-8 w-6 h-6 md:w-12 md:h-12 border-t border-l border-black/20" />
+                        <div className="absolute top-3 right-3 md:top-8 md:right-8 w-6 h-6 md:w-12 md:h-12 border-t border-r border-black/20" />
+                        <div className="absolute bottom-3 left-3 md:bottom-8 md:left-8 w-6 h-6 md:w-12 md:h-12 border-b border-l border-black/20" />
+                        <div className="absolute bottom-3 right-3 md:bottom-8 md:right-8 w-6 h-6 md:w-12 md:h-12 border-b border-r border-black/20" />
                     </div>
 
                     <motion.div
                         initial={{ scale: 0.8, opacity: 0 }}
                         whileInView={{ scale: 1, opacity: 1 }}
                         transition={{ type: "spring", stiffness: 260, damping: 20 }}
-                        className="absolute bottom-12 right-12 bg-white/80 backdrop-blur-xl px-8 py-4 border border-black/10 z-20"
+                        className="absolute bottom-3 right-3 md:bottom-12 md:right-12 max-w-[calc(100%-1.5rem)] bg-white/80 backdrop-blur-xl px-4 py-3 md:px-8 md:py-4 border border-black/10 z-20"
                     >
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-3">
-                                <div className="w-2 h-2 bg-amber-600 rounded-full animate-ping" />
-                                <span className="font-mono text-[10px] tracking-widest text-black uppercase">{name}</span>
+                                <div className="w-2 h-2 shrink-0 bg-amber-600 rounded-full animate-ping" />
+                                <span className="font-mono text-[10px] tracking-widest text-black uppercase truncate">{name}</span>
                             </div>
                             <div className="h-px w-full bg-black/5 my-1" />
                             <span className="font-mono text-[9px] text-amber-600/60 tracking-wider">
@@ -91,7 +93,7 @@ export function LocationMap({ name, coordinates, title = "Map Location", subtitl
                         </div>
                     </motion.div>
 
-                    <div className="absolute left-12 top-1/2 -translate-y-1/2 flex flex-col gap-12 pointer-events-none">
+                    <div className="hidden md:flex absolute left-12 top-1/2 -translate-y-1/2 flex-col gap-12 pointer-events-none">
                         <div className="space-y-1">
                             <p className="font-mono text-[8px] text-black/20 uppercase tracking-widest">Information View</p>
                             <div className="flex gap-1">
@@ -105,7 +107,7 @@ export function LocationMap({ name, coordinates, title = "Map Location", subtitl
                     </div>
                 </div>
 
-                <div className="mt-12 flex justify-between items-center text-gray-500 font-mono text-[9px] tracking-widest uppercase">
+                <div className="mt-6 md:mt-12 flex flex-wrap justify-between items-center gap-2 text-gray-500 font-mono text-[9px] tracking-widest uppercase">
                     <span>Location Data: 100% Verified</span>
                     <span className="animate-pulse">Kingdom of Happiness...</span>
                 </div>

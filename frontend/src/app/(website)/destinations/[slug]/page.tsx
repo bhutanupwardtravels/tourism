@@ -7,7 +7,7 @@ import {
 import { notFound } from "next/navigation";
 import { DestinationHero } from "./components/destination-hero";
 import { DestinationOverview } from "./components/destination-overview";
-import { DestinationMap } from "./components/destination-map";
+import { LocationMap } from "@/components/common/location-map";
 import { DestinationExperiences } from "./components/destination-experiences";
 import { DestinationFestivals } from "./components/destination-festivals";
 import { DestinationHotels } from "./components/destination-hotels";
@@ -89,7 +89,7 @@ export default async function DestinationPage({ params }: PageProps) {
       />
 
       {/* Section 2: Location on Bhutan map */}
-      <DestinationMap
+      <LocationMap
         name={destination.name}
         coordinates={destination.coordinates}
       />

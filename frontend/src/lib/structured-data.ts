@@ -6,10 +6,22 @@ function abs(path: string): string {
     return `${siteUrl()}${path.startsWith("/") ? "" : "/"}${path}`;
 }
 
-export function organizationJsonLd(contact: ContactContent | null) {
+export interface OrganizationCredentials {
+    founderName?: string;
+    foundingYear?: string;
+    licenseNumber?: string;
+}
+
+export function organizationJsonLd(contact: ContactContent | null, credentials?: OrganizationCredentials) {
     const sameAs = contact
         ? Object.values(contact.socials).filter((url) => Boolean(url))
         : [];
+
+    // foundingYear is admin-entered free text (e.g. "2015" or "2015-06-01"); only
+    // pass it through as a schema.org Date if it looks like one, otherwise omit
+    // rather than emit an invalid foundingDate.
+    const foundingYear = credentials?.foundingYear?.trim();
+    const foundingDate = foundingYear && /^\d{4}(-\d{2}(-\d{2})?)?$/.test(foundingYear) ? foundingYear : undefined;
 
     return {
         "@context": "https://schema.org",
@@ -22,6 +34,17 @@ export function organizationJsonLd(contact: ContactContent | null) {
         ...(contact?.phone ? { telephone: contact.phone } : {}),
         ...(contact?.address ? { address: { "@type": "PostalAddress", streetAddress: contact.address, addressCountry: "BT" } } : {}),
         ...(sameAs.length > 0 ? { sameAs } : {}),
+        ...(credentials?.founderName ? { founder: { "@type": "Person", name: credentials.founderName } } : {}),
+        ...(foundingDate ? { foundingDate } : {}),
+        ...(credentials?.licenseNumber
+            ? {
+                  hasCredential: {
+                      "@type": "EducationalOccupationalCredential",
+                      credentialCategory: "Tour Operator License",
+                      identifier: credentials.licenseNumber,
+                  },
+              }
+            : {}),
     };
 }
 

@@ -7,7 +7,7 @@ import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DestinationHero } from "@/app/(website)/destinations/[slug]/components/destination-hero";
 import { DestinationOverview } from "@/app/(website)/destinations/[slug]/components/destination-overview";
-import { DestinationMap } from "@/app/(website)/destinations/[slug]/components/destination-map";
+import { LocationMap } from "@/components/common/location-map";
 import { DestinationExperiences } from "@/app/(website)/destinations/[slug]/components/destination-experiences";
 import { DestinationFestivals } from "@/app/(website)/destinations/[slug]/components/destination-festivals";
 import { DestinationHotels } from "@/app/(website)/destinations/[slug]/components/destination-hotels";
@@ -73,7 +73,7 @@ export default async function DestinationViewPage({
       />
 
       {/* Section 2: Location on Bhutan map */}
-      <DestinationMap
+      <LocationMap
         name={destination.name}
         coordinates={destination.coordinates}
       />

@@ -17,7 +17,7 @@ export function PackageInquiryView({ tour }: PackageInquiryViewProps) {
 
     if (!tour) {
         return (
-            <div className="border border-gray-100 rounded-none p-32 text-center bg-gray-50/30">
+            <div className="flex h-full min-h-[500px] flex-col items-center justify-center border border-gray-100 rounded-none p-32 text-center bg-gray-50/30">
                 <div className="w-16 h-16 bg-white border border-gray-100 rounded-none flex items-center justify-center mx-auto mb-6 shadow-sm">
                     <MapPin className="w-6 h-6 text-gray-200" />
                 </div>

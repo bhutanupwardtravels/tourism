@@ -35,12 +35,15 @@ async function insertMany(table, docs) {
   return data.map((row) => ({ ...row, _id: row.id }));
 }
 
+// These previously pointed at local files under public/images/cinematic/ that
+// were never actually committed to the repo, causing 404s wherever seeded
+// content rendered them. Unsplash placeholders until real photography exists.
 const image = {
-  paro: "/images/cinematic/paro.jpg",
-  thimphu: "/images/cinematic/thimphu.jpg",
-  punakha: "/images/cinematic/punakha.jpg",
-  bumthang: "/images/cinematic/bumthang.jpg",
-  default: "/images/cinematic/thimphu.jpg",
+  paro: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2940&auto=format&fit=crop",
+  thimphu: "https://images.unsplash.com/photo-1548013146-72479768bada?w=2940&auto=format&fit=crop",
+  punakha: "https://images.unsplash.com/photo-1528127269322-539801943592?w=2940&auto=format&fit=crop",
+  bumthang: "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=2940&auto=format&fit=crop",
+  default: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2940&auto=format&fit=crop",
 };
 
 async function seedDummyData() {

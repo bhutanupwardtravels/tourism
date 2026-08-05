@@ -39,11 +39,9 @@ export function FestivalCard({ festival, index }: FestivalCardProps) {
                                 alt={festival.title}
                                 fill
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                className="object-cover transition-[opacity,transform] duration-700 saturate-[1.2] group-hover:opacity-85 group-hover:scale-105"
+                                className="object-cover duration-700 saturate-[1.2] group-hover:scale-110"
                             />
                         )}
-                        {/* No desaturating overlay to keep colors vibrant as requested */}
-                        <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-700" />
 
                         <div className="absolute top-6 left-6">
                             <span className="bg-white/90 backdrop-blur-md px-3 py-1 font-mono text-[8px] tracking-[0.3em] border border-black/10 uppercase text-black">
