@@ -67,6 +67,7 @@ import { emailTemplates } from "@/lib/email/templates";
 import { publicTourRequestSchema } from "./schema";
 import { checkRateLimit } from "@/lib/security/rate-limit";
 import { verifyTurnstile } from "@/lib/security/turnstile";
+import { getOperatorEmails } from "@/lib/data/operator-emails";
 
 // Max public submissions per IP within the window before we start rejecting.
 const RATE_LIMIT = 5;
@@ -130,18 +131,18 @@ export async function submitTourRequest(data: any) {
         //    deliver on serverless, where the function may freeze right after
         //    returning. Email failures are logged but don't fail the request —
         //    the lead is already saved in the DB.
-        const operatorEmail = process.env.OPERATOR_EMAIL || "info@bhutanupwardtravels.com";
+        const operatorEmails = await getOperatorEmails();
         const mailResults = await Promise.allSettled([
             sendMail({
                 to: parsed.data.email,
                 subject: "Your Tour Request - Bhutan Upward Travels",
                 html: emailTemplates.userConfirmation(result),
                 from: senders.confirmation(),
-                // hello@ may not be a monitored inbox yet — route replies to the operator.
-                replyTo: operatorEmail,
+                // hello@ may not be a monitored inbox yet — route replies to the operator(s).
+                replyTo: operatorEmails,
             }),
             sendMail({
-                to: operatorEmail,
+                to: operatorEmails,
                 subject: `${parsed.data.firstName} ${parsed.data.lastName} — ${result.tourName || "Custom Trip"}`,
                 html: emailTemplates.operatorNotification(result),
                 from: senders.operatorNotification(),

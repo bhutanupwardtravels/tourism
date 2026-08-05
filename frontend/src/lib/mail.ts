@@ -1,11 +1,11 @@
 import { Resend } from "resend";
 
 export interface MailOptions {
-    to: string;
+    to: string | string[];
     subject: string;
     html: string;
     from?: string;
-    replyTo?: string;
+    replyTo?: string | string[];
 }
 
 // EMAIL_FROM's domain (e.g. "hello@bhutanupwardtravels.bt" -> "bhutanupwardtravels.bt")
