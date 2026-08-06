@@ -8,10 +8,20 @@ import { ArrowRight, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { submitTourRequest } from "../actions";
 import { Tour } from "@/app/(website)/tours/schema";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Turnstile } from "@/components/turnstile";
 import { CountryCodeSelect } from "@/components/common/country-code-select";
+import { CountrySelect } from "@/components/common/country-select";
+import { MonthSelect } from "@/components/common/month-select";
+import { OptionSelect } from "@/components/common/option-select";
 import { COUNTRIES } from "@/lib/countries";
+
+const TRAVELER_OPTIONS = [
+    { value: "1", label: "Solitary [1]" },
+    { value: "2", label: "Duo [2]" },
+    { value: "3-4", label: "Small Group [3-4]" },
+    { value: "5-8", label: "Large Group [5-8]" },
+    { value: "9+", label: "Kingdom Delegation [9+]" },
+];
 
 interface TourRequestFormProps {
     selectedTour: Tour | null;
@@ -24,6 +34,7 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
         lastName: "",
         email: "",
         phone: "",
+        country: "", // ISO2 country code (analytics)
         travelDate: "",
         travelers: "",
         message: "",
@@ -211,6 +222,22 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                             />
                             <div className="space-y-4 group">
                                 <label className="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-500 group-focus-within:text-amber-600 transition-colors">
+                                    Country
+                                </label>
+                                <div className="border-b border-black/10 focus-within:border-amber-600 transition-all">
+                                    <CountrySelect
+                                        value={formState.country}
+                                        onChange={(iso2) => {
+                                            setFormState({ ...formState, country: iso2 });
+                                            // Default the phone code to match — still independently editable below.
+                                            setPhoneCountry(iso2);
+                                        }}
+                                        placeholder="Select your country"
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-4 group md:col-span-2">
+                                <label className="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-500 group-focus-within:text-amber-600 transition-colors">
                                     Mobile Connection
                                 </label>
                                 <div className="flex items-center gap-3 border-b border-black/10 focus-within:border-amber-600 transition-all">
@@ -234,31 +261,28 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                                 <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
                                     Traveler Count
                                 </label>
-                                <Select
-                                    name="travelers"
-                                    value={formState.travelers}
-                                    onValueChange={(value) => setFormState({ ...formState, travelers: value })}
-                                >
-                                    <SelectTrigger className="flex w-full h-auto min-h-[60px] items-center justify-between text-black border-0 border-b border-black/10 py-4 text-lg font-light focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none px-0 shadow-none ring-0 focus:ring-0">
-                                        <SelectValue placeholder="Select volume" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="1">Solitary [1]</SelectItem>
-                                        <SelectItem value="2">Duo [2]</SelectItem>
-                                        <SelectItem value="3-4">Small Group [3-4]</SelectItem>
-                                        <SelectItem value="5-8">Large Group [5-8]</SelectItem>
-                                        <SelectItem value="9+">Kingdom Delegation [9+]</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <div className="border-b border-black/10 focus-within:border-amber-600 transition-all">
+                                    <OptionSelect
+                                        value={formState.travelers}
+                                        onChange={(travelers) => setFormState({ ...formState, travelers })}
+                                        options={TRAVELER_OPTIONS}
+                                        placeholder="Select volume"
+                                    />
+                                </div>
                             </div>
 
-                            <FormInput
-                                label="Anticipated Arrival"
-                                name="travelDate"
-                                placeholder="e.g., Autumn 2025"
-                                value={formState.travelDate}
-                                onChange={handleChange}
-                            />
+                            <div className="space-y-4 group">
+                                <label className="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-500 group-focus-within:text-amber-600 transition-colors">
+                                    Anticipated Arrival
+                                </label>
+                                <div className="border-b border-black/10 focus-within:border-amber-600 transition-all">
+                                    <MonthSelect
+                                        value={formState.travelDate}
+                                        onChange={(month) => setFormState({ ...formState, travelDate: month })}
+                                        placeholder="Select month"
+                                    />
+                                </div>
+                            </div>
                         </div>
 
                         {/* Large Message Area */}

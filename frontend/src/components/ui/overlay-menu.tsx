@@ -84,7 +84,7 @@ export function OverlayMenu({ isOpen, onClose, contact }: OverlayMenuProps) {
                 animate="show"
                 className="flex flex-col gap-6"
               >
-                <motion.div variants={itemVariants} className="mb-10">
+                <motion.div variants={itemVariants} className="mb-10 lg:hidden">
                   <Link
                     href="/plan-my-trip"
                     onClick={onClose}

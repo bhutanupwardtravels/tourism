@@ -16,6 +16,12 @@ export interface TourRequest {
     travelDate: string;
     travelers: string;
     message: string;
+    // Bespoke builder fields — only present for custom itinerary submissions.
+    adults?: number;
+    children_6_12?: number;
+    children_under_6?: number;
+    arrivalDate?: string;
+    departureDate?: string;
     tourId?: string; // Optional: If they selected a specific package
     tourName?: string; // Optional: Denormalized name for easier display
     status: RequestStatus;

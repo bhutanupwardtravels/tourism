@@ -18,6 +18,11 @@ const COLUMNS = [
     "tour_name",
     "status",
     "custom_itinerary",
+    "adults",
+    "children_6_12",
+    "children_under_6",
+    "arrival_date",
+    "departure_date",
 ];
 
 export const tourRequestDb = {

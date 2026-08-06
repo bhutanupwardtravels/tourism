@@ -29,6 +29,24 @@ function generateId() {
     return Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
 }
 
+// YYYY-MM-DD in local time — matches <input type="date"> values, so it's safe
+// to compare directly as strings without timezone drift from toISOString().
+function formatDateInput(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+}
+
+// Adds `days` to a YYYY-MM-DD string, built from its parts (not `new Date(str)`,
+// which parses as UTC and can shift a calendar day in negative-offset timezones).
+function addDaysToDateInput(dateStr: string, days: number): string {
+    const [year, month, day] = dateStr.split("-").map(Number);
+    const d = new Date(year, month - 1, day);
+    d.setDate(d.getDate() + days);
+    return formatDateInput(d);
+}
+
 interface CustomItineraryBuilderProps {
     experiences: Experience[];
     destinations: Destination[];
@@ -80,6 +98,20 @@ export function CustomItineraryBuilder({
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [turnstileToken, setTurnstileToken] = useState("");
     const [company, setCompany] = useState(""); // honeypot
+
+    // Earliest bookable date — trips must be arranged at least a week out.
+    const minTripDate = useMemo(() => {
+        const d = new Date();
+        d.setDate(d.getDate() + 7);
+        return formatDateInput(d);
+    }, []);
+
+    // Departure must be at least one day after arrival (no same-day trips).
+    const minDepartureDate = useMemo(() => {
+        if (!userDetails.arrivalDate) return minTripDate;
+        const dayAfterArrival = addDaysToDateInput(userDetails.arrivalDate, 1);
+        return dayAfterArrival > minTripDate ? dayAfterArrival : minTripDate;
+    }, [userDetails.arrivalDate, minTripDate]);
 
     // --- Logic Helpers ---
 
@@ -438,6 +470,7 @@ export function CustomItineraryBuilder({
                                     label="Arrival Date"
                                     name="arrivalDate"
                                     type="date"
+                                    min={minTripDate}
                                     value={userDetails.arrivalDate}
                                     onChange={(e: any) => setUserDetails({ ...userDetails, arrivalDate: e.target.value })}
                                 />
@@ -445,6 +478,7 @@ export function CustomItineraryBuilder({
                                     label="Departure Date"
                                     name="departureDate"
                                     type="date"
+                                    min={minDepartureDate}
                                     value={userDetails.departureDate}
                                     onChange={(e: any) => setUserDetails({ ...userDetails, departureDate: e.target.value })}
                                 />
@@ -458,7 +492,10 @@ export function CustomItineraryBuilder({
                                     type="number"
                                     min={1}
                                     value={userDetails.adults}
-                                    onChange={(e: any) => setUserDetails({ ...userDetails, adults: parseInt(e.target.value) || 1 })}
+                                    onChange={(e: any) => {
+                                        const parsed = parseInt(e.target.value);
+                                        setUserDetails({ ...userDetails, adults: Number.isNaN(parsed) ? 1 : Math.max(1, parsed) });
+                                    }}
                                 />
                                 <FormInput
                                     label="Children (6-12)"
@@ -466,7 +503,10 @@ export function CustomItineraryBuilder({
                                     type="number"
                                     min={0}
                                     value={userDetails.children_6_12}
-                                    onChange={(e: any) => setUserDetails({ ...userDetails, children_6_12: parseInt(e.target.value) || 0 })}
+                                    onChange={(e: any) => {
+                                        const parsed = parseInt(e.target.value);
+                                        setUserDetails({ ...userDetails, children_6_12: Number.isNaN(parsed) ? 0 : Math.max(0, parsed) });
+                                    }}
                                 />
                                 <FormInput
                                     label="Infants (< 6)"
@@ -474,7 +514,10 @@ export function CustomItineraryBuilder({
                                     type="number"
                                     min={0}
                                     value={userDetails.children_under_6}
-                                    onChange={(e: any) => setUserDetails({ ...userDetails, children_under_6: parseInt(e.target.value) || 0 })}
+                                    onChange={(e: any) => {
+                                        const parsed = parseInt(e.target.value);
+                                        setUserDetails({ ...userDetails, children_under_6: Number.isNaN(parsed) ? 0 : Math.max(0, parsed) });
+                                    }}
                                 />
                             </div>
 
@@ -495,8 +538,20 @@ export function CustomItineraryBuilder({
 
                             <button
                                 onClick={() => {
-                                    if (!userDetails.firstName || !userDetails.lastName || !userDetails.email || !userDetails.arrivalDate || !userDetails.departureDate) {
+                                    if (!userDetails.firstName || !userDetails.lastName || !userDetails.email || !userDetails.phone || !userDetails.arrivalDate || !userDetails.departureDate) {
                                         toast.error("Please fill in all required fields.");
+                                        return;
+                                    }
+                                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userDetails.email)) {
+                                        toast.error("Please enter a valid email address.");
+                                        return;
+                                    }
+                                    if (userDetails.arrivalDate < minTripDate || userDetails.departureDate < minTripDate) {
+                                        toast.error("Arrival and departure dates must be at least a week from today.");
+                                        return;
+                                    }
+                                    if (userDetails.departureDate <= userDetails.arrivalDate) {
+                                        toast.error("Departure date must be at least one day after the arrival date.");
                                         return;
                                     }
                                     setStep("ENTRY_POINT");
@@ -844,7 +899,7 @@ export function CustomItineraryBuilder({
     );
 }
 
-function FormInput({ label, name, value, onChange, placeholder, type = "text" }: any) {
+function FormInput({ label, name, value, onChange, placeholder, type = "text", ...rest }: any) {
     return (
         <div className="space-y-4 group">
             <label className="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-500 group-focus-within:text-amber-600 transition-colors">
@@ -858,6 +913,7 @@ function FormInput({ label, name, value, onChange, placeholder, type = "text" }:
                 onChange={onChange}
                 className="w-full border-b border-black/10 py-4 text-lg font-light text-black focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none placeholder:text-gray-200"
                 placeholder={placeholder}
+                {...rest}
             />
         </div>
     );

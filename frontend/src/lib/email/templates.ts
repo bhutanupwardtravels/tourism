@@ -95,6 +95,28 @@ function tripSummary(data: TourRequest): { label: string; value: string } {
     return { label: "Destination", value: "Not specified" };
 }
 
+/** Arrival/departure dates for bespoke builder submissions, otherwise the free-text travel date. */
+function tripDateRows(data: TourRequest): { label: string; value: string }[] {
+    if (data.arrivalDate || data.departureDate) {
+        return [
+            { label: "Arrival Date", value: data.arrivalDate || "Not specified" },
+            { label: "Departure Date", value: data.departureDate || "Not specified" },
+        ];
+    }
+    return [{ label: "Travel Date", value: data.travelDate }];
+}
+
+/** Adult/children breakdown for bespoke builder submissions, otherwise the free-text traveler count. */
+function travelersRow(data: TourRequest): { label: string; value: string } {
+    if (typeof data.adults === "number") {
+        const parts = [`${data.adults} Adult${data.adults === 1 ? "" : "s"}`];
+        if (data.children_6_12) parts.push(`${data.children_6_12} Child${data.children_6_12 === 1 ? "" : "ren"} (6-12)`);
+        if (data.children_under_6) parts.push(`${data.children_under_6} Infant${data.children_under_6 === 1 ? "" : "s"} (under 6)`);
+        return { label: "Travelers", value: parts.join(", ") };
+    }
+    return { label: "Travelers", value: data.travelers };
+}
+
 function ctaButton(label: string, href: string): string {
     return `
         <table role="presentation" cellpadding="0" cellspacing="0" style="margin: 28px 0;">
@@ -138,8 +160,8 @@ export const emailTemplates = {
 
             ${detailsBox("Request Summary", [
                 tripSummary(data),
-                { label: "Travel Date", value: data.travelDate },
-                { label: "Travelers", value: data.travelers },
+                ...tripDateRows(data),
+                travelersRow(data),
             ])}
 
             <p>One of our travel specialists will reach out to you shortly at <strong>${escapeHtml(data.email)}</strong> to discuss your itinerary in detail.</p>
@@ -162,8 +184,8 @@ export const emailTemplates = {
 
             ${detailsBox("Trip Preferences", [
                 { label: "Destination", value: data.destination || "Not specified" },
-                { label: "Travel Date", value: data.travelDate },
-                { label: "Travelers", value: data.travelers },
+                ...tripDateRows(data),
+                travelersRow(data),
                 { label: "Package", value: data.tourName || "Custom Trip" },
             ])}
 
@@ -187,8 +209,8 @@ export const emailTemplates = {
 
             ${detailsBox("Your Request", [
                 tripSummary(data),
-                { label: "Travel Date", value: data.travelDate },
-                { label: "Travelers", value: data.travelers },
+                ...tripDateRows(data),
+                travelersRow(data),
             ])}
 
             <p>One of our travel specialists will be in touch shortly to finalise the details and next steps. If you have any questions in the meantime, simply reply to this email.</p>
@@ -205,7 +227,7 @@ export const emailTemplates = {
 
             ${detailsBox("Request Reference", [
                 tripSummary(data),
-                { label: "Travel Date", value: data.travelDate },
+                ...tripDateRows(data),
             ])}
 
             <p>This may be due to availability, timing, or other constraints. We'd genuinely love to help you explore Bhutan another time.</p>
