@@ -1,6 +1,7 @@
 import { TourRequest } from "@/app/admin/tour-requests/types";
 import { escapeHtml } from "@/lib/utils";
 import { siteUrl } from "@/lib/site";
+import { countryName } from "@/lib/countries";
 
 const SANS_STACK =
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
@@ -156,6 +157,7 @@ export const emailTemplates = {
                 { label: "Name", value: `${data.firstName} ${data.lastName}` },
                 { label: "Email", value: data.email },
                 { label: "Phone", value: data.phone },
+                ...(data.country ? [{ label: "Country", value: countryName(data.country) || data.country }] : []),
             ])}
 
             ${detailsBox("Trip Preferences", [

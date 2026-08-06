@@ -51,7 +51,7 @@ export function DestinationCard({ destination, index, className, onClick, disabl
                 </div>
             </div>
 
-            <p className="mt-6 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-md">
+            <p className="mt-6 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-base">
                 "{destination.description}"
             </p>
 

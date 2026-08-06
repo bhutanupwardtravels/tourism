@@ -11,6 +11,7 @@ export interface TourRequest {
     lastName: string;
     email: string;
     phone: string;
+    country?: string; // ISO2 country code, e.g. "IN" — captured via the bespoke planner
     destination?: string;
     travelDate: string;
     travelers: string;

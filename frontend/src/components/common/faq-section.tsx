@@ -106,7 +106,7 @@ export function FaqSection({ label, title, bgText, items, className }: FaqSectio
                                             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                                             className="overflow-hidden"
                                         >
-                                            <p className="mt-6 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-md">
+                                            <p className="mt-6 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-base">
                                                 {item.answer}
                                             </p>
                                         </motion.div>

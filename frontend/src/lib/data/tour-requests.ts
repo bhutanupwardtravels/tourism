@@ -13,6 +13,7 @@ const COLUMNS = [
     "travel_date",
     "travelers",
     "message",
+    "country",
     "tour_id",
     "tour_name",
     "status",

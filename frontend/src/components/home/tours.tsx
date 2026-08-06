@@ -68,7 +68,7 @@ export function FeaturedItinerary({ itineraries }: FeaturedItineraryProps) {
                                         whileInView={{ opacity: 1, x: 0 }}
                                         transition={{ duration: 0.8 }}
                                     >
-                                        <span className="font-mono text-amber-500 text-xs uppercase tracking-[0.6em] mb-6 block">
+                                        <span className="font-mono text-amber-500 text-xs uppercase tracking-[0.4em] mb-6 block">
                       // {itinerary.duration} Day Expedition // 0{index + 1}
                                         </span>
                                     </motion.div>
@@ -77,10 +77,10 @@ export function FeaturedItinerary({ itineraries }: FeaturedItineraryProps) {
                                         initial={{ opacity: 0, y: 30 }}
                                         whileInView={{ opacity: 1, y: 0 }}
                                         transition={{ duration: 0.8, delay: 0.2 }}
-                                        className="text-4xl md:text-6xl font-light tracking-tighter text leading-tight mb-8 md:mb-12 uppercase"
+                                        className="w-full text-3xl sm:text-4xl md:text-6xl font-light tracking-tighter leading-tight mb-8 md:mb-12 uppercase line-clamp-3 md:line-clamp-2"
                                     >
                                         {itinerary.title.split(' ').map((word, i) => (
-                                            <span key={i} className={i % 2 !== 0 ? "italic font-serif normal-case text-amber-500 block md:inline" : ""}>
+                                            <span key={i} className={i % 2 !== 0 ? "italic font-serif normal-case text-amber-500" : ""}>
                                                 {word}{' '}
                                             </span>
                                         ))}
@@ -90,7 +90,7 @@ export function FeaturedItinerary({ itineraries }: FeaturedItineraryProps) {
                                         initial={{ opacity: 0 }}
                                         whileInView={{ opacity: 1 }}
                                         transition={{ duration: 0.8, delay: 0.4 }}
-                                        className="text-md text-gray-300 leading-relaxed mb-12 font-light max-w-2xl italic line-clamp-4"
+                                        className="text-base text-gray-300 leading-relaxed mb-12 font-light max-w-2xl italic line-clamp-4"
                                     >
                                         "{itinerary.description}"
                                     </motion.p>

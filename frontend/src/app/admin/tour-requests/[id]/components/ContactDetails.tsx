@@ -3,6 +3,7 @@
 import { Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TourRequest } from "../../types";
+import { countryFlagEmoji, countryName } from "@/lib/countries";
 
 interface ContactDetailsProps {
     request: TourRequest;
@@ -32,6 +33,14 @@ export function ContactDetails({ request, onCopyEmail }: ContactDetailsProps) {
                     <span className="block text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2">Phone</span>
                     <span className="text-black font-semibold text-sm">{request.phone || "Not Provided"}</span>
                 </div>
+                {request.country && (
+                    <div className="group relative">
+                        <span className="block text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2">Country</span>
+                        <span className="text-black font-semibold text-sm">
+                            {countryFlagEmoji(request.country)} {countryName(request.country) || request.country}
+                        </span>
+                    </div>
+                )}
             </div>
         </div>
     );

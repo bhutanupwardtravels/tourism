@@ -131,11 +131,11 @@ export default async function AdminLayout({
       <Sidebar
         className="border-r border-gray-800"
       >
-        <SidebarHeader className="border-b border-gray-800 bg-black">
-          <div className="p-6">
+        <SidebarHeader className=" bg-black">
+          <div className="p-4">
             <Link href="/" className="block">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 shrink-0 rounded-full bg-white flex items-center justify-center">
+                <div className="w-8 h-8 shrink-0 rounded-full bg-white flex items-center justify-center">
                   <Image
                     src="/images/logo.png"
                     alt="Bhutan Upward Travels logo"
@@ -145,7 +145,7 @@ export default async function AdminLayout({
                   />
                 </div>
                 <div>
-                  <span className="text-lg font-bold tracking-widest uppercase block text-white">
+                  <span className="text-sm font-bold traking-tight uppercase block text-white">
                     BHUTAN UPWARD
                   </span>
                   <span className="text-[9px] tracking-[0.2em] text-gray-400 block">

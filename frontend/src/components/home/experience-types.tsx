@@ -14,7 +14,7 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
     return (
         <section className="py-24 md:py-40 bg-white border-t border-black/5 relative overflow-hidden">
             {/* Background Decorative ID */}
-            <div className="absolute top-0 right-12 font-mono text-[15vw] opacity-[0.03] select-none pointer-events-none font-bold uppercase tracking-tighter">
+            <div className="absolute top-0 right-12 font-mono text-[25vw] opacity-[0.03] select-none pointer-events-none font-bold uppercase tracking-tighter">
                 Intel
             </div>
 

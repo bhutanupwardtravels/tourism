@@ -63,7 +63,7 @@ export default function CallToAction() {
           viewport={{ once: true }}
           transition={{ duration: 1 }}
         >
-          <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.5em] mb-4 block">
+          <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block">
             // start your journey
           </span>
           <h2 className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase text-black">

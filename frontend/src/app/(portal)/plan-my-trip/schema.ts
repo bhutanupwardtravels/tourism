@@ -13,6 +13,7 @@ export const publicTourRequestSchema = z.object({
     travelDate: z.string().trim().max(100).optional(),
     travelers: z.string().trim().max(50).optional(),
     message: z.string().trim().max(5000).optional(),
+    country: z.string().trim().max(5).optional(), // ISO2 country code (analytics)
 });
 
 export type PublicTourRequest = z.infer<typeof publicTourRequestSchema>;

@@ -9,6 +9,8 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Turnstile } from "@/components/turnstile";
 import { submitTourRequest } from "@/app/(portal)/plan-my-trip/actions";
+import { CountryCodeSelect } from "@/components/common/country-code-select";
+import { COUNTRIES } from "@/lib/countries";
 
 export default function EnquireClient() {
     const [formState, setFormState] = useState({
@@ -22,6 +24,7 @@ export default function EnquireClient() {
         message: "",
     });
 
+    const [phoneCountry, setPhoneCountry] = useState("BT");
     const [company, setCompany] = useState(""); // honeypot — hidden from real users
     const [turnstileToken, setTurnstileToken] = useState("");
 
@@ -39,8 +42,11 @@ export default function EnquireClient() {
         e.preventDefault();
         setIsSubmitting(true);
 
+        const dialCode = COUNTRIES.find((c) => c.iso2 === phoneCountry)?.dialCode ?? "";
+
         const result = await submitTourRequest({
             ...formState,
+            phone: `${dialCode} ${formState.phone}`.trim(),
             company,
             turnstileToken,
             tourName: "General Enquiry",
@@ -223,14 +229,23 @@ export default function EnquireClient() {
                                     value={formState.email}
                                     onChange={handleChange}
                                 />
-                                <FormInput
-                                    label="Mobile Connection"
-                                    name="phone"
-                                    type="tel"
-                                    placeholder="+1 (555) 000-0000"
-                                    value={formState.phone}
-                                    onChange={handleChange}
-                                />
+                                <div className="space-y-4 group">
+                                    <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
+                                        Mobile Connection
+                                    </label>
+                                    <div className="flex items-center gap-3 border-b border-black/10 focus-within:border-amber-600 transition-all">
+                                        <CountryCodeSelect value={phoneCountry} onChange={setPhoneCountry} />
+                                        <input
+                                            type="tel"
+                                            name="phone"
+                                            required
+                                            value={formState.phone}
+                                            onChange={handleChange}
+                                            className="w-full py-4 text-lg font-light text-black focus:outline-none bg-transparent rounded-none placeholder:text-gray-200"
+                                            placeholder="17 123 456"
+                                        />
+                                    </div>
+                                </div>
                             </div>
 
                             {/* Travel Details Grid */}

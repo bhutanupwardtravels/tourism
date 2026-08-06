@@ -10,6 +10,8 @@ import { submitTourRequest } from "../actions";
 import { Tour } from "@/app/(website)/tours/schema";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Turnstile } from "@/components/turnstile";
+import { CountryCodeSelect } from "@/components/common/country-code-select";
+import { COUNTRIES } from "@/lib/countries";
 
 interface TourRequestFormProps {
     selectedTour: Tour | null;
@@ -26,6 +28,7 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
         travelers: "",
         message: "",
     });
+    const [phoneCountry, setPhoneCountry] = useState("BT");
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -45,8 +48,11 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
         setSubmitError("");
         setIsSubmitting(true);
 
+        const dialCode = COUNTRIES.find((c) => c.iso2 === phoneCountry)?.dialCode ?? "";
+
         const payload = {
             ...formState,
+            phone: `${dialCode} ${formState.phone}`.trim(),
             company, // honeypot
             turnstileToken,
             tourId: selectedTour ? selectedTour._id : undefined,
@@ -203,14 +209,23 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                                 value={formState.email}
                                 onChange={handleChange}
                             />
-                            <FormInput
-                                label="Mobile Connection"
-                                name="phone"
-                                type="tel"
-                                placeholder="+1 (555) 000-0000"
-                                value={formState.phone}
-                                onChange={handleChange}
-                            />
+                            <div className="space-y-4 group">
+                                <label className="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-500 group-focus-within:text-amber-600 transition-colors">
+                                    Mobile Connection
+                                </label>
+                                <div className="flex items-center gap-3 border-b border-black/10 focus-within:border-amber-600 transition-all">
+                                    <CountryCodeSelect value={phoneCountry} onChange={setPhoneCountry} />
+                                    <input
+                                        type="tel"
+                                        name="phone"
+                                        required
+                                        value={formState.phone}
+                                        onChange={handleChange}
+                                        className="w-full py-4 text-lg font-light text-black focus:outline-none bg-transparent rounded-none placeholder:text-gray-200"
+                                        placeholder="17 123 456"
+                                    />
+                                </div>
+                            </div>
                         </div>
 
                         {/* Travel Details Grid */}

@@ -19,9 +19,11 @@ import { HotelSelector } from "./builder/hotel-selector";
 import { submitTourRequest } from "../actions";
 import { Turnstile } from "@/components/turnstile";
 import { toast } from "sonner";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getTravelTime } from "@/constants/travel-times";
 import { DestinationCard } from "@/components/common/destination-card";
+import { CountryCodeSelect } from "@/components/common/country-code-select";
+import { CountrySelect } from "@/components/common/country-select";
+import { COUNTRIES } from "@/lib/countries";
 
 function generateId() {
     return Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
@@ -66,7 +68,7 @@ export function CustomItineraryBuilder({
         lastName: "",
         email: "",
         phone: "",
-        nationality: "International" as "Indian" | "International",
+        country: "", // ISO2 country code, e.g. "IN" — drives Indian-national pricing + analytics
         adults: 1,
         children_6_12: 0,
         children_under_6: 0,
@@ -74,6 +76,7 @@ export function CustomItineraryBuilder({
         departureDate: "",
         message: ""
     });
+    const [phoneCountry, setPhoneCountry] = useState("BT");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [turnstileToken, setTurnstileToken] = useState("");
     const [company, setCompany] = useState(""); // honeypot
@@ -92,7 +95,7 @@ export function CustomItineraryBuilder({
         const items: { label: string, price: number }[] = [];
 
         (costs || []).forEach(cost => {
-            if (cost.isIndianNational === (userDetails.nationality === "Indian")) {
+            if (cost.isIndianNational === (userDetails.country === "IN")) {
                 let count = 0;
                 if (cost.travelerCategory === "adult") count = userDetails.adults;
                 else if (cost.travelerCategory === "child_6_12") count = userDetails.children_6_12;
@@ -273,8 +276,11 @@ export function CustomItineraryBuilder({
         e.preventDefault();
         setIsSubmitting(true);
 
+        const dialCode = COUNTRIES.find((c) => c.iso2 === phoneCountry)?.dialCode ?? "";
+
         const payload = {
             ...userDetails,
+            phone: `${dialCode} ${userDetails.phone}`.trim(),
             company, // honeypot
             turnstileToken,
             tourName: "Custom Bespoke Itinerary",
@@ -391,34 +397,42 @@ export function CustomItineraryBuilder({
                                     value={userDetails.email}
                                     onChange={(e: any) => setUserDetails({ ...userDetails, email: e.target.value })}
                                 />
-                                <FormInput
-                                    label="Mobile Connection"
-                                    name="phone"
-                                    type="tel"
-                                    placeholder="+1 (555) 000-0000"
-                                    value={userDetails.phone}
-                                    onChange={(e: any) => setUserDetails({ ...userDetails, phone: e.target.value })}
-                                />
+                                <div className="space-y-4 group">
+                                    <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
+                                        Country
+                                    </label>
+                                    <div className="border-b border-black/10 focus-within:border-amber-600 transition-all">
+                                        <CountrySelect
+                                            value={userDetails.country}
+                                            onChange={(iso2) => {
+                                                setUserDetails({ ...userDetails, country: iso2 });
+                                                // Default the phone code to match — still independently editable below.
+                                                setPhoneCountry(iso2);
+                                            }}
+                                            placeholder="Select your country"
+                                        />
+                                    </div>
+                                </div>
                             </div>
 
-                            {/* Nationality & Dates */}
+                            {/* Mobile & Dates */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-10">
                                 <div className="space-y-4 group">
                                     <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
-                                        Nationality
+                                        Mobile Connection
                                     </label>
-                                    <Select
-                                        value={userDetails.nationality}
-                                        onValueChange={(value: "Indian" | "International") => setUserDetails({ ...userDetails, nationality: value })}
-                                    >
-                                        <SelectTrigger className="flex w-full h-auto min-h-[60px] items-center justify-between text-black border-0 border-b border-black/10 py-4 text-lg font-light focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none px-0 shadow-none ring-0 focus:ring-0">
-                                            <SelectValue placeholder="Select nationality" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="Indian">Indian National</SelectItem>
-                                            <SelectItem value="International">Other National</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                    <div className="flex items-center gap-3 border-b border-black/10 focus-within:border-amber-600 transition-all">
+                                        <CountryCodeSelect value={phoneCountry} onChange={setPhoneCountry} />
+                                        <input
+                                            type="tel"
+                                            name="phone"
+                                            required
+                                            value={userDetails.phone}
+                                            onChange={(e: any) => setUserDetails({ ...userDetails, phone: e.target.value })}
+                                            className="w-full py-4 text-lg font-light text-black focus:outline-none bg-transparent rounded-none placeholder:text-gray-200"
+                                            placeholder="17 123 456"
+                                        />
+                                    </div>
                                 </div>
                                 <FormInput
                                     label="Arrival Date"

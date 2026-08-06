@@ -56,10 +56,10 @@ export function HotelCard({ hotel, index, className, disableLink, onClick }: Hot
                     <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-amber-500 mb-4 block">
                         Hospitality
                     </span>
-                    <h4 className="text-3xl font-light tracking-tighter text-white mb-6 group-hover:italic transition-all duration-500 line-clamp-2 uppercase">
+                    <h4 className="text-3xl md:text-4xl font-light tracking-tighter text-white mb-6 group-hover:italic transition-all duration-500 line-clamp-2 uppercase">
                         {hotel.name}
                     </h4>
-                    <p className="text-md text-white/60 font-light leading-relaxed line-clamp-2 italic mb-6">
+                    <p className="text-base text-white/60 font-light leading-relaxed line-clamp-2 italic mb-6">
                         "{hotel.description}"
                     </p>
                     <div className="flex items-center gap-4 text-white/50 group-hover:text-white transition-colors duration-500">

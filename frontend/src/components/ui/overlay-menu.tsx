@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { X } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ContactContent } from "@/lib/data/contact";
 
@@ -84,6 +84,19 @@ export function OverlayMenu({ isOpen, onClose, contact }: OverlayMenuProps) {
                 animate="show"
                 className="flex flex-col gap-6"
               >
+                <motion.div variants={itemVariants} className="mb-10">
+                  <Link
+                    href="/plan-my-trip"
+                    onClick={onClose}
+                    className="group/cta relative inline-flex items-center gap-6 overflow-hidden bg-white px-8 py-4 text-[10px] font-bold uppercase tracking-[0.4em] text-black transition-colors duration-300"
+                  >
+                    <span className="relative z-10 text-sm font-normal flex items-center gap-6 group-hover/cta:text-white transition-colors duration-300">
+                      Plan My Trip
+                      <ArrowRight className="w-4 h-4 transition-transform group-hover/cta:translate-x-1" />
+                    </span>
+                    <div className="absolute inset-0 translate-y-full group-hover/cta:translate-y-0 bg-amber-600 transition-transform duration-500" />
+                  </Link>
+                </motion.div>
                 <motion.div variants={itemVariants}>
                   <Link
                     href="/destinations"

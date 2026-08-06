@@ -18,17 +18,17 @@ export function CompanyIntro() {
           className="max-w-5xl mx-auto text-center"
         >
           <div className="flex flex-col items-center gap-6 mb-16">
-            <span className="font-mono text-amber-500/60 text-[10px] uppercase tracking-[0.6em] block">
+            <span className="font-mono text-amber-500/60 text-xs uppercase tracking-[0.4em] block">
               // The Bhutanese Essence
             </span>
             <div className="h-20 w-px bg-linear-to-b from-amber-500/0 via-amber-500/40 to-amber-500/0" />
           </div>
 
-          <h2 className="text-4xl md:text-6xl font-light tracking-tighter text-white uppercase mb-16 leading-tight">
+          <h2 className="text-5xl md:text-7xl font-light tracking-tighter text-white uppercase mb-16 leading-tight">
             Crafting <span className="italic font-serif normal-case text-amber-500">Transformative</span> Journeys
           </h2>
 
-          <p className="text-md font-light text-neutral-400 leading-relaxed max-w-4xl mx-auto italic font-serif">
+          <p className="text-base font-light text-neutral-400 leading-relaxed max-w-4xl mx-auto italic font-serif">
             "We are dedicated to honoring Bhutan's rich cultural heritage, pristine environment, and the
             philosophy of Gross National Happiness. Each experience is thoughtfully curated to
             create meaningful connections between travelers and the Kingdom of the Thunder Dragon."
