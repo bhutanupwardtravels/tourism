@@ -100,6 +100,11 @@ const menuGroups = [
         label: "Fee Settings",
         href: "/admin/settings",
       },
+      {
+        iconName: "mail" as const,
+        label: "Notification Emails",
+        href: "/admin/notifications",
+      },
     ],
   },
   {

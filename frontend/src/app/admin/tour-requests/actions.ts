@@ -5,6 +5,7 @@ import { RequestStatus } from "./types";
 import { revalidatePath } from "next/cache";
 import { sendMail, senders } from "@/lib/mail";
 import { emailTemplates } from "@/lib/email/templates";
+import { getOperatorEmails } from "@/lib/data/operator-emails";
 
 export async function getTourRequests(page = 1, pageSize = 10, status?: RequestStatus | RequestStatus[], search?: string, unread?: boolean) {
     const result = await tourRequestDb.getAllTourRequests(page, pageSize, status, search, unread);
@@ -100,8 +101,8 @@ export async function updateTourRequestStatus(id: string, status: RequestStatus)
                         : emailTemplates.requestRejected(tourRequest),
                     from: isApproved ? senders.approved() : senders.rejected(),
                     // reservations@/support@ may not be monitored inboxes yet —
-                    // route replies to the operator.
-                    replyTo: process.env.OPERATOR_EMAIL || undefined,
+                    // route replies to the operator(s).
+                    replyTo: await getOperatorEmails(),
                 });
                 if (!mail.success) {
                     console.error(`Failed to send ${status} email:`, mail.error);
