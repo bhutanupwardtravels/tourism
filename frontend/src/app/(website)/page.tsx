@@ -13,6 +13,8 @@ import { ExperienceTypes } from "@/components/home/experience-types";
 import { getFeaturedExperiences, getExperienceTypes } from "./experiences/actions";
 import { FaqSection } from "@/components/common/faq-section";
 import { getFaqContent } from "@/lib/data/faq";
+import { Testimonials } from "@/components/home/testimonials";
+import { getFeaturedTestimonials } from "@/lib/data/testimonials";
 
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/site";
@@ -33,6 +35,7 @@ export default async function Home() {
     featuredDestinations,
     experienceTypes,
     faqContent,
+    testimonials,
   ] = await Promise.all([
     getTopPriorityTours(5),
     getBestHotels(6),
@@ -40,6 +43,7 @@ export default async function Home() {
     getFeaturedDestinations(6),
     getExperienceTypes(),
     getFaqContent(),
+    getFeaturedTestimonials(9),
   ]);
 
   return (
@@ -52,6 +56,7 @@ export default async function Home() {
       {/* <LuxuryBridge /> */}
       <Experiences experiences={featuredExperiences} />
       <BestHotels hotels={bestHotels} />
+      <Testimonials testimonials={testimonials} />
       <FaqSection
         label="// know before you go"
         title="Bhutan Travel FAQ"

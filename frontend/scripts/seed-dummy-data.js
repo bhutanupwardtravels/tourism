@@ -58,6 +58,7 @@ async function seedDummyData() {
       "experience_types",
       "destinations",
       "global_costs",
+      "testimonials",
     ];
 
     for (const name of tablesToReset) {
@@ -394,6 +395,47 @@ async function seedDummyData() {
 
     const hotelBySlug = Object.fromEntries(hotelDocs.map((h) => [h.slug, h]));
 
+    const testimonials = [
+      {
+        name: "Emily Carter",
+        role: "Traveler from USA",
+        quote:
+          "Our trip through Paro and Punakha was seamless from start to finish. The guides knew every trail and temple story by heart.",
+        avatar: "",
+        rating: 5,
+        isFeatured: true,
+        priority: 3,
+        createdAt: now,
+        updatedAt: now,
+      },
+      {
+        name: "Lukas Weber",
+        role: "Traveler from Germany",
+        quote:
+          "Thimphu Heritage Hotel and the itinerary planning made this the most relaxed cultural trip we've taken. Highly recommended.",
+        avatar: "",
+        rating: 5,
+        isFeatured: true,
+        priority: 2,
+        createdAt: now,
+        updatedAt: now,
+      },
+      {
+        name: "Aiko Tanaka",
+        role: "Traveler from Japan",
+        quote:
+          "Bumthang's quiet valleys were exactly what we hoped for. Every detail, from lodging to local cuisine, was thoughtfully arranged.",
+        avatar: "",
+        rating: 4.5,
+        isFeatured: true,
+        priority: 1,
+        createdAt: now,
+        updatedAt: now,
+      },
+    ];
+
+    await insertMany("testimonials", testimonials);
+
     const tours = [
       {
         slug: "classic-western-bhutan-7d",
@@ -688,6 +730,7 @@ async function seedDummyData() {
     console.log("- global_costs:", costs.length);
     console.log("- experiences:", experiences.length);
     console.log("- hotels:", hotels.length);
+    console.log("- testimonials:", testimonials.length);
     console.log("- tours:", tours.length);
     console.log("- tour_requests:", requests.length);
   } catch (error) {

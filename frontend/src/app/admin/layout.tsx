@@ -65,6 +65,11 @@ const menuGroups = [
         label: "Hotels",
         href: "/admin/hotels",
       },
+      {
+        iconName: "quote" as const,
+        label: "Testimonials",
+        href: "/admin/testimonials",
+      },
     ],
   },
   {

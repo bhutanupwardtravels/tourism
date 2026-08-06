@@ -19,6 +19,7 @@ import {
   Phone,
   HelpCircle,
   Mail,
+  Quote,
 } from "lucide-react";
 
 const iconMap = {
@@ -35,6 +36,7 @@ const iconMap = {
   phone: Phone,
   "help-circle": HelpCircle,
   mail: Mail,
+  quote: Quote,
 };
 
 interface AdminNavItemProps {

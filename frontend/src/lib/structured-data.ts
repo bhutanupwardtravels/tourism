@@ -12,10 +12,29 @@ export interface OrganizationCredentials {
     licenseNumber?: string;
 }
 
-export function organizationJsonLd(contact: ContactContent | null, credentials?: OrganizationCredentials) {
+interface TestimonialLike {
+    name: string;
+    quote: string;
+    rating: number;
+}
+
+export function organizationJsonLd(
+    contact: ContactContent | null,
+    credentials?: OrganizationCredentials,
+    testimonials?: TestimonialLike[]
+) {
     const sameAs = contact
         ? Object.values(contact.socials).filter((url) => Boolean(url))
         : [];
+
+    const reviews = testimonials && testimonials.length > 0 ? testimonials : undefined;
+    const aggregateRating = reviews
+        ? {
+              "@type": "AggregateRating",
+              ratingValue: (reviews.reduce((sum, t) => sum + t.rating, 0) / reviews.length).toFixed(1),
+              reviewCount: reviews.length,
+          }
+        : undefined;
 
     // foundingYear is admin-entered free text (e.g. "2015" or "2015-06-01"); only
     // pass it through as a schema.org Date if it looks like one, otherwise omit
@@ -34,6 +53,17 @@ export function organizationJsonLd(contact: ContactContent | null, credentials?:
         ...(contact?.phone ? { telephone: contact.phone } : {}),
         ...(contact?.address ? { address: { "@type": "PostalAddress", streetAddress: contact.address, addressCountry: "BT" } } : {}),
         ...(sameAs.length > 0 ? { sameAs } : {}),
+        ...(aggregateRating ? { aggregateRating } : {}),
+        ...(reviews
+            ? {
+                  review: reviews.map((t) => ({
+                      "@type": "Review",
+                      author: { "@type": "Person", name: t.name },
+                      reviewBody: t.quote,
+                      reviewRating: { "@type": "Rating", ratingValue: t.rating, bestRating: 5 },
+                  })),
+              }
+            : {}),
         ...(credentials?.founderName ? { founder: { "@type": "Person", name: credentials.founderName } } : {}),
         ...(foundingDate ? { foundingDate } : {}),
         ...(credentials?.licenseNumber

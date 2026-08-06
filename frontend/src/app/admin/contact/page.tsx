@@ -15,6 +15,7 @@ import {
     Twitter,
     Youtube,
 } from "lucide-react";
+import { TiktokIcon, RedditIcon } from "@/components/icons/social-icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,7 +30,7 @@ const emptyContent: ContactContent = {
     phone: "",
     whatsapp: "",
     address: "",
-    socials: { facebook: "", instagram: "", twitter: "", youtube: "" },
+    socials: { facebook: "", instagram: "", twitter: "", youtube: "", tiktok: "", reddit: "" },
 };
 
 const contactFields = [
@@ -64,6 +65,8 @@ const socialFields = [
     { key: "instagram" as const, label: "Instagram", icon: Instagram, placeholder: "https://instagram.com/..." },
     { key: "twitter" as const, label: "Twitter / X", icon: Twitter, placeholder: "https://x.com/..." },
     { key: "youtube" as const, label: "YouTube", icon: Youtube, placeholder: "https://youtube.com/..." },
+    { key: "tiktok" as const, label: "TikTok", icon: TiktokIcon, placeholder: "https://tiktok.com/@..." },
+    { key: "reddit" as const, label: "Reddit", icon: RedditIcon, placeholder: "https://reddit.com/r/..." },
 ];
 
 export default function ContactPage() {

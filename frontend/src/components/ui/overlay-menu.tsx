@@ -53,6 +53,8 @@ export function OverlayMenu({ isOpen, onClose, contact }: OverlayMenuProps) {
     { href: contact?.socials.facebook, label: "Facebook" },
     { href: contact?.socials.twitter, label: "Twitter" },
     { href: contact?.socials.youtube, label: "YouTube" },
+    { href: contact?.socials.tiktok, label: "TikTok" },
+    { href: contact?.socials.reddit, label: "Reddit" },
   ].filter((social) => !!social.href);
 
   return (

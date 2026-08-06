@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin } from "lucide-react";
+import { TiktokIcon, RedditIcon } from "@/components/icons/social-icons";
 import { motion } from "framer-motion";
 import type { ContactContent } from "@/lib/data/contact";
 
@@ -16,6 +17,8 @@ export function Footer({ contact }: FooterProps) {
     { href: contact?.socials.facebook, icon: Facebook, label: "Facebook" },
     { href: contact?.socials.twitter, icon: Twitter, label: "Twitter" },
     { href: contact?.socials.youtube, icon: Youtube, label: "YouTube" },
+    { href: contact?.socials.tiktok, icon: TiktokIcon, label: "TikTok" },
+    { href: contact?.socials.reddit, icon: RedditIcon, label: "Reddit" },
   ].filter((social) => !!social.href);
 
   return (

@@ -7,6 +7,8 @@ export interface SocialLinks {
     instagram: string;
     twitter: string;
     youtube: string;
+    tiktok: string;
+    reddit: string;
 }
 
 export interface ContactContent {
@@ -29,6 +31,8 @@ function defaultContactContent(): ContactContent {
             instagram: "",
             twitter: "",
             youtube: "",
+            tiktok: "",
+            reddit: "",
         },
     };
 }
