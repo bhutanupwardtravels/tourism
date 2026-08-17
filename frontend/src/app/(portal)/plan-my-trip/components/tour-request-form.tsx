@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { submitTourRequest } from "../actions";
 import { Tour } from "@/app/(website)/tours/schema";
 import { Turnstile } from "@/components/turnstile";
+import { DiscountNotice } from "@/components/promo/discount-notice";
 import { CountryCodeSelect } from "@/components/common/country-code-select";
 import { CountrySelect } from "@/components/common/country-select";
 import { MonthSelect } from "@/components/common/month-select";
@@ -46,6 +47,8 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
     const [submitError, setSubmitError] = useState("");
     const [turnstileToken, setTurnstileToken] = useState("");
     const [company, setCompany] = useState(""); // honeypot
+    // Advisory only: submitTourRequest re-validates the code server-side.
+    const [couponCode, setCouponCode] = useState("");
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setFormState({
@@ -66,6 +69,7 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
             phone: `${dialCode} ${formState.phone}`.trim(),
             company, // honeypot
             turnstileToken,
+            couponCode: couponCode || undefined,
             tourId: selectedTour ? selectedTour._id : undefined,
             tourName: selectedTour ? selectedTour.title : undefined,
         };
@@ -299,6 +303,8 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                                 placeholder="Describe your vision, interests, or any special moments you wish to experience..."
                             />
                         </div>
+
+                        <DiscountNotice email={formState.email} onCouponChange={setCouponCode} />
 
                         {/* Honeypot — hidden from real users, catches bots */}
                         <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden">

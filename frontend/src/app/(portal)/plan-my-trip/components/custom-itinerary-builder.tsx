@@ -16,7 +16,7 @@ import { DayBuilder } from "./builder/day-builder";
 import { ExperienceSelector } from "./builder/experience-selector";
 import { TravelSelector } from "./builder/travel-selector";
 import { HotelSelector } from "./builder/hotel-selector";
-import { submitTourRequest } from "../actions";
+import { submitTourRequest, lookupTravellerDiscount, validateCoupon } from "../actions";
 import { Turnstile } from "@/components/turnstile";
 import { toast } from "sonner";
 import { getTravelTime } from "@/constants/travel-times";
@@ -24,6 +24,7 @@ import { DestinationCard } from "@/components/common/destination-card";
 import { CountryCodeSelect } from "@/components/common/country-code-select";
 import { CountrySelect } from "@/components/common/country-select";
 import { COUNTRIES } from "@/lib/countries";
+import { buildQuote, computeFees, applyDiscount } from "@/lib/pricing/quote";
 
 function generateId() {
     return Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
@@ -99,6 +100,18 @@ export function CustomItineraryBuilder({
     const [turnstileToken, setTurnstileToken] = useState("");
     const [company, setCompany] = useState(""); // honeypot
 
+    // Returning-traveller discount, resolved from the email on leaving the
+    // INFORMATION step. Display only — the server recomputes it at submit.
+    const [loyaltyPercent, setLoyaltyPercent] = useState(0);
+    const [priorTrips, setPriorTrips] = useState(0);
+
+    // Coupon from a lead-capture campaign.
+    const [couponInput, setCouponInput] = useState("");
+    const [couponCode, setCouponCode] = useState("");
+    const [couponPercent, setCouponPercent] = useState(0);
+    const [couponError, setCouponError] = useState("");
+    const [isCheckingCoupon, setIsCheckingCoupon] = useState(false);
+
     // Earliest bookable date — trips must be arranged at least a week out.
     const minTripDate = useMemo(() => {
         const d = new Date();
@@ -115,55 +128,31 @@ export function CustomItineraryBuilder({
 
     // --- Logic Helpers ---
 
-    const calculateFees = () => {
-        if (!userDetails.arrivalDate || !userDetails.departureDate) return { total: 0, breakDown: [] };
-
-        const start = new Date(userDetails.arrivalDate);
-        const end = new Date(userDetails.departureDate);
-        const nights = Math.max(0, Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)));
-        const daysCount = nights + 1;
-
-        let feeTotal = 0;
-        const items: { label: string, price: number }[] = [];
-
-        (costs || []).forEach(cost => {
-            if (cost.isIndianNational === (userDetails.country === "IN")) {
-                let count = 0;
-                if (cost.travelerCategory === "adult") count = userDetails.adults;
-                else if (cost.travelerCategory === "child_6_12") count = userDetails.children_6_12;
-                else if (cost.travelerCategory === "child_under_6") count = userDetails.children_under_6;
-
-                if (count > 0) {
-                    const base = cost.price * count;
-                    const totalForItem = cost.type === "daily" ? base * daysCount : base;
-                    feeTotal += totalForItem;
-                    items.push({ label: `${cost.title} (${count}x)`, price: totalForItem });
-                }
-            }
-        });
-
-        return { total: feeTotal, breakDown: items };
+    // The quote maths lives in @/lib/pricing/quote so this preview and the
+    // authoritative figures computed in submitTourRequest can never drift.
+    const quoteInput = {
+        costs,
+        country: userDetails.country,
+        adults: userDetails.adults,
+        children_6_12: userDetails.children_6_12,
+        children_under_6: userDetails.children_under_6,
+        arrivalDate: userDetails.arrivalDate,
+        departureDate: userDetails.departureDate,
+        customItinerary: days,
+        experiences,
+        hotels,
     };
 
-    const calculateTotalCost = () => {
-        const { total: fees } = calculateFees();
-        let itemsTotal = 0;
+    const calculateFees = () => computeFees(quoteInput);
 
-        (days || []).forEach(day => {
-            (day.items || []).forEach(item => {
-                if (item.experienceId) {
-                    const exp = (experiences || []).find(e => e._id === item.experienceId || e.slug === item.experienceId) as any;
-                    itemsTotal += (exp?.price || 0);
-                }
-                if (item.hotelId) {
-                    const hotel = (hotels || []).find(h => h._id === item.hotelId || h.slug === item.hotelId) as any;
-                    itemsTotal += (hotel?.price || 0);
-                }
-            });
-        });
+    const calculateTotalCost = () => buildQuote(quoteInput).subtotal;
 
-        return fees + itemsTotal;
-    };
+    // Best-of, never stacked — matches how the server resolves it at submit.
+    const discountPercent = Math.max(loyaltyPercent, couponPercent);
+    const discountKind: "none" | "loyalty" | "coupon" =
+        discountPercent === 0 ? "none" : couponPercent >= loyaltyPercent ? "coupon" : "loyalty";
+    const quoteSubtotal = calculateTotalCost();
+    const discounted = applyDiscount(quoteSubtotal, discountPercent);
 
     // --- Builder Logic ---
 
@@ -319,6 +308,9 @@ export function CustomItineraryBuilder({
             status: "pending",
             travelDate: "Custom Dates", // Or add field
             customItinerary: days,
+            // Advisory: the server re-validates the code and recomputes the
+            // discount and total from its own data before storing anything.
+            couponCode: couponCode || undefined,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         };
@@ -331,6 +323,39 @@ export function CustomItineraryBuilder({
             toast.error(result.error || "Failed to submit request.");
         }
         setIsSubmitting(false);
+    };
+
+    // Resolved from the email once the traveller leaves the INFORMATION step.
+    // Display only — submitTourRequest recounts it server-side at submit.
+    const refreshLoyalty = async (email: string) => {
+        try {
+            const result = await lookupTravellerDiscount(email);
+            setLoyaltyPercent(result.percent);
+            setPriorTrips(result.priorTrips);
+        } catch {
+            setLoyaltyPercent(0);
+            setPriorTrips(0);
+        }
+    };
+
+    const handleApplyCoupon = async () => {
+        const code = couponInput.trim().toUpperCase();
+        if (!code) return;
+
+        setIsCheckingCoupon(true);
+        setCouponError("");
+        try {
+            const result = await validateCoupon(code, userDetails.email);
+            if (result.valid) {
+                setCouponCode(result.code);
+                setCouponPercent(result.percent);
+            } else {
+                setCouponError(result.reason);
+            }
+        } catch {
+            setCouponError("We couldn't verify that code. Please try again.");
+        }
+        setIsCheckingCoupon(false);
     };
 
     if (step === "SUCCESS") {
@@ -554,6 +579,10 @@ export function CustomItineraryBuilder({
                                         toast.error("Departure date must be at least one day after the arrival date.");
                                         return;
                                     }
+                                    // Fire-and-forget: the badge appearing a
+                                    // moment later is fine, and a slow lookup
+                                    // must never hold up the builder.
+                                    refreshLoyalty(userDetails.email);
                                     setStep("ENTRY_POINT");
                                 }}
                                 className="group relative w-full overflow-hidden bg-black py-8 text-white text-[10px] font-bold uppercase tracking-[0.5em] transition-all hover:bg-amber-600"
@@ -643,12 +672,12 @@ export function CustomItineraryBuilder({
                                         <div className="flex justify-between items-end border-b border-white/10 pb-6">
                                             <span className="text-white/60 text-xs uppercase tracking-widest font-mono">// Total Estimate</span>
                                             <span className="text-4xl font-light tracking-tighter text-amber-500">
-                                                ${calculateTotalCost().toLocaleString()}
+                                                ${discounted.total.toLocaleString()}
                                             </span>
                                         </div>
 
                                         <div className="space-y-4">
-                                            {calculateFees().breakDown.map((item, idx) => (
+                                            {calculateFees().breakdown.map((item, idx) => (
                                                 <div key={idx} className="flex justify-between text-xs">
                                                     <span className="text-white/40">{item.label}</span>
                                                     <span className="text-white/80">${item.price.toLocaleString()}</span>
@@ -656,8 +685,77 @@ export function CustomItineraryBuilder({
                                             ))}
                                             <div className="flex justify-between text-xs pt-4 border-t border-white/5">
                                                 <span className="text-white/40">Activities & Hotels</span>
-                                                <span className="text-white/80">${(calculateTotalCost() - calculateFees().total).toLocaleString()}</span>
+                                                <span className="text-white/80">${(quoteSubtotal - calculateFees().total).toLocaleString()}</span>
                                             </div>
+                                            {discountPercent > 0 && (
+                                                <>
+                                                    <div className="flex justify-between text-xs pt-4 border-t border-white/5">
+                                                        <span className="text-white/40">Subtotal</span>
+                                                        <span className="text-white/80">${quoteSubtotal.toLocaleString()}</span>
+                                                    </div>
+                                                    <div className="flex justify-between text-xs">
+                                                        <span className="text-amber-500/80">
+                                                            {discountKind === "coupon"
+                                                                ? `Coupon ${couponCode}`
+                                                                : `Returning traveller (${priorTrips} ${priorTrips === 1 ? "trip" : "trips"})`}
+                                                            {" "}&mdash; {discountPercent}%
+                                                        </span>
+                                                        <span className="text-amber-500">-${discounted.discountAmount.toLocaleString()}</span>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+
+                                        {/* Coupon redemption */}
+                                        <div className="pt-4 border-t border-white/10 space-y-3">
+                                            {couponPercent > 0 ? (
+                                                <div className="flex items-center justify-between gap-3">
+                                                    <span className="text-xs text-amber-500 font-mono tracking-wide">
+                                                        {couponCode} applied &mdash; {couponPercent}% off
+                                                    </span>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setCouponCode("");
+                                                            setCouponPercent(0);
+                                                            setCouponInput("");
+                                                            setCouponError("");
+                                                        }}
+                                                        className="text-[10px] uppercase tracking-widest text-white/40 hover:text-white transition-colors"
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/40 block">
+                                                        Discount code
+                                                    </label>
+                                                    <div className="flex gap-2">
+                                                        <input
+                                                            type="text"
+                                                            value={couponInput}
+                                                            onChange={(e) => {
+                                                                setCouponInput(e.target.value.toUpperCase());
+                                                                setCouponError("");
+                                                            }}
+                                                            placeholder="BHU-XXXXXX"
+                                                            className="flex-1 bg-transparent border border-white/20 px-3 py-2 text-xs font-mono tracking-wider text-white placeholder:text-white/20 focus:border-amber-500 focus:outline-none"
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={handleApplyCoupon}
+                                                            disabled={isCheckingCoupon || !couponInput.trim()}
+                                                            className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest bg-white/10 hover:bg-amber-600 disabled:opacity-40 disabled:hover:bg-white/10 transition-colors"
+                                                        >
+                                                            {isCheckingCoupon ? <Loader2 className="w-3 h-3 animate-spin" /> : "Apply"}
+                                                        </button>
+                                                    </div>
+                                                    {couponError && (
+                                                        <p className="text-[11px] text-rose-400">{couponError}</p>
+                                                    )}
+                                                </>
+                                            )}
                                         </div>
                                     </div>
 

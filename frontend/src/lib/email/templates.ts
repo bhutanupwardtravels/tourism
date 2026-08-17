@@ -1,4 +1,6 @@
 import { TourRequest } from "@/app/admin/tour-requests/types";
+import { PromoLead } from "@/app/admin/promotions/leads/schema";
+import { PromoCampaign } from "@/app/admin/promotions/campaigns/schema";
 import { escapeHtml } from "@/lib/utils";
 import { siteUrl } from "@/lib/site";
 import { countryName } from "@/lib/countries";
@@ -117,6 +119,44 @@ function travelersRow(data: TourRequest): { label: string; value: string } {
     return { label: "Travelers", value: data.travelers };
 }
 
+function money(amount: number, currency?: string | null): string {
+    const symbol = (currency ?? "USD") === "USD" ? "$" : `${currency} `;
+    return `${symbol}${Math.round(amount).toLocaleString("en-US")}`;
+}
+
+/**
+ * The stored quote snapshot. Only the bespoke builder produces a subtotal and
+ * total; the package and general-enquiry flows carry the discount percentage
+ * alone, so those get a single "discount applied" line and no figures.
+ */
+function quoteRows(data: TourRequest): { label: string; value: string }[] {
+    const rows: { label: string; value: string }[] = [];
+    const percent = data.discountPercent ?? 0;
+
+    const discountLabel =
+        data.discountKind === "coupon"
+            ? `Discount code ${data.couponCode ?? ""}`.trim()
+            : `Returning traveller${data.priorTripCount ? ` (${data.priorTripCount} previous ${data.priorTripCount === 1 ? "trip" : "trips"})` : ""}`;
+
+    if (typeof data.quoteSubtotal === "number" && data.quoteSubtotal > 0) {
+        if (percent > 0) {
+            rows.push({ label: "Estimate before discount", value: money(data.quoteSubtotal, data.quoteCurrency) });
+            rows.push({
+                label: `${discountLabel} — ${percent}%`,
+                value: `- ${money(data.discountAmount ?? 0, data.quoteCurrency)}`,
+            });
+        }
+        rows.push({
+            label: "Estimated total",
+            value: money(data.quoteTotal ?? data.quoteSubtotal, data.quoteCurrency),
+        });
+    } else if (percent > 0) {
+        rows.push({ label: "Discount applied", value: `${discountLabel} — ${percent}%` });
+    }
+
+    return rows;
+}
+
 function ctaButton(label: string, href: string): string {
     return `
         <table role="presentation" cellpadding="0" cellspacing="0" style="margin: 28px 0;">
@@ -152,6 +192,56 @@ function wrapper(bodyHtml: string): string {
 }
 
 export const emailTemplates = {
+    /**
+     * The discount code, delivered to the address that was just captured. This
+     * is what makes the lead worth having — a code shown only on screen invites
+     * throwaway addresses, which defeats the point of the exchange.
+     */
+    couponIssued: (lead: PromoLead, campaign: PromoCampaign) => {
+        const longDate = (value?: string | null) =>
+            value
+                ? new Date(value).toLocaleDateString("en-GB", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                  })
+                : "";
+
+        const eligible = longDate(lead.eligibleFrom);
+        const notYetLive = lead.eligibleFrom && new Date(lead.eligibleFrom).getTime() > Date.now();
+
+        return wrapper(`
+            ${eyebrow("Your Discount Code")}
+            ${heading(`Here it is, ${accent(lead.firstName)}`)}
+            <p>Thank you for your interest in <strong>Bhutan Upward Travels</strong>. Your <strong style="color: ${AMBER};">${lead.discountPercent}% discount</strong> is reserved under the code below.</p>
+
+            <div style="background-color: #000000; padding: 28px 24px; margin: 28px 0; text-align: center;">
+                <div style="font-family: ${MONO_STACK}; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: ${AMBER}; margin-bottom: 12px;">
+                    // Your Code
+                </div>
+                <div style="font-family: ${MONO_STACK}; font-size: 28px; letter-spacing: 6px; color: #ffffff; font-weight: 700;">
+                    ${escapeHtml(lead.code)}
+                </div>
+            </div>
+
+            ${detailsBox("The Details", [
+                { label: "Discount", value: `${lead.discountPercent}% off your trip` },
+                ...(notYetLive ? [{ label: "Redeemable from", value: eligible }] : []),
+                ...(lead.expiresAt ? [{ label: "Valid until", value: longDate(lead.expiresAt) }] : []),
+            ])}
+
+            <p>Enter the code when you plan your trip and we'll apply the discount to your estimate.</p>
+
+            ${ctaButton(campaign.bannerCtaLabel || "Plan Your Trip", `${siteUrl()}/plan-my-trip`)}
+
+            <p style="margin-top: 32px; font-size: 12px; color: #78716c;">
+                You're receiving this because you asked us to send you this code. If you'd rather not hear from us again, just reply to this email and we'll remove you.
+            </p>
+
+            <p style="margin-top: 24px;">Warm regards,<br>The Bhutan Upward Travels Team</p>
+        `);
+    },
+
     userConfirmation: (data: TourRequest) =>
         wrapper(`
             ${eyebrow("Request Confirmed")}
@@ -162,6 +252,7 @@ export const emailTemplates = {
                 tripSummary(data),
                 ...tripDateRows(data),
                 travelersRow(data),
+                ...quoteRows(data),
             ])}
 
             <p>One of our travel specialists will reach out to you shortly at <strong>${escapeHtml(data.email)}</strong> to discuss your itinerary in detail.</p>
@@ -187,6 +278,7 @@ export const emailTemplates = {
                 ...tripDateRows(data),
                 travelersRow(data),
                 { label: "Package", value: data.tourName || "Custom Trip" },
+                ...quoteRows(data),
             ])}
 
             <div style="background-color: #f7f7f5; padding: 20px 24px; margin: 24px 0;">

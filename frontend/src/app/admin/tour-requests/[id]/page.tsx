@@ -11,6 +11,7 @@ import { DeleteTourRequestDialog } from "../components/delete-tour-request-dialo
 
 // Extracted Components
 import { RequestHeader } from "./components/RequestHeader";
+import { QuoteSummary } from "./components/QuoteSummary";
 import { ContactDetails } from "./components/ContactDetails";
 import { PlanDetails } from "./components/PlanDetails";
 import { RequestMessage } from "./components/RequestMessage";
@@ -102,6 +103,7 @@ export default function TourRequestDetailPage({ params }: PageProps) {
                 <div className="lg:col-span-1 space-y-12">
                     <ContactDetails request={request} onCopyEmail={copyEmail} />
                     <PlanDetails request={request} />
+                    <QuoteSummary request={request} />
                     <RequestMessage message={request.message} />
                 </div>
 

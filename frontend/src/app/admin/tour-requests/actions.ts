@@ -79,6 +79,18 @@ export async function updateTourRequestStatus(id: string, status: RequestStatus)
                 // Log error but don't fail the approval
                 console.error("Failed to increment priorities:", error);
             }
+
+            // Burn the coupon here rather than at submission, so an applicant
+            // who gets rejected keeps their code. markRedeemed only touches an
+            // unredeemed row, so re-approving can't reassign a spent code.
+            if (tourRequest.couponCode && status !== previousStatus) {
+                try {
+                    const { markRedeemed } = await import("@/lib/data/promo-leads");
+                    await markRedeemed(tourRequest.couponCode, id);
+                } catch (error) {
+                    console.error("Failed to mark coupon redeemed:", error);
+                }
+            }
         }
 
         // Notify the requester when the decision actually changes to approved or

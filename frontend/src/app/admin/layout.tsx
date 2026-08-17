@@ -83,6 +83,26 @@ const menuGroups = [
     ],
   },
   {
+    label: "Promotions",
+    items: [
+      {
+        iconName: "ticket" as const,
+        label: "Discount Campaigns",
+        href: "/admin/promotions/campaigns",
+      },
+      {
+        iconName: "user-plus" as const,
+        label: "Captured Leads",
+        href: "/admin/promotions/leads",
+      },
+      {
+        iconName: "badge-percent" as const,
+        label: "Returning Travellers",
+        href: "/admin/promotions/loyalty",
+      },
+    ],
+  },
+  {
     label: "Site Settings",
     items: [
       {

@@ -23,6 +23,14 @@ const COLUMNS = [
     "children_under_6",
     "arrival_date",
     "departure_date",
+    "quote_subtotal",
+    "quote_total",
+    "quote_currency",
+    "discount_kind",
+    "discount_percent",
+    "discount_amount",
+    "coupon_code",
+    "prior_trip_count",
 ];
 
 export const tourRequestDb = {

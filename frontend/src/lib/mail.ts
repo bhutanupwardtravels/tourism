@@ -27,6 +27,7 @@ export const senders = {
     approved: () => fromAddress("reservations"),
     rejected: () => fromAddress("support"),
     operatorNotification: () => fromAddress("notifications"),
+    coupon: () => fromAddress("offers"),
 };
 
 export async function sendMail({ to, subject, html, from, replyTo }: MailOptions) {

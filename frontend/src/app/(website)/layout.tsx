@@ -7,6 +7,9 @@ import { getFeaturedTestimonials } from "@/lib/data/testimonials";
 import { JsonLd } from "@/components/common/json-ld";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/structured-data";
 import { ChatWidget } from "@/components/chat/chat-widget";
+import { PromoBanner } from "@/components/promo/promo-banner";
+import { getActiveBannerCampaign } from "@/lib/data/promo-campaigns";
+import { PublicCampaign } from "@/components/promo/types";
 import NextTopLoader from "nextjs-toploader";
 
 // Public pages are statically rendered and revalidated in the background.
@@ -22,13 +25,31 @@ export default async function SiteLayout({
   let contact: ContactContent | null = null;
   let credentials: { founderName?: string; foundingYear?: string; licenseNumber?: string } | undefined;
   let testimonials: { name: string; quote: string; rating: number }[] = [];
+  let campaign: PublicCampaign | null = null;
   try {
-    const [contactContent, aboutContent, featuredTestimonials] = await Promise.all([
+    const [contactContent, aboutContent, featuredTestimonials, activeCampaign] = await Promise.all([
       getContactContent(),
       getAboutContent(),
       getFeaturedTestimonials(20),
+      getActiveBannerCampaign(),
     ]);
     contact = contactContent;
+    // Only the fields the banner needs cross to the client. The window is
+    // re-checked there against the real clock — this layout is ISR'd for an
+    // hour, so a server-only check could leave a finished campaign up.
+    campaign = activeCampaign
+      ? {
+          id: activeCampaign._id ?? activeCampaign.id ?? "",
+          discountPercent: activeCampaign.discountPercent,
+          bannerHeadline: activeCampaign.bannerHeadline,
+          bannerBody: activeCampaign.bannerBody,
+          bannerCtaLabel: activeCampaign.bannerCtaLabel,
+          bannerStartsAt: activeCampaign.bannerStartsAt ?? null,
+          bannerEndsAt: activeCampaign.bannerEndsAt ?? null,
+          couponValidDays: activeCampaign.couponValidDays,
+          couponEligibleAfterDays: activeCampaign.couponEligibleAfterDays,
+        }
+      : null;
     credentials = {
       founderName: aboutContent.founder.name || undefined,
       foundingYear: aboutContent.credentials.foundingYear || undefined,
@@ -50,6 +71,7 @@ export default async function SiteLayout({
       </main>
       <Footer contact={contact} />
       <ChatWidget />
+      <PromoBanner campaign={campaign} />
     </>
   );
 }

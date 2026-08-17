@@ -8,6 +8,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Turnstile } from "@/components/turnstile";
+import { DiscountNotice } from "@/components/promo/discount-notice";
 import { submitTourRequest } from "@/app/(portal)/plan-my-trip/actions";
 import { CountryCodeSelect } from "@/components/common/country-code-select";
 import { CountrySelect } from "@/components/common/country-select";
@@ -38,6 +39,8 @@ export default function EnquireClient() {
 
     const [phoneCountry, setPhoneCountry] = useState("BT");
     const [company, setCompany] = useState(""); // honeypot — hidden from real users
+    // Advisory only: submitTourRequest re-validates the code server-side.
+    const [couponCode, setCouponCode] = useState("");
     const [turnstileToken, setTurnstileToken] = useState("");
 
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,6 +64,7 @@ export default function EnquireClient() {
             phone: `${dialCode} ${formState.phone}`.trim(),
             company,
             turnstileToken,
+            couponCode: couponCode || undefined,
             tourName: "General Enquiry",
         });
 
@@ -321,7 +325,9 @@ export default function EnquireClient() {
                                 />
                             </div>
 
-                            {/* Honeypot — hidden from real users, catches bots */}
+                            <DiscountNotice email={formState.email} onCouponChange={setCouponCode} />
+
+                        {/* Honeypot — hidden from real users, catches bots */}
                             <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden">
                                 <label>
                                     Company

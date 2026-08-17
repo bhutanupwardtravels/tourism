@@ -25,6 +25,18 @@ export interface TourRequest {
     tourId?: string; // Optional: If they selected a specific package
     tourName?: string; // Optional: Denormalized name for easier display
     status: RequestStatus;
+    // Quote snapshot, always recomputed server-side at submit — the client's
+    // figures are never trusted. Only the bespoke builder produces a subtotal
+    // and total; the package and general-enquiry flows have no computed cost,
+    // so they store the discount percent alone for the operator to apply.
+    quoteSubtotal?: number | null;
+    quoteTotal?: number | null;
+    quoteCurrency?: string | null;
+    discountKind?: "none" | "loyalty" | "coupon" | null;
+    discountPercent?: number | null;
+    discountAmount?: number | null;
+    couponCode?: string | null;
+    priorTripCount?: number | null;
     createdAt: string;
     updatedAt: string;
     readAt?: string | null; // null/undefined => unread (notification bell)
