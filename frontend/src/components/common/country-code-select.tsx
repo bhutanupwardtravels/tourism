@@ -17,9 +17,12 @@ import { COUNTRIES, countryFlagEmoji } from "@/lib/countries";
 interface CountryCodeSelectProps {
     value: string; // ISO2 country code, e.g. "BT"
     onChange: (iso2: string) => void;
+    /** Extra classes for the dropdown panel — needed when the trigger sits inside
+     *  an overlay stacked above the popover's default z-50. */
+    contentClassName?: string;
 }
 
-export function CountryCodeSelect({ value, onChange }: CountryCodeSelectProps) {
+export function CountryCodeSelect({ value, onChange, contentClassName }: CountryCodeSelectProps) {
     const [open, setOpen] = useState(false);
     const selected = COUNTRIES.find((country) => country.iso2 === value);
 
@@ -34,7 +37,7 @@ export function CountryCodeSelect({ value, onChange }: CountryCodeSelectProps) {
                     <ChevronDown className="w-4 h-4 text-gray-400" />
                 </button>
             </PopoverTrigger>
-            <PopoverContent align="start" className="w-72 rounded-none p-0">
+            <PopoverContent align="start" className={cn("w-72 rounded-none p-0", contentClassName)}>
                 <Command
                     filter={(itemValue, search) =>
                         itemValue.toLowerCase().includes(search.toLowerCase()) ? 1 : 0

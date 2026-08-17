@@ -203,32 +203,42 @@ export function ClaimCouponDialog({ campaign, open, onClose, onClaimed }: ClaimC
                                     />
                                 </div>
 
-                                <div>
-                                    <label className={labelClass}>Phone</label>
-                                    <div className="flex items-center gap-2 border-b border-black/10">
-                                        <CountryCodeSelect value={phoneCountry} onChange={setPhoneCountry} />
-                                        <input
-                                            type="tel"
-                                            className="w-full text-black py-3 text-base font-light focus:outline-none bg-transparent placeholder:text-gray-300"
-                                            value={form.phone}
-                                            onChange={(e) => setField("phone", e.target.value)}
-                                            placeholder="17 123 456"
-                                            required
-                                        />
+                                {/* Nationality first: picking it defaults the dial code, so asking
+                                    for it before the number saves the visitor a step. Both dropdowns
+                                    portal to <body> at z-50, below this overlay — hence z-[70]. */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className={labelClass}>Nationality</label>
+                                        <div className="border-b border-black/10">
+                                            <CountrySelect
+                                                value={form.country}
+                                                onChange={(iso2) => {
+                                                    setField("country", iso2);
+                                                    setPhoneCountry(iso2);
+                                                }}
+                                                placeholder="Select nationality"
+                                                contentClassName="z-[70]"
+                                            />
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div>
-                                    <label className={labelClass}>Nationality</label>
-                                    <div className="border-b border-black/10">
-                                        <CountrySelect
-                                            value={form.country}
-                                            onChange={(iso2) => {
-                                                setField("country", iso2);
-                                                setPhoneCountry(iso2);
-                                            }}
-                                            placeholder="Select your nationality"
-                                        />
+                                    <div>
+                                        <label className={labelClass}>Phone</label>
+                                        <div className="flex items-center gap-2 border-b border-black/10">
+                                            <CountryCodeSelect
+                                                value={phoneCountry}
+                                                onChange={setPhoneCountry}
+                                                contentClassName="z-[70]"
+                                            />
+                                            <input
+                                                type="tel"
+                                                className="w-full min-w-0 text-black py-3 text-base font-light focus:outline-none bg-transparent placeholder:text-gray-300"
+                                                value={form.phone}
+                                                onChange={(e) => setField("phone", e.target.value)}
+                                                placeholder="17 123 456"
+                                                required
+                                            />
+                                        </div>
                                     </div>
                                 </div>
 

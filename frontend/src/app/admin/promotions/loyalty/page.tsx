@@ -89,7 +89,7 @@ export default function LoyaltyPage() {
     }
 
     return (
-        <div className="space-y-6 max-w-4xl">
+        <div className="space-y-6">
             <div className="flex flex-col gap-1">
                 <h2 className="text-2xl font-semibold tracking-tight text-black">
                     Returning-Traveller Discount
@@ -103,7 +103,7 @@ export default function LoyaltyPage() {
             <Card className="rounded-none border-gray-200">
                 <CardContent className="pt-6 space-y-8">
                     <div className="flex items-center justify-between gap-6">
-                        <div>
+                        <div className="max-w-2xl">
                             <Label className="text-black">Enable returning-traveller discounts</Label>
                             <p className="text-sm text-neutral-500 mt-1">
                                 Off means no discount is offered or stored, whatever the tiers say.
@@ -117,7 +117,7 @@ export default function LoyaltyPage() {
 
                     <div className="space-y-4">
                         <div className="flex items-end justify-between gap-4">
-                            <div>
+                            <div className="max-w-2xl">
                                 <Label className="text-black">Tiers</Label>
                                 <p className="text-sm text-neutral-500 mt-1">
                                     Each row is a threshold, not an exact count: a traveller with 5
@@ -179,32 +179,36 @@ export default function LoyaltyPage() {
                         )}
                     </div>
 
-                    <div className="space-y-2 max-w-xs">
-                        <Label className="text-black">Maximum discount (%)</Label>
-                        <Input
-                            type="number"
-                            min={0}
-                            max={100}
-                            value={settings.maxPercent}
-                            onChange={(e) => setField("maxPercent", Number(e.target.value))}
-                            className="bg-white border-gray-200 text-black"
-                        />
-                        <p className="text-sm text-neutral-500">
-                            A hard ceiling on any single discount — tier or coupon. Nothing can exceed
-                            this, so a typo in a tier can&apos;t give away the trip.
-                        </p>
-                    </div>
+                    {/* Paired so the width earns its keep — a lone number input in a
+                        full-width card leaves a dead gap to its right. */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+                        <div className="space-y-2">
+                            <Label className="text-black">Maximum discount (%)</Label>
+                            <Input
+                                type="number"
+                                min={0}
+                                max={100}
+                                value={settings.maxPercent}
+                                onChange={(e) => setField("maxPercent", Number(e.target.value))}
+                                className="bg-white border-gray-200 text-black"
+                            />
+                            <p className="text-sm text-neutral-500">
+                                A hard ceiling on any single discount — tier or coupon. Nothing can
+                                exceed this, so a typo in a tier can&apos;t give away the trip.
+                            </p>
+                        </div>
 
-                    <div className="space-y-2">
-                        <Label className="text-black">Teaser text</Label>
-                        <Textarea
-                            value={settings.teaserText}
-                            onChange={(e) => setField("teaserText", e.target.value)}
-                            className="min-h-[80px] bg-white border-gray-200 text-black resize-none"
-                        />
-                        <p className="text-sm text-neutral-500">
-                            Prompts returning travellers to apply with the same email address.
-                        </p>
+                        <div className="space-y-2 lg:col-span-2">
+                            <Label className="text-black">Teaser text</Label>
+                            <Textarea
+                                value={settings.teaserText}
+                                onChange={(e) => setField("teaserText", e.target.value)}
+                                className="min-h-[80px] bg-white border-gray-200 text-black resize-none"
+                            />
+                            <p className="text-sm text-neutral-500">
+                                Prompts returning travellers to apply with the same email address.
+                            </p>
+                        </div>
                     </div>
 
                     <div className="border border-amber-200 bg-amber-50/50 p-5 space-y-3">

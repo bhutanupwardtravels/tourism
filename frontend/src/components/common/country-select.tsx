@@ -17,10 +17,18 @@ import { COUNTRIES, countryFlagEmoji } from "@/lib/countries";
 interface CountrySelectProps {
     value: string; // ISO2 country code, e.g. "BT"
     onChange: (iso2: string) => void;
+    /** Extra classes for the dropdown panel — needed when the trigger sits inside
+     *  an overlay stacked above the popover's default z-50. */
+    contentClassName?: string;
     placeholder?: string;
 }
 
-export function CountrySelect({ value, onChange, placeholder = "Select country" }: CountrySelectProps) {
+export function CountrySelect({
+    value,
+    onChange,
+    placeholder = "Select country",
+    contentClassName,
+}: CountrySelectProps) {
     const [open, setOpen] = useState(false);
     const selected = COUNTRIES.find((country) => country.iso2 === value);
 
@@ -31,13 +39,13 @@ export function CountrySelect({ value, onChange, placeholder = "Select country" 
                     type="button"
                     className="flex w-full items-center justify-between py-4 text-lg font-light text-black focus:outline-none"
                 >
-                    <span className={cn(!selected && "text-gray-300")}>
+                    <span className={cn("min-w-0 truncate", !selected && "text-gray-300")}>
                         {selected ? `${countryFlagEmoji(selected.iso2)} ${selected.name}` : placeholder}
                     </span>
                     <ChevronDown className="w-4 h-4 shrink-0 text-gray-400" />
                 </button>
             </PopoverTrigger>
-            <PopoverContent align="start" className="w-72 rounded-none p-0">
+            <PopoverContent align="start" className={cn("w-72 rounded-none p-0", contentClassName)}>
                 <Command
                     filter={(itemValue, search) =>
                         itemValue.toLowerCase().includes(search.toLowerCase()) ? 1 : 0
