@@ -268,7 +268,11 @@ export function CampaignForm({ initialData, action, title: pageTitle }: Campaign
                                                 </FormDescription>
                                             </div>
                                             <FormControl>
-                                                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                                <Switch
+                                                    checked={field.value}
+                                                    onCheckedChange={field.onChange}
+                                                    className="data-[state=checked]:bg-green-600 data-[state=unchecked]:bg-red-600"
+                                                />
                                             </FormControl>
                                         </FormItem>
                                     )}

@@ -162,7 +162,12 @@ export function TestimonialForm({ initialData, action, title, isReadOnly = false
                             Featured testimonials appear in the homepage carousel, ordered by priority.
                         </p>
                     </div>
-                    <Switch checked={isFeatured} onCheckedChange={setIsFeatured} disabled={isReadOnly} />
+                    <Switch
+                        checked={isFeatured}
+                        onCheckedChange={setIsFeatured}
+                        disabled={isReadOnly}
+                        className="data-[state=checked]:bg-green-600 data-[state=unchecked]:bg-red-600"
+                    />
                 </div>
 
                 <ImageUpload

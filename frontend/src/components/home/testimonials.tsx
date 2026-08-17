@@ -13,46 +13,114 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface TestimonialsProps {
   testimonials: Testimonial[];
 }
 
-function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
+function Rating({ rating }: { rating: number }) {
   return (
-    <div className="h-full flex flex-col justify-between bg-white border border-black/10 p-8 md:p-10">
+    <div className="flex items-center gap-0.5">
+      {[1, 2, 3, 4, 5].map((value) => (
+        <Star
+          key={value}
+          className={`w-3.5 h-3.5 ${
+            value <= Math.round(rating) ? "fill-amber-500 text-amber-500" : "text-gray-200"
+          }`}
+        />
+      ))}
+    </div>
+  );
+}
+
+function TestimonialIdentity({ testimonial }: { testimonial: Testimonial }) {
+  return (
+    <div className="flex items-center justify-between border-t border-black/5 pt-6">
+      <div className="flex items-center gap-3">
+        <div className="h-11 w-11 shrink-0 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center text-sm font-semibold text-zinc-500">
+          {testimonial.avatar ? (
+            <img src={testimonial.avatar} alt={testimonial.name} className="w-full h-full object-cover" />
+          ) : (
+            testimonial.name.charAt(0).toUpperCase()
+          )}
+        </div>
+        <div className="flex flex-col">
+          <span className="text-sm font-semibold text-black">{testimonial.name}</span>
+          {testimonial.role && (
+            <span className="text-[10px] text-gray-400 uppercase font-medium tracking-tight">
+              {testimonial.role}
+            </span>
+          )}
+        </div>
+      </div>
+      <Rating rating={testimonial.rating} />
+    </div>
+  );
+}
+
+function TestimonialCard({
+  testimonial,
+  onDialogOpenChange,
+}: {
+  testimonial: Testimonial;
+  onDialogOpenChange?: (open: boolean) => void;
+}) {
+  const quoteRef = React.useRef<HTMLParagraphElement>(null);
+  const [isClamped, setIsClamped] = React.useState(false);
+
+  // The quote is clamped to a fixed number of lines so every card is the same
+  // height; only show the "read full story" affordance when text is cut off.
+  React.useEffect(() => {
+    const element = quoteRef.current;
+    if (!element) return;
+
+    const check = () => setIsClamped(element.scrollHeight - element.clientHeight > 1);
+    check();
+
+    const observer = new ResizeObserver(check);
+    observer.observe(element);
+    document.fonts?.ready.then(check).catch(() => {});
+
+    return () => observer.disconnect();
+  }, [testimonial.quote]);
+
+  return (
+    <div className="h-full flex flex-col bg-white border border-black/10 p-8 md:p-10">
       <Quote className="w-8 h-8 text-amber-500/40 mb-6" />
-      <p className="text-lg md:text-xl font-light leading-relaxed text-black italic mb-8">
-        &ldquo;{testimonial.quote}&rdquo;
-      </p>
-      <div className="flex items-center justify-between border-t border-black/5 pt-6">
-        <div className="flex items-center gap-3">
-          <div className="h-11 w-11 shrink-0 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center text-sm font-semibold text-zinc-500">
-            {testimonial.avatar ? (
-              <img src={testimonial.avatar} alt={testimonial.name} className="w-full h-full object-cover" />
-            ) : (
-              testimonial.name.charAt(0).toUpperCase()
-            )}
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold text-black">{testimonial.name}</span>
-            {testimonial.role && (
-              <span className="text-[10px] text-gray-400 uppercase font-medium tracking-tight">
-                {testimonial.role}
-              </span>
-            )}
-          </div>
-        </div>
-        <div className="flex items-center gap-0.5">
-          {[1, 2, 3, 4, 5].map((value) => (
-            <Star
-              key={value}
-              className={`w-3.5 h-3.5 ${
-                value <= Math.round(testimonial.rating) ? "fill-amber-500 text-amber-500" : "text-gray-200"
-              }`}
-            />
-          ))}
-        </div>
+      <div className="flex-1">
+        <p
+          ref={quoteRef}
+          className="text-base font-light leading-relaxed text-black italic line-clamp-5"
+        >
+          &ldquo;{testimonial.quote}&rdquo;
+        </p>
+        {isClamped && (
+          <Dialog onOpenChange={onDialogOpenChange}>
+            <DialogTrigger className="group mt-5 flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.3em] text-amber-600 hover:text-black transition-colors cursor-pointer">
+              <span className="h-px w-8 bg-amber-600/40 group-hover:w-14 group-hover:bg-black transition-all duration-500" />
+              Read full story
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto rounded-none border-black/10 bg-white text-black p-8 md:p-10 gap-0">
+              <DialogTitle className="sr-only">
+                Traveler story from {testimonial.name}
+              </DialogTitle>
+              <Quote className="w-8 h-8 text-amber-500/40 mb-6" />
+              <p className="text-base font-light leading-relaxed text-black italic whitespace-pre-line mb-8">
+                &ldquo;{testimonial.quote}&rdquo;
+              </p>
+              <TestimonialIdentity testimonial={testimonial} />
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
+      <div className="mt-8">
+        <TestimonialIdentity testimonial={testimonial} />
       </div>
     </div>
   );
@@ -60,16 +128,17 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
 
 export function Testimonials({ testimonials }: TestimonialsProps) {
   const [api, setApi] = React.useState<CarouselApi>();
+  const [isPaused, setIsPaused] = React.useState(false);
 
   React.useEffect(() => {
-    if (!api) return;
+    if (!api || isPaused) return;
 
     const interval = setInterval(() => {
       api.scrollNext();
     }, 6000);
 
     return () => clearInterval(interval);
-  }, [api]);
+  }, [api, isPaused]);
 
   if (!testimonials || testimonials.length === 0) return null;
 
@@ -115,7 +184,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
           setApi={setApi}
           className="w-full"
         >
-          <CarouselContent className="-ml-8">
+          <CarouselContent className="-ml-8 items-stretch">
             {testimonials.map((testimonial, index) => (
               <CarouselItem
                 key={testimonial.id}
@@ -128,7 +197,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <TestimonialCard testimonial={testimonial} />
+                  <TestimonialCard testimonial={testimonial} onDialogOpenChange={setIsPaused} />
                 </motion.div>
               </CarouselItem>
             ))}
