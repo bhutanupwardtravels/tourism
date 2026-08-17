@@ -353,7 +353,7 @@ Tell us roughly when you want to travel and who's coming. We'll come back with a
                                     type="submit"
                                     disabled={isSubmitting}
                                     className={cn(
-                                        "group relative w-full overflow-hidden bg-black py-8 text-white text-[10px] font-bold uppercase tracking-[0.5em] transition-all hover:bg-amber-600",
+                                        "group relative w-full overflow-hidden bg-black py-6 text-white text-[13px] font-bold uppercase tracking-[0.2em] transition-all hover:bg-amber-600",
                                         isSubmitting && "opacity-70 cursor-not-allowed"
                                     )}
                                 >

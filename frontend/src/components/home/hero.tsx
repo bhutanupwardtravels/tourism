@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 
 interface HeroProps {
@@ -11,10 +11,14 @@ interface HeroProps {
 }
 
 export function Hero({ licenseNumber, foundingYear, reviewCount }: HeroProps) {
+  // A looping background video is decoration, not content: when the OS asks for
+  // reduced motion, hold the poster frame instead.
+  const prefersReducedMotion = useReducedMotion();
+
   const trustPoints = [
     licenseNumber && `Licence ${licenseNumber}`,
     foundingYear && `Operating since ${foundingYear}`,
-    reviewCount && reviewCount > 0 && `${reviewCount} traveller reviews`,
+    reviewCount && reviewCount > 0 && `${reviewCount} traveller review${reviewCount === 1 ? "" : "s"}`,
     "Sustainable Development Fee included",
   ].filter(Boolean) as string[];
 
@@ -24,21 +28,30 @@ export function Hero({ licenseNumber, foundingYear, reviewCount }: HeroProps) {
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-black/10 z-10" />
         <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-black/20 z-10" />
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="metadata"
-          poster="/images/hero-poster.jpg"
-          className="w-full h-full object-cover"
-        >
-          <source
-            src="/videos/landing_video.mp4"
-            type="video/mp4"
+        {prefersReducedMotion ? (
+          <img
+            src="/images/hero-poster.jpg"
+            alt=""
+            aria-hidden="true"
+            className="w-full h-full object-cover"
           />
-          Your browser does not support the video tag.
-        </video>
+        ) : (
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-hidden="true"
+            preload="metadata"
+            poster="/images/hero-poster.jpg"
+            className="w-full h-full object-cover"
+          >
+            <source
+              src="/videos/landing_video.mp4"
+              type="video/mp4"
+            />
+          </video>
+        )}
       </div>
 
       {/* Content */}

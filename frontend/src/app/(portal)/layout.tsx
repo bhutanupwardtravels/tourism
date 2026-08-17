@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import NextTopLoader from "nextjs-toploader";
+import { MotionProvider } from "@/components/layout/motion-provider";
 
 // Route group for the trip-planning portal. It deliberately does NOT use the
 // public site's Header/Footer — this is a focused, app-like workspace rather
@@ -51,10 +52,39 @@ export default function PortalLayout({
               </span>
             </span>
           </Link>
+
+          {/*
+            The planner used to be a dead end — the logo was the only link out.
+            Someone mid-build who wants to re-check a hotel or a destination
+            needs a way across without losing their place.
+          */}
+          <nav className="ml-auto flex items-center gap-6">
+            {[
+              { href: "/tours", label: "Tours" },
+              { href: "/destinations", label: "Destinations" },
+              { href: "/hotels", label: "Hotels" },
+            ].map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="hidden text-xs font-medium uppercase tracking-wider text-white/70 transition-colors hover:text-white sm:inline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
+              >
+                {item.label}
+              </Link>
+            ))}
+            <Link
+              href="/enquire"
+              className="text-xs font-medium uppercase tracking-wider text-amber-500 transition-colors hover:text-amber-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
+            >
+              Talk to us
+            </Link>
+          </nav>
         </div>
       </header>
 
-      <main className="flex-1">{children}</main>
+      <MotionProvider>
+        <main className="flex-1">{children}</main>
+      </MotionProvider>
     </div>
   );
 }

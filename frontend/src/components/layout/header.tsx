@@ -5,7 +5,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Menu, Search } from "lucide-react";
+import { Menu } from "lucide-react";
 import { OverlayMenu } from "@/components/ui/overlay-menu";
 import { useScroll, useMotionValueEvent } from "framer-motion";
 import type { ContactContent } from "@/lib/data/contact";
@@ -20,7 +20,6 @@ export function Header({ contact }: HeaderProps) {
   const { scrollY } = useScroll();
   const pathname = usePathname();
 
-  const isHome = pathname === "/";
   // Pages with white backgrounds requiring dark text when not scrolled
   const lightBgPages = ["/destinations", "/experiences", "/tours", "/hotels", "/terms", "/privacy", "/bhutan-travel-guide"];
   const isDarkText = lightBgPages.includes(pathname) && !isScrolled;
@@ -121,15 +120,15 @@ export function Header({ contact }: HeaderProps) {
             >
               Hotels
             </Link>
-            {/* <Link
+            <Link
               href="/about-us"
               className={cn(
                 "text-sm font-medium transition-colors uppercase tracking-wider",
                 isDarkText ? "hover:text-gray-600" : "hover:text-gray-300"
               )}
             >
-              About Us
-            </Link> */}
+              About
+            </Link>
             {/* <Link
               href="/plan-my-trip"
               className={cn(

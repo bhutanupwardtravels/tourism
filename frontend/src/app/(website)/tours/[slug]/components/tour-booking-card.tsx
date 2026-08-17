@@ -33,17 +33,17 @@ export function TourBookingCard({ slug, className = "" }: TourBookingCardProps) 
                     itinerary to you. You'll get a detailed quote within 24 hours.
                 </p>
 
-                <div className="mb-10 space-y-3 font-mono text-[9px] uppercase tracking-widest">
+                <div className="mb-10 space-y-3 text-[13px] leading-relaxed">
                     <div className="flex items-start gap-3 text-gray-600">
                         <span className="mt-1 w-1.5 h-1.5 rounded-full bg-amber-600 shrink-0" />
-                        <span>Included: licensed guide, private transport, entry &amp; monument fees, Sustainable Development Fee</span>
+                        <span className="text-gray-700">Included: licensed guide, private transport, entry &amp; monument fees, and the Sustainable Development Fee.</span>
                     </div>
                 </div>
 
                 <div className="space-y-6">
                     <a
                         href={`/plan-my-trip?package=${slug}`}
-                        className="group relative flex items-center justify-center gap-6 bg-black py-6 text-white text-[10px] font-bold uppercase tracking-[0.4em] transition-all hover:bg-amber-600 overflow-hidden"
+                        className="group relative flex items-center justify-center gap-6 bg-black py-5 text-white text-[13px] font-bold uppercase tracking-[0.2em] transition-all hover:bg-amber-600 overflow-hidden"
                     >
                         <span className="relative z-10">Start Planning</span>
                         <div className="absolute inset-0 translate-y-full group-hover:translate-y-0 bg-amber-500 transition-transform duration-500" />

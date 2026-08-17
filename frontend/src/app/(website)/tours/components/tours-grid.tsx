@@ -11,6 +11,15 @@ function tripDays(tour: Tour): number {
     return match ? parseInt(match[0], 10) : 0;
 }
 
+/** Recommended order uses the operator's own priority/featured flags. */
+const SORTS = [
+    { id: "recommended", label: "Recommended" },
+    { id: "shortest", label: "Shortest first" },
+    { id: "longest", label: "Longest first" },
+    { id: "price-asc", label: "Price: low to high" },
+    { id: "price-desc", label: "Price: high to low" },
+];
+
 const LENGTH_BANDS = [
     { id: "short", label: "Up to 7 days", test: (d: number) => d > 0 && d <= 7 },
     { id: "mid", label: "8-12 days", test: (d: number) => d >= 8 && d <= 12 },
@@ -29,22 +38,38 @@ interface ToursGridProps {
 export function ToursGrid({ tours }: ToursGridProps) {
     const [band, setBand] = useState<string | null>(null);
     const [category, setCategory] = useState<string | null>(null);
+    const [sort, setSort] = useState<string>("recommended");
 
     const categories = useMemo(
         () => Array.from(new Set(tours.map((tour) => tour.category).filter(Boolean) as string[])).sort(),
         [tours]
     );
 
-    const visible = useMemo(
-        () =>
-            tours.filter((tour) => {
-                const activeBand = LENGTH_BANDS.find((b) => b.id === band);
-                if (activeBand && !activeBand.test(tripDays(tour))) return false;
-                if (category && tour.category !== category) return false;
-                return true;
-            }),
-        [tours, band, category]
-    );
+    const visible = useMemo(() => {
+        const filtered = tours.filter((tour) => {
+            const activeBand = LENGTH_BANDS.find((b) => b.id === band);
+            if (activeBand && !activeBand.test(tripDays(tour))) return false;
+            if (category && tour.category !== category) return false;
+            return true;
+        });
+
+        return [...filtered].sort((a, b) => {
+            switch (sort) {
+                case "shortest":
+                    return tripDays(a) - tripDays(b);
+                case "longest":
+                    return tripDays(b) - tripDays(a);
+                case "price-asc":
+                    return a.price - b.price;
+                case "price-desc":
+                    return b.price - a.price;
+                default:
+                    // Featured first, then the admin-set priority.
+                    if (!!a.featured !== !!b.featured) return a.featured ? -1 : 1;
+                    return (b.priority ?? 0) - (a.priority ?? 0);
+            }
+        });
+    }, [tours, band, category, sort]);
 
     const hasFilters = band !== null || category !== null;
 
@@ -95,6 +120,21 @@ export function ToursGrid({ tours }: ToursGridProps) {
                 </div>
 
                 <div className="flex items-center gap-4 text-[13px] text-gray-500">
+                    <label htmlFor="tours-sort" className="sr-only">
+                        Sort itineraries
+                    </label>
+                    <select
+                        id="tours-sort"
+                        value={sort}
+                        onChange={(e) => setSort(e.target.value)}
+                        className="border border-black/15 bg-white px-3 py-2 text-[12px] text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
+                    >
+                        {SORTS.map((option) => (
+                            <option key={option.id} value={option.id}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </select>
                     <span aria-live="polite">
                         {visible.length} of {tours.length} itineraries
                     </span>

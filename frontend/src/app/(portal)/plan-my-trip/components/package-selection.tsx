@@ -20,7 +20,7 @@ export function PackageSelection({ packages, selectedPackage, onBack, onSelect }
             exit={{ opacity: 0, y: -20 }}
             className="w-full"
         >
-            <div className="flex justify-between items-end mb-24 pb-12">
+            <div className="flex justify-between items-end mb-12 pb-6">
                 <div className="space-y-4">
                     <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.5em] font-bold block">
                         // step 1 of 2
@@ -38,7 +38,7 @@ export function PackageSelection({ packages, selectedPackage, onBack, onSelect }
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 {selectedPackage && (
                     <div className="md:col-span-2 mb-12">
                         <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.5em] font-bold block mb-8">
@@ -68,7 +68,7 @@ export function PackageSelection({ packages, selectedPackage, onBack, onSelect }
                     ))}
             </div>
 
-            <div className="mt-32 text-center pt-24 border-t border-black/5">
+            <div className="mt-16 text-center pt-12 border-t border-black/5">
                 <p className="font-mono text-[9px] text-gray-500 uppercase tracking-[0.5em] max-w-lg mx-auto leading-loose">
                     Every itinerary includes a licensed private guide, private transport, visa processing and the Sustainable Development Fee.
                 </p>

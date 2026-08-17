@@ -40,12 +40,12 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
                     />
                 )}
 
-                <span className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm text-amber-700 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.3em] font-bold z-20 shadow-lg">
+                <span className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm text-amber-700 px-3 py-1 text-[11px] uppercase tracking-[0.12em] font-bold z-20 shadow-lg">
                     {categoryTitle}
                 </span>
 
                 {tour.featured && (
-                    <span className="absolute top-6 left-6 bg-amber-600 text-white px-3 py-1 font-mono text-[8px] uppercase tracking-[0.4em] z-20 shadow-lg">
+                    <span className="absolute top-6 left-6 bg-amber-600 text-white px-3 py-1 text-[11px] uppercase tracking-[0.12em] font-bold z-20 shadow-lg">
                         Featured
                     </span>
                 )}
@@ -62,7 +62,7 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
             {/* Metadata */}
             <div className="flex justify-between items-start">
                 <div className="flex-1">
-                    <div className="flex items-center justify-between gap-6 mb-4 text-[11px] font-mono text-gray-500 uppercase tracking-widest font-medium">
+                    <div className="flex items-center justify-between gap-6 mb-4 text-[13px] text-gray-600 font-medium">
                         <div className="flex items-center gap-2">
                             <Calendar className="w-3.5 h-3.5 text-amber-600/60" />
                             {tour.duration}
@@ -70,7 +70,7 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
                         <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-600/10 rounded-xs text-black border border-amber-600/20 shadow-xs whitespace-nowrap">
                             <DollarSign className="w-3.5 h-3.5 text-amber-600" />
                             {formatPrice(tour.price)}
-                            <span className="text-gray-400 font-normal">/person · SDF incl.</span>
+                            <span className="text-gray-500 font-normal">/person · SDF incl.</span>
                         </div>
                     </div>
 

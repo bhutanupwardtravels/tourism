@@ -12,7 +12,7 @@ interface DestinationHeroProps {
 
 export function DestinationHero({ name, image, region }: DestinationHeroProps) {
   return (
-    <div className="h-screen relative overflow-hidden bg-white">
+    <div className="h-[72vh] min-h-[520px] relative overflow-hidden bg-white">
       {/* Background Image with Color */}
       <motion.div
         initial={{ scale: 1.2, opacity: 0 }}

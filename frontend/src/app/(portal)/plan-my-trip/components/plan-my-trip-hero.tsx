@@ -25,7 +25,7 @@ export function PlanMyTripHero() {
                         <span className="italic font-serif normal-case text-amber-500">Bhutan Trip</span>
                     </h1>
                     <p className="mt-5 text-base md:text-lg text-white/80 font-light max-w-xl leading-relaxed">
-Two ways to start: pick one of our ready-made itineraries, or build your own day by day. Either way, a specialist reviews it and comes back to you with a full price.
+Three ways to start: pick a ready-made itinerary, build your own day by day, or just tell us what you have in mind. Either way a specialist reviews it and comes back with a full price.
                     </p>
                 </motion.div>
             </div>

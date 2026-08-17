@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 export function CompanyIntro() {
   return (
-    <section className="py-40 md:py-60 bg-neutral-950 relative overflow-hidden">
+    <section className="py-24 md:py-32 bg-neutral-950 relative overflow-hidden">
       {/* Background Decorative Element */}
       <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-amber-500/20 to-transparent" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(245,158,11,0.03),transparent_70%)]" />

@@ -17,7 +17,7 @@ export function PageHeader({ label, title, description, bgText }: PageHeaderProp
     // I will use regex to find words in brackets or similar, or just allow title to be ReactNode.
 
     return (
-        <div className="pt-48 pb-12 relative overflow-hidden">
+        <div className="pt-32 pb-8 relative overflow-hidden">
             {/* Large Background Decorative Text */}
             {bgText && (
                 <motion.div
@@ -30,7 +30,7 @@ export function PageHeader({ label, title, description, bgText }: PageHeaderProp
                     }}
                     className="absolute top-0 right-0 opacity-[0.03] select-none pointer-events-none transform translate-y-24"
                 >
-                    <span className="text-[25vw] font-bold uppercase leading-none tracking-tighter block whitespace-nowrap">
+                    <span className="text-[14vw] font-bold uppercase leading-none tracking-tighter block whitespace-nowrap">
                         {bgText}
                     </span>
                 </motion.div>

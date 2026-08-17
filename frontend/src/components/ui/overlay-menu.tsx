@@ -90,7 +90,7 @@ export function OverlayMenu({ isOpen, onClose, contact }: OverlayMenuProps) {
                   <Link
                     href="/plan-my-trip"
                     onClick={onClose}
-                    className="group/cta relative inline-flex items-center gap-6 overflow-hidden bg-white px-8 py-4 text-[10px] font-bold uppercase tracking-[0.4em] text-black transition-colors duration-300"
+                    className="group/cta relative inline-flex items-center gap-6 overflow-hidden bg-white px-8 py-4 text-[13px] font-bold uppercase tracking-[0.2em] text-black transition-colors duration-300"
                   >
                     <span className="relative z-10 text-sm font-normal flex items-center gap-6 group-hover/cta:text-white transition-colors duration-300">
                       Plan My Trip
@@ -128,6 +128,15 @@ export function OverlayMenu({ isOpen, onClose, contact }: OverlayMenuProps) {
                 </motion.div>
                 <motion.div variants={itemVariants}>
                   <Link
+                    href="/hotels"
+                    className="text-4xl lg:text-6xl font-light hover:text-gray-300 transition-colors"
+                    onClick={onClose}
+                  >
+                    Hotels
+                  </Link>
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                  <Link
                     href="/about-us"
                     className="text-4xl lg:text-6xl font-light hover:text-gray-300 transition-colors"
                     onClick={onClose}
@@ -150,7 +159,7 @@ export function OverlayMenu({ isOpen, onClose, contact }: OverlayMenuProps) {
                     className="text-4xl lg:text-6xl font-light hover:text-gray-300 transition-colors"
                     onClick={onClose}
                   >
-                    Enquire
+                    Talk to a specialist
                   </Link>
                 </motion.div>
               </motion.nav>

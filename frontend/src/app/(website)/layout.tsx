@@ -1,6 +1,7 @@
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { PageTransition } from "@/components/layout/page-transition";
+import { MotionProvider } from "@/components/layout/motion-provider";
 import { getContactContent, ContactContent } from "@/lib/data/contact";
 import { getAboutContent } from "@/lib/data/about";
 import { getFeaturedTestimonials } from "@/lib/data/testimonials";
@@ -65,13 +66,21 @@ export default async function SiteLayout({
       <JsonLd data={organizationJsonLd(contact, credentials, testimonials)} />
       <JsonLd data={websiteJsonLd()} />
       <NextTopLoader color="#d97706" height={2} showSpinner={false} />
-      <Header contact={contact} />
-      <main className="min-h-screen">
-        <PageTransition>{children}</PageTransition>
-      </main>
-      <Footer contact={contact} />
-      <ChatWidget />
-      <PromoBanner campaign={campaign} />
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-6 focus:top-6 focus:z-100 focus:bg-black focus:px-5 focus:py-3 focus:text-sm focus:font-medium focus:text-white focus:outline-2 focus:outline-offset-2 focus:outline-amber-600"
+      >
+        Skip to content
+      </a>
+      <MotionProvider>
+        <Header contact={contact} />
+        <main id="main-content" className="min-h-screen">
+          <PageTransition>{children}</PageTransition>
+        </main>
+        <Footer contact={contact} />
+        <ChatWidget />
+        <PromoBanner campaign={campaign} />
+      </MotionProvider>
     </>
   );
 }

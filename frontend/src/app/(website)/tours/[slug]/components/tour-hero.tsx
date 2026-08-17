@@ -32,7 +32,7 @@ export function TourHero({
     };
 
     return (
-        <div className="h-screen relative overflow-hidden bg-white">
+        <div className="h-[72vh] min-h-[520px] relative overflow-hidden bg-white">
             {/* Background Image with Color Reveal */}
             <motion.div
                 initial={{ scale: 1.2, opacity: 0 }}
@@ -120,7 +120,7 @@ export function TourHero({
                                     <div className="text-left">
                                         <span className="block font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1">Pricing From</span>
                                         <span className="font-light tracking-widest text-lg md:text-xl uppercase text-white">{formatPrice(price)}</span>
-                                        <span className="block font-mono text-[9px] text-gray-500 tracking-wider mt-1 normal-case">per person · SDF included · group rates available</span>
+                                        <span className="block font-mono text-[12px] text-gray-300 tracking-normal mt-1 normal-case">per person · SDF included · group rates available</span>
                                     </div>
                                 </div>
                             </>

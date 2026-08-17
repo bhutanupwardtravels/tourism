@@ -3,11 +3,13 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Sparkles, Heart } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Sparkles, Heart, MessageCircle } from "lucide-react";
 import { PackageSelection } from "./package-selection";
 import { CustomItineraryBuilder } from "./custom-itinerary-builder";
 import { TourRequestForm } from "./tour-request-form";
 import { PlanMyTripHero } from "./plan-my-trip-hero";
+import { readDraft } from "../draft";
 import { Tour } from "@/app/(website)/tours/schema";
 import { Destination } from "@/app/(website)/destinations/schema";
 import { Experience } from "@/app/(website)/experiences/schema";
@@ -36,6 +38,13 @@ export default function PlanMyTripClient({
     const searchParams = useSearchParams();
     const [step, setStep] = useState<PlanningStep>("mode_selection");
     const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
+
+    // A saved itinerary is worthless if a refresh drops the traveller back on
+    // the mode picker with no sign of it, so resume into the builder directly.
+    useEffect(() => {
+        if (searchParams.get("package")) return;
+        if (readDraft()) setStep("custom_builder");
+    }, [searchParams]);
 
     useEffect(() => {
         const packageSlug = searchParams.get("package");
@@ -68,23 +77,23 @@ export default function PlanMyTripClient({
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.8, ease: "easeOut" }}
-                                className="grid md:grid-cols-2 gap-px bg-black/5 p-px shadow-2xl"
+                                className="grid md:grid-cols-3 gap-px bg-black/5 p-px shadow-2xl"
                             >
                                 {/* Curated Package Card */}
                                 <motion.button
                                     onClick={() => setStep("package_list")}
-                                    className="group relative overflow-hidden bg-white hover:bg-neutral-50 transition-all duration-700 p-16 md:p-24 text-left flex flex-col justify-between aspect-4/5 md:aspect-auto"
+                                    className="group relative overflow-hidden bg-white hover:bg-neutral-50 transition-all duration-700 p-10 md:p-12 text-left flex flex-col justify-between aspect-4/5 md:aspect-auto"
                                 >
                                     <div className="space-y-8 relative z-10">
                                         <div className="w-12 h-12 border border-black/10 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all duration-500">
                                             <Sparkles className="w-5 h-5 text-black group-hover:text-white transition-all duration-500" />
                                         </div>
                                         <div>
-                                            <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase mb-6 leading-none text-black">
+                                            <h2 className="text-3xl md:text-4xl font-light tracking-tighter uppercase mb-6 leading-none text-black">
                                                 Choose a <br />
                                                 <span className="italic font-serif normal-case text-amber-600">ready-made trip</span>
                                             </h2>
-                                            <p className="text-gray-500 text-lg leading-relaxed font-light max-w-sm">
+                                            <p className="text-gray-500 text-base leading-relaxed font-light max-w-sm">
                                                 Complete itineraries from 5 to 15 days, each with a price and a
                                                 day-by-day plan. Pick one and we'll tailor the details to you.
                                             </p>
@@ -97,25 +106,25 @@ export default function PlanMyTripClient({
 
                                     {/* Abstract Overlay */}
                                     <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
-                                        <Sparkles className="w-64 h-64 rotate-12 text-black group-hover:text-amber-600 transition-all" />
+                                        <Sparkles className="w-40 h-40 rotate-12 text-black group-hover:text-amber-600 transition-all" />
                                     </div>
                                 </motion.button>
 
                                 {/* Custom Bespoke Card */}
                                 <motion.button
                                     onClick={() => setStep("custom_builder")}
-                                    className="group relative overflow-hidden bg-white hover:bg-neutral-50 transition-all duration-700 p-16 md:p-24 text-left flex flex-col justify-between aspect-4/5 md:aspect-auto"
+                                    className="group relative overflow-hidden bg-white hover:bg-neutral-50 transition-all duration-700 p-10 md:p-12 text-left flex flex-col justify-between aspect-4/5 md:aspect-auto"
                                 >
                                     <div className="space-y-8 relative z-10">
                                         <div className="w-12 h-12 border border-black/10 flex items-center justify-center group-hover:bg-amber-600 group-hover:text-white transition-all duration-500">
                                             <Heart className="w-5 h-5 text-black group-hover:text-white transition-all duration-500" />
                                         </div>
                                         <div>
-                                            <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase mb-6 leading-none text-black">
+                                            <h2 className="text-3xl md:text-4xl font-light tracking-tighter uppercase mb-6 leading-none text-black">
                                                 Build your own <br />
                                                 <span className="italic font-serif normal-case text-amber-600">day by day</span>
                                             </h2>
-                                            <p className="text-gray-500 text-lg leading-relaxed font-light max-w-sm">
+                                            <p className="text-gray-500 text-base leading-relaxed font-light max-w-sm">
                                                 Choose where you go, what you do and where you stay. The estimated
                                                 price updates as you build.
                                             </p>
@@ -128,9 +137,39 @@ export default function PlanMyTripClient({
 
                                     {/* Abstract Overlay */}
                                     <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
-                                        <Heart className="w-64 h-64 -rotate-12 text-black group-hover:text-amber-600 transition-all" />
+                                        <Heart className="w-40 h-40 -rotate-12 text-black group-hover:text-amber-600 transition-all" />
                                     </div>
                                 </motion.button>
+
+                                {/* Talk to someone */}
+                                <Link
+                                    href="/enquire"
+                                    className="group relative overflow-hidden bg-white hover:bg-neutral-50 transition-all duration-700 p-10 md:p-12 text-left flex flex-col justify-between aspect-4/5 md:aspect-auto"
+                                >
+                                    <div className="space-y-8 relative z-10">
+                                        <div className="w-12 h-12 border border-black/10 flex items-center justify-center group-hover:bg-amber-600 group-hover:text-white transition-all duration-500">
+                                            <MessageCircle className="w-5 h-5 text-black group-hover:text-white transition-all duration-500" />
+                                        </div>
+                                        <div>
+                                            <h2 className="text-3xl md:text-4xl font-light tracking-tighter uppercase mb-6 leading-none text-black">
+                                                Just talk <br />
+                                                <span className="italic font-serif normal-case text-amber-600">to someone</span>
+                                            </h2>
+                                            <p className="text-gray-500 text-base leading-relaxed font-light max-w-sm">
+                                                Not sure where to start? Send us a few details and a specialist
+                                                will come back with suggestions.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-4 flex items-center gap-6 text-[10px] font-bold uppercase tracking-[0.4em] text-gray-400 group-hover:text-amber-600 transition-all">
+                                        Contact a specialist <ArrowRight className="w-4 h-4 group-hover:translate-x-3 transition-transform duration-500" />
+                                    </div>
+
+                                    <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+                                        <MessageCircle className="w-40 h-40 rotate-6 text-black group-hover:text-amber-600 transition-all" />
+                                    </div>
+                                </Link>
                             </motion.div>
                         ) : step === "package_list" ? (
                             <div className="bg-white text-black shadow-2xl p-6 md:p-16 my-8">

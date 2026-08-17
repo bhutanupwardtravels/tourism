@@ -9,7 +9,7 @@ interface TourOverviewProps {
 
 export function TourOverview({ tour }: TourOverviewProps) {
     return (
-        <div className="lg:col-span-8">
+        <div>
             <div className="flex flex-col gap-12">
                 <div className="max-w-3xl">
                     <span className="font-mono text-amber-600 text-[13px] uppercase tracking-[0.4em] mb-4 block font-bold">

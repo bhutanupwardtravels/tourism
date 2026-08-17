@@ -6,7 +6,10 @@ import { TourOverview } from "./components/tour-overview";
 import { getTourBySlug, getRelatedTours } from "../actions";
 import CallToAction from "@/components/common/call-to-action";
 import { TourBookingCard } from "./components/tour-booking-card";
+import { TourActionBar } from "./components/tour-action-bar";
 import { JsonLd } from "@/components/common/json-ld";
+import { FaqSection } from "@/components/common/faq-section";
+import { getFaqContent } from "@/lib/data/faq";
 import { tourJsonLd, breadcrumbJsonLd } from "@/lib/structured-data";
 
 import type { Metadata } from "next";
@@ -17,6 +20,15 @@ export async function generateStaticParams() {
     const slugs = await listSlugs("tours");
     return slugs.map((slug) => ({ slug }));
 }
+
+const TOUR_PAGE_FAQ_QUESTIONS = [
+    "What is the best time to visit Bhutan?",
+    "How far in advance should I book a Bhutan tour?",
+    "What should I pack for a trip to Bhutan, and is altitude a concern?",
+    "Do I need a visa to visit Bhutan?",
+    "Do I need a licensed guide to travel in Bhutan?",
+    "What currency is used in Bhutan and how do I pay for a tour?",
+];
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -36,10 +48,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function TourPage({ params }: PageProps) {
   const { slug } = await params;
-  const [tour, relatedTours] = await Promise.all([
+  const [tour, relatedTours, faqContent] = await Promise.all([
     getTourBySlug(slug),
-    getRelatedTours(slug, 6)
+    getRelatedTours(slug, 6),
+    getFaqContent().catch(() => ({ items: [] })),
   ]);
+
+  const tourFaqs = TOUR_PAGE_FAQ_QUESTIONS.map((question) =>
+    faqContent.items.find((item) => item.question === question)
+  ).filter((item): item is NonNullable<typeof item> => Boolean(item));
 
   if (!tour) {
     notFound();
@@ -63,14 +80,30 @@ export default async function TourPage({ params }: PageProps) {
         price={tour.price}
       />
 
-      <div className="container mx-auto px-6 pt-40">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-start">
-          <TourOverview tour={tour} />
+      <div className="container mx-auto px-6 pt-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          <div className="lg:col-span-8 space-y-16">
+            <TourOverview tour={tour} />
+            <TourItinerary days={tour.days} slug={tour.slug} />
+          </div>
           <TourBookingCard slug={tour.slug} />
         </div>
-
-        <TourItinerary days={tour.days} slug={tour.slug} />
       </div>
+
+      <FaqSection
+        label="// before you book"
+        title="Good to know"
+        bgText="FAQ"
+        items={tourFaqs}
+        className="border-t border-black/5"
+      />
+
+      <TourActionBar
+        slug={tour.slug}
+        title={tour.title}
+        duration={tour.duration}
+        price={tour.price}
+      />
 
       {/* Related Tours Section */}
       <TourCarousel tours={relatedTours} currentSlug={slug} />

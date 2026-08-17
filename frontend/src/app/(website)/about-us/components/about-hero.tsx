@@ -13,7 +13,7 @@ export function AboutHero({ hero }: AboutHeroProps) {
   const titleWords = hero.title.split(' ');
 
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-white">
+    <section className="relative h-[72vh] min-h-[520px] w-full overflow-hidden bg-white">
       {/* Background Image with Cinematic Overlays */}
       <motion.div
         initial={{ scale: 1.2, opacity: 0 }}

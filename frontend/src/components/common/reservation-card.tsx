@@ -36,7 +36,7 @@ export function ReservationCard({ className = "" }: ReservationCardProps) {
                 <div className="space-y-6">
                     <a
                         href="/plan-my-trip"
-                        className="group relative flex items-center justify-center gap-6 bg-black py-6 text-white text-[10px] font-bold uppercase tracking-[0.4em] transition-all hover:bg-amber-600 overflow-hidden"
+                        className="group relative flex items-center justify-center gap-6 bg-black py-5 text-white text-[13px] font-bold uppercase tracking-[0.2em] transition-all hover:bg-amber-600 overflow-hidden"
                     >
                         <span className="relative z-10">Start Planning</span>
                         <div className="absolute inset-0 translate-y-full group-hover:translate-y-0 bg-amber-500 transition-transform duration-500" />

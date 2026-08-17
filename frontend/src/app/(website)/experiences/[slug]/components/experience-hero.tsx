@@ -46,7 +46,7 @@ export function ExperienceHero({
 
     const dateRange = formatDateRange(startDate, endDate);
     return (
-        <div className="h-screen relative overflow-hidden bg-white">
+        <div className="h-[72vh] min-h-[520px] relative overflow-hidden bg-white">
             {/* Background Image with Color Reveal */}
             <motion.div
                 initial={{ scale: 1.2, opacity: 0 }}

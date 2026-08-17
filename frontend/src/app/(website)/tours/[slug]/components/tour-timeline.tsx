@@ -1,78 +1,150 @@
 "use client";
 
 import Image from "next/image";
-
-import { motion } from "framer-motion";
-import { TourDay } from "../../schema";
-import { Plus } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, ChevronDown, MoonStar } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { TourDay } from "../../schema";
 
 interface TourTimelineProps {
   days: TourDay[];
   slug: string;
 }
 
+/**
+ * A 12-day tour used to render as 12 full-viewport blocks, so nobody could form
+ * a mental model of the trip without scrolling through all of it. Each day is
+ * now a scannable row that expands in place; the first is open so the pattern
+ * is obvious without a click.
+ */
 export function TourTimeline({ days, slug }: TourTimelineProps) {
+  const [openDays, setOpenDays] = useState<number[]>(days.length ? [days[0].day] : []);
+
+  const allOpen = openDays.length === days.length;
+
+  const toggle = (day: number) =>
+    setOpenDays((prev) =>
+      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
+    );
+
   return (
-    <div className="relative space-y-32 py-12">
-      {days.map((day, index) => (
-        <Link
-          key={day.day}
-          href={`/tours/${slug}/day/${day.day}`}
-          className="block group"
+    <div className="border-t border-black/10">
+      <div className="flex justify-end py-4">
+        <button
+          type="button"
+          onClick={() => setOpenDays(allOpen ? [] : days.map((d) => d.day))}
+          className="text-[11px] font-bold uppercase tracking-[0.2em] text-amber-600 transition-colors hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
         >
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.8, delay: index * 0.1 }}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start"
-          >
-            {/* Day Number Label */}
-            <div className="lg:col-span-1">
-              <span className="font-mono text-xs text-amber-600 uppercase tracking-[0.4em] block sticky top-40 font-bold">
-                // day {day.day < 10 ? `0${day.day}` : day.day}
-              </span>
-            </div>
+          {allOpen ? "Collapse all" : "Expand all"}
+        </button>
+      </div>
 
-            {/* Content Area */}
-            <div className="lg:col-span-11 grid grid-cols-1 md:grid-cols-2 gap-12 items-start border-l border-black/5 pl-12 pb-24 group-hover:border-amber-500/30 transition-colors duration-700">
-              {day.image && (
-                <div className="relative aspect-video overflow-hidden rounded-xs border border-black/5">
-                  {day.image && (
-                      <Image
-                          src={day.image}
-                          alt={day.title}
-                          fill
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                          className="object-cover transition-transform duration-1000 group-hover:scale-110"
-                      />
+      <ul className="border-t border-black/10">
+        {days.map((day) => {
+          const isOpen = openDays.includes(day.day);
+          const panelId = `day-panel-${day.day}`;
+
+          return (
+            <li key={day.day} className="border-b border-black/10">
+              <button
+                type="button"
+                onClick={() => toggle(day.day)}
+                aria-expanded={isOpen}
+                aria-controls={panelId}
+                className="group flex w-full items-center gap-6 py-6 text-left transition-colors hover:bg-neutral-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
+              >
+                <span className="w-16 shrink-0 pl-1 text-[11px] font-bold uppercase tracking-[0.2em] text-amber-600">
+                  Day {day.day}
+                </span>
+
+                <span className="min-w-0 flex-1">
+                  <span className="block text-lg md:text-xl font-normal text-black leading-snug">
+                    {day.title}
+                  </span>
+                  {!isOpen && (
+                    <span className="mt-1 block truncate text-[13px] text-gray-500">
+                      {day.accommodation ? `Stay: ${day.accommodation}` : day.description}
+                    </span>
                   )}
-                </div>
-              )}
-              <div>
-                <h3 className="text-4xl font-light mb-6 group-hover:italic transition-all duration-500 uppercase tracking-tight group-hover:translate-x-3 origin-left">
-                  {day.title}
-                </h3>
+                </span>
 
-                <p className="text-gray-600 leading-relaxed font-light italic text-base md:text-lg mb-6 line-clamp-4">
-                  "{day.description}"
-                </p>
+                <ChevronDown
+                  className={cn(
+                    "mr-1 h-5 w-5 shrink-0 text-gray-400 transition-transform duration-300 group-hover:text-black",
+                    isOpen && "rotate-180"
+                  )}
+                />
+              </button>
 
-                {day.accommodation && (
-                  <p className="mb-8 text-[13px] text-gray-500">
-                    <span className="font-semibold text-black">Stay:</span> {day.accommodation}
-                  </p>
+              <AnimatePresence initial={false}>
+                {isOpen && (
+                  <motion.div
+                    id={panelId}
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
+                    className="overflow-hidden"
+                  >
+                    <div className="grid grid-cols-1 gap-8 pb-10 md:grid-cols-[minmax(0,320px)_1fr] md:pl-22">
+                      {day.image && (
+                        <div className="relative aspect-4/3 overflow-hidden rounded-xs border border-black/5">
+                          <Image
+                            src={day.image}
+                            alt={day.title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 320px"
+                            className="object-cover"
+                          />
+                        </div>
+                      )}
+
+                      <div className="flex flex-col gap-5">
+                        <p className="text-[15px] leading-relaxed text-gray-600">
+                          {day.description}
+                        </p>
+
+                        {day.accommodation && (
+                          <p className="flex items-center gap-2 text-[13px] text-gray-600">
+                            <MoonStar className="h-4 w-4 shrink-0 text-amber-600" />
+                            <span>
+                              <span className="font-semibold text-black">Stay:</span>{" "}
+                              {day.accommodation}
+                            </span>
+                          </p>
+                        )}
+
+                        {day.activities && day.activities.length > 0 && (
+                          <ul className="flex flex-wrap gap-2">
+                            {day.activities.map((activity, index) => (
+                              <li
+                                key={index}
+                                className="border border-black/10 px-3 py-1 text-[12px] text-gray-600"
+                              >
+                                {activity}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+
+                        <Link
+                          href={`/tours/${slug}/day/${day.day}`}
+                          className="group/link inline-flex w-fit items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-black transition-colors hover:text-amber-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
+                        >
+                          See day {day.day} in detail
+                          <ArrowRight className="h-4 w-4 transition-transform group-hover/link:translate-x-1" />
+                        </Link>
+                      </div>
+                    </div>
+                  </motion.div>
                 )}
-
-                <div className="flex items-center gap-2 font-mono text-[10px] text-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-500 font-bold">
-                  <Plus className="w-4 h-4 text-amber-600" /> Read the full day
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </Link>
-      ))}
+              </AnimatePresence>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }

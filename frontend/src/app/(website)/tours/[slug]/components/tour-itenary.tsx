@@ -10,9 +10,9 @@ interface TourItineraryProps {
 
 export function TourItinerary({ days, slug }: TourItineraryProps) {
     return (
-        <div className="pt-40">
-            <div className="container mx-auto">
-                <div className="flex items-center justify-between mb-24">
+        <div>
+            <div>
+                <div className="flex items-center justify-between mb-12">
                     <div>
                         <span className="font-mono text-amber-600 text-[13px] uppercase tracking-[0.4em] mb-4 block font-bold">
               // expedition itinerary

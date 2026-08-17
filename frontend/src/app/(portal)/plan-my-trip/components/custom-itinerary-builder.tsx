@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Plus, Calendar, Loader2, Sparkles, Check, X, XCircle, Search, Headphones } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -26,6 +26,7 @@ import { CountryCodeSelect } from "@/components/common/country-code-select";
 import { CountrySelect } from "@/components/common/country-select";
 import { COUNTRIES } from "@/lib/countries";
 import { buildQuote, computeFees, applyDiscount } from "@/lib/pricing/quote";
+import { readDraft, writeDraft, clearDraft } from "../draft";
 
 function generateId() {
     return Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
@@ -64,6 +65,7 @@ interface CustomItineraryBuilderProps {
 type BuilderStep = "BASICS" | "ENTRY_POINT" | "BUILDER" | "CONTACT" | "SUCCESS";
 
 const STEP_ORDER: BuilderStep[] = ["BASICS", "ENTRY_POINT", "BUILDER", "CONTACT"];
+
 const STEP_LABELS: Record<string, string> = {
     BASICS: "Trip basics",
     ENTRY_POINT: "Starting point",
@@ -109,6 +111,10 @@ export function CustomItineraryBuilder({
     });
     const [phoneCountry, setPhoneCountry] = useState("");
     const [errors, setErrors] = useState<Record<string, string>>({});
+    // Gates draft *writing* until the restore pass has run, so the empty initial
+    // state can't overwrite a saved draft before it is read back.
+    const [draftLoaded, setDraftLoaded] = useState(false);
+    const [restoredDraft, setRestoredDraft] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [turnstileToken, setTurnstileToken] = useState("");
     const [company, setCompany] = useState(""); // honeypot
@@ -138,6 +144,46 @@ export function CustomItineraryBuilder({
         const dayAfterArrival = addDaysToDateInput(userDetails.arrivalDate, 1);
         return dayAfterArrival > minTripDate ? dayAfterArrival : minTripDate;
     }, [userDetails.arrivalDate, minTripDate]);
+
+    // Restore once, on mount. Deliberately not part of useState initialisers:
+    // localStorage is unavailable during SSR and would break hydration.
+    useEffect(() => {
+        const draft = readDraft();
+        if (draft) {
+            const allDests = allDestinations.length > 0 ? allDestinations : destinations;
+            const dest = draft.activeDestinationId
+                ? allDests.find((d) => (d._id || d.slug) === draft.activeDestinationId) ?? null
+                : null;
+
+            // Only resume mid-build if the destination that anchors the itinerary
+            // still exists; otherwise fall back to the basics step with the
+            // details intact.
+            const resumable = draft.step === "BUILDER" || draft.step === "CONTACT";
+            if (draft.days?.length) setDays(draft.days);
+            if (draft.userDetails) setUserDetails((prev) => ({ ...prev, ...draft.userDetails }));
+            if (draft.phoneCountry) setPhoneCountry(draft.phoneCountry);
+            if (dest) setActiveDestination(dest);
+            if (draft.step && draft.step !== "SUCCESS" && (!resumable || dest)) {
+                setStep(draft.step);
+            }
+            setRestoredDraft(true);
+        }
+        setDraftLoaded(true);
+        // Mount-only by design.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        if (!draftLoaded || step === "SUCCESS") return;
+        writeDraft({
+            savedAt: Date.now(),
+            step,
+            days,
+            userDetails,
+            phoneCountry,
+            activeDestinationId: activeDestination?._id || activeDestination?.slug || null,
+        });
+    }, [draftLoaded, step, days, userDetails, phoneCountry, activeDestination]);
 
     const clearError = (field: string) =>
         setErrors((prev) => {
@@ -374,6 +420,7 @@ export function CustomItineraryBuilder({
         const result = await submitTourRequest(payload);
 
         if (result.success) {
+            clearDraft();
             setStep("SUCCESS");
         } else {
             toast.error(result.error || "Failed to submit request.");
@@ -470,6 +517,40 @@ export function CustomItineraryBuilder({
                     </button>
                 </div>
             </div>
+
+            {restoredDraft && (
+                <div className="mb-12 flex flex-col gap-3 border border-amber-200 bg-amber-50/60 px-6 py-4 text-sm text-amber-900 sm:flex-row sm:items-center sm:justify-between">
+                    <span>We picked up where you left off. Your itinerary was saved on this device.</span>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            clearDraft();
+                            setRestoredDraft(false);
+                            setDays([{ day: 1, items: [] }]);
+                            setActiveDestination(null);
+                            setUserDetails({
+                                firstName: "",
+                                lastName: "",
+                                email: "",
+                                phone: "",
+                                country: "",
+                                adults: 1,
+                                children_6_12: 0,
+                                children_under_6: 0,
+                                arrivalDate: "",
+                                departureDate: "",
+                                message: "",
+                            });
+                            setPhoneCountry("");
+                            setErrors({});
+                            setStep("BASICS");
+                        }}
+                        className="shrink-0 text-[11px] font-bold uppercase tracking-[0.2em] text-amber-700 underline underline-offset-4 hover:text-black transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
+                    >
+                        Start over
+                    </button>
+                </div>
+            )}
 
             <AnimatePresence mode="wait">
                 {step === "BASICS" ? (
@@ -586,7 +667,7 @@ export function CustomItineraryBuilder({
                                     if (!validateBasics()) return;
                                     setStep("ENTRY_POINT");
                                 }}
-                                className="group relative w-full overflow-hidden bg-black py-8 text-white text-[10px] font-bold uppercase tracking-[0.5em] transition-all hover:bg-amber-600"
+                                className="group relative w-full overflow-hidden bg-black py-6 text-white text-[13px] font-bold uppercase tracking-[0.2em] transition-all hover:bg-amber-600"
                             >
                                 <span className="relative z-10 flex items-center justify-center gap-6">
                                     Continue <ArrowRight className="w-5 h-5 group-hover:translate-x-3 transition-transform duration-500" />
@@ -717,7 +798,7 @@ export function CustomItineraryBuilder({
                                                 toast.error(validation.message);
                                             }
                                         }}
-                                        className="w-full mt-12 bg-amber-600 hover:bg-amber-500 py-6 text-[10px] font-bold uppercase tracking-[0.4em] transition-all flex items-center justify-center gap-4"
+                                        className="w-full mt-12 bg-amber-600 hover:bg-amber-500 py-5 text-[13px] font-bold uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-4"
                                     >
                                         Continue <ArrowRight className="w-4 h-4" />
                                     </button>
@@ -952,7 +1033,7 @@ This estimate covers the Sustainable Development Fee, accommodation and the expe
                                     await handleSubmit(new Event("submit") as any);
                                 }}
                                 disabled={isSubmitting}
-                                className="group relative w-full overflow-hidden bg-black py-8 text-white text-[10px] font-bold uppercase tracking-[0.5em] transition-all hover:bg-amber-600 disabled:opacity-60"
+                                className="group relative w-full overflow-hidden bg-black py-6 text-white text-[13px] font-bold uppercase tracking-[0.2em] transition-all hover:bg-amber-600 disabled:opacity-60"
                             >
                                 <span className="relative z-10 flex items-center justify-center gap-6">
                                     {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : "Send to a specialist"}
@@ -1078,28 +1159,6 @@ This estimate covers the Sustainable Development Fee, accommodation and the expe
                                 </button>
                             </div>
                         </div>
-                    </motion.div>
-                ) : step === "SUCCESS" ? (
-                    <motion.div
-                        key="success"
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="max-w-xl mx-auto text-center py-24 space-y-8"
-                    >
-                        <div className="w-24 h-24 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mx-auto">
-                            <Sparkles className="w-12 h-12" />
-                        </div>
-                        <h3 className="text-4xl font-light uppercase tracking-tight">Request sent</h3>
-                        <p className="text-gray-500">
-                            A travel specialist will review your itinerary and email you within 24 hours
-                            with a detailed quote and any suggestions.
-                        </p>
-                        <button
-                            onClick={onBack}
-                            className="bg-black text-white px-12 py-5 rounded-sm uppercase tracking-[0.2em] text-xs font-bold hover:bg-amber-600 transition-colors shadow-xl mt-8"
-                        >
-                            Back to the planner
-                        </button>
                     </motion.div>
                 ) : null
                 }
