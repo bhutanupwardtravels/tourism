@@ -20,9 +20,11 @@ interface CountryCodeSelectProps {
     /** Extra classes for the dropdown panel — needed when the trigger sits inside
      *  an overlay stacked above the popover's default z-50. */
     contentClassName?: string;
+    /** id of the visible <label> naming this control. */
+    ariaLabelledBy?: string;
 }
 
-export function CountryCodeSelect({ value, onChange, contentClassName }: CountryCodeSelectProps) {
+export function CountryCodeSelect({ value, onChange, contentClassName, ariaLabelledBy }: CountryCodeSelectProps) {
     const [open, setOpen] = useState(false);
     const selected = COUNTRIES.find((country) => country.iso2 === value);
 
@@ -31,7 +33,8 @@ export function CountryCodeSelect({ value, onChange, contentClassName }: Country
             <PopoverTrigger asChild>
                 <button
                     type="button"
-                    className="flex shrink-0 items-center gap-1 py-4 text-lg font-light text-black focus:outline-none"
+                    aria-labelledby={ariaLabelledBy}
+                    className="flex shrink-0 items-center gap-1 py-4 text-lg font-light text-black focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
                 >
                     {selected ? `${countryFlagEmoji(selected.iso2)} ${selected.dialCode}` : "Code"}
                     <ChevronDown className="w-4 h-4 text-gray-400" />

@@ -23,10 +23,12 @@ interface OptionSelectProps {
     onChange: (value: string) => void;
     options: Option[];
     placeholder?: string;
+    /** id of the visible <label> naming this control. */
+    ariaLabelledBy?: string;
 }
 
 /** Same popover + searchable list style as CountrySelect/MonthSelect, for a fixed set of options. */
-export function OptionSelect({ value, onChange, options, placeholder = "Select" }: OptionSelectProps) {
+export function OptionSelect({ value, onChange, options, placeholder = "Select", ariaLabelledBy }: OptionSelectProps) {
     const [open, setOpen] = useState(false);
     const selected = options.find((o) => o.value === value);
 
@@ -35,7 +37,8 @@ export function OptionSelect({ value, onChange, options, placeholder = "Select" 
             <PopoverTrigger asChild>
                 <button
                     type="button"
-                    className="flex w-full items-center justify-between py-4 text-lg font-light text-black focus:outline-none"
+                    aria-labelledby={ariaLabelledBy}
+                    className="flex w-full items-center justify-between py-4 text-lg font-light text-black focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
                 >
                     <span className={cn(!selected && "text-gray-300")}>
                         {selected ? selected.label : placeholder}

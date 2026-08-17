@@ -48,31 +48,25 @@ export function TourTimeline({ days, slug }: TourTimelineProps) {
                           className="object-cover transition-transform duration-1000 group-hover:scale-110"
                       />
                   )}
-
-                  <div className="absolute bottom-4 left-4">
-                    <span className="font-mono text-[10px] text-white tracking-widest uppercase bg-black/40 backdrop-blur-md px-3 py-1.5 font-bold">
-                      Visual Record // FRM-{day.day}
-                    </span>
-                  </div>
                 </div>
               )}
               <div>
-                <div className="flex items-center gap-4 mb-4">
-                  <span className="font-mono text-[10px] text-gray-500 uppercase tracking-widest px-3 py-1 border border-black/5 rounded-full font-bold">
-                    Route Authentication Verified
-                  </span>
-                </div>
-
                 <h3 className="text-4xl font-light mb-6 group-hover:italic transition-all duration-500 uppercase tracking-tight group-hover:translate-x-3 origin-left">
                   {day.title}
                 </h3>
 
-                <p className="text-gray-600 leading-relaxed font-light italic text-base md:text-lg mb-8 line-clamp-4">
+                <p className="text-gray-600 leading-relaxed font-light italic text-base md:text-lg mb-6 line-clamp-4">
                   "{day.description}"
                 </p>
 
+                {day.accommodation && (
+                  <p className="mb-8 text-[13px] text-gray-500">
+                    <span className="font-semibold text-black">Stay:</span> {day.accommodation}
+                  </p>
+                )}
+
                 <div className="flex items-center gap-2 font-mono text-[10px] text-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-500 font-bold">
-                  <Plus className="w-4 h-4 text-amber-600" /> [ Read Detailed Briefing ]
+                  <Plus className="w-4 h-4 text-amber-600" /> Read the full day
                 </div>
               </div>
             </div>

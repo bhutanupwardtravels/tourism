@@ -21,6 +21,8 @@ interface CountrySelectProps {
      *  an overlay stacked above the popover's default z-50. */
     contentClassName?: string;
     placeholder?: string;
+    /** id of the visible <label> naming this control. */
+    ariaLabelledBy?: string;
 }
 
 export function CountrySelect({
@@ -28,6 +30,7 @@ export function CountrySelect({
     onChange,
     placeholder = "Select country",
     contentClassName,
+    ariaLabelledBy,
 }: CountrySelectProps) {
     const [open, setOpen] = useState(false);
     const selected = COUNTRIES.find((country) => country.iso2 === value);
@@ -37,7 +40,8 @@ export function CountrySelect({
             <PopoverTrigger asChild>
                 <button
                     type="button"
-                    className="flex w-full items-center justify-between py-4 text-lg font-light text-black focus:outline-none"
+                    aria-labelledby={ariaLabelledBy}
+                    className="flex w-full items-center justify-between py-4 text-lg font-light text-black focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
                 >
                     <span className={cn("min-w-0 truncate", !selected && "text-gray-300")}>
                         {selected ? `${countryFlagEmoji(selected.iso2)} ${selected.name}` : placeholder}

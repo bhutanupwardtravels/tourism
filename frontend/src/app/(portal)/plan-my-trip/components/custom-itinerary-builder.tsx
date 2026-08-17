@@ -21,6 +21,7 @@ import { Turnstile } from "@/components/turnstile";
 import { toast } from "sonner";
 import { getTravelTime } from "@/constants/travel-times";
 import { DestinationCard } from "@/components/common/destination-card";
+import { FormInput } from "@/components/common/form-input";
 import { CountryCodeSelect } from "@/components/common/country-code-select";
 import { CountrySelect } from "@/components/common/country-select";
 import { COUNTRIES } from "@/lib/countries";
@@ -57,7 +58,18 @@ interface CustomItineraryBuilderProps {
     onBack: () => void;
 }
 
-type BuilderStep = "INFORMATION" | "ENTRY_POINT" | "BUILDER" | "SUCCESS";
+// Build first, identify last: the traveller only hands over contact details
+// once they have an itinerary they don't want to lose. BASICS is kept up front
+// because dates, group size and nationality are what the quote is computed from.
+type BuilderStep = "BASICS" | "ENTRY_POINT" | "BUILDER" | "CONTACT" | "SUCCESS";
+
+const STEP_ORDER: BuilderStep[] = ["BASICS", "ENTRY_POINT", "BUILDER", "CONTACT"];
+const STEP_LABELS: Record<string, string> = {
+    BASICS: "Trip basics",
+    ENTRY_POINT: "Starting point",
+    BUILDER: "Build your days",
+    CONTACT: "Send it to us",
+};
 
 export function CustomItineraryBuilder({
     experiences = [],
@@ -67,7 +79,7 @@ export function CustomItineraryBuilder({
     costs = [],
     onBack
 }: CustomItineraryBuilderProps) {
-    const [step, setStep] = useState<BuilderStep>("INFORMATION");
+    const [step, setStep] = useState<BuilderStep>("BASICS");
 
     // Builder State
     const [days, setDays] = useState<DayItinerary[]>([
@@ -95,13 +107,14 @@ export function CustomItineraryBuilder({
         departureDate: "",
         message: ""
     });
-    const [phoneCountry, setPhoneCountry] = useState("BT");
+    const [phoneCountry, setPhoneCountry] = useState("");
+    const [errors, setErrors] = useState<Record<string, string>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [turnstileToken, setTurnstileToken] = useState("");
     const [company, setCompany] = useState(""); // honeypot
 
-    // Returning-traveller discount, resolved from the email on leaving the
-    // INFORMATION step. Display only — the server recomputes it at submit.
+    // Returning-traveller discount, resolved once the email is entered on the
+    // CONTACT step. Display only — the server recomputes it at submit.
     const [loyaltyPercent, setLoyaltyPercent] = useState(0);
     const [priorTrips, setPriorTrips] = useState(0);
 
@@ -125,6 +138,49 @@ export function CustomItineraryBuilder({
         const dayAfterArrival = addDaysToDateInput(userDetails.arrivalDate, 1);
         return dayAfterArrival > minTripDate ? dayAfterArrival : minTripDate;
     }, [userDetails.arrivalDate, minTripDate]);
+
+    const clearError = (field: string) =>
+        setErrors((prev) => {
+            if (!prev[field]) return prev;
+            const next = { ...prev };
+            delete next[field];
+            return next;
+        });
+
+    /** Dates + group size — everything the quote is computed from. */
+    const validateBasics = () => {
+        const next: Record<string, string> = {};
+        if (!userDetails.arrivalDate) next.arrivalDate = "Choose your arrival date.";
+        if (!userDetails.departureDate) next.departureDate = "Choose your departure date.";
+        if (userDetails.arrivalDate && userDetails.arrivalDate < minTripDate) {
+            next.arrivalDate = "Trips need at least a week's notice.";
+        }
+        if (
+            userDetails.arrivalDate &&
+            userDetails.departureDate &&
+            userDetails.departureDate <= userDetails.arrivalDate
+        ) {
+            next.departureDate = "Must be at least one day after arrival.";
+        }
+        if (!userDetails.adults || userDetails.adults < 1) next.adults = "At least one adult is required.";
+        setErrors(next);
+        return Object.keys(next).length === 0;
+    };
+
+    /** Contact details — only asked for once the itinerary exists. */
+    const validateContact = () => {
+        const next: Record<string, string> = {};
+        if (!userDetails.firstName.trim()) next.firstName = "Please enter your first name.";
+        if (!userDetails.lastName.trim()) next.lastName = "Please enter your last name.";
+        if (!userDetails.email.trim()) {
+            next.email = "Please enter your email address.";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userDetails.email)) {
+            next.email = "That doesn't look like a valid email address.";
+        }
+        if (!userDetails.phone.trim()) next.phone = "Please enter a phone number.";
+        setErrors(next);
+        return Object.keys(next).length === 0;
+    };
 
     // --- Logic Helpers ---
 
@@ -325,7 +381,7 @@ export function CustomItineraryBuilder({
         setIsSubmitting(false);
     };
 
-    // Resolved from the email once the traveller leaves the INFORMATION step.
+    // Resolved from the email on the CONTACT step, once it is known.
     // Display only — submitTourRequest recounts it server-side at submit.
     const refreshLoyalty = async (email: string) => {
         try {
@@ -364,13 +420,16 @@ export function CustomItineraryBuilder({
                 <div className="w-24 h-24 border border-green-600/30 rounded-full flex items-center justify-center mx-auto text-green-600">
                     <Check className="w-10 h-10" />
                 </div>
-                <h2 className="text-4xl font-light uppercase tracking-tight text-black">Itinerary <span className="italic normal-case text-amber-600">Submitted</span></h2>
-                <p className="text-gray-500">Our team will review your bespoke design and contact you shortly.</p>
+                <h2 className="text-4xl font-light uppercase tracking-tight text-black">Request <span className="italic normal-case text-amber-600">sent</span></h2>
+                <p className="text-gray-500 leading-relaxed">
+                    A travel specialist will review your itinerary and email you within 24 hours
+                    with a detailed quote. Nothing is booked or charged yet.
+                </p>
                 <button
                     onClick={() => window.location.href = "/"}
                     className="bg-black text-white px-8 py-3 uppercase tracking-widest text-xs font-bold hover:bg-amber-600 transition-colors"
                 >
-                    Return Home
+                    Back to the site
                 </button>
             </motion.div>
         );
@@ -385,19 +444,21 @@ export function CustomItineraryBuilder({
             {/* Header */}
             <div className="flex justify-between items-end mb-16 border-b border-gray-100 pb-8">
                 <div className="space-y-4">
-                    <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.5em] font-bold block">
-                        // bespoke architecture
+                    <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.3em] font-bold block">
+                        Step {STEP_ORDER.indexOf(step) + 1} of {STEP_ORDER.length} &mdash; {STEP_LABELS[step]}
                     </span>
                     <h2 className="text-4xl md:text-5xl font-light tracking-tighter uppercase leading-none text-black">
-                        Planner <span className="italic font-serif normal-case text-amber-600">Studio</span>
+                        Trip <span className="italic font-serif normal-case text-amber-600">planner</span>
                     </h2>
                 </div>
                 <div className="flex gap-4">
-                    {step !== "INFORMATION" && (
+                    {step !== "BASICS" && (
                         <button
                             onClick={() => {
-                                if (step === "ENTRY_POINT") setStep("INFORMATION");
+                                setErrors({});
+                                if (step === "ENTRY_POINT") setStep("BASICS");
                                 if (step === "BUILDER") setStep("ENTRY_POINT");
+                                if (step === "CONTACT") setStep("BUILDER");
                             }}
                             className="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-black transition-colors"
                         >
@@ -405,15 +466,15 @@ export function CustomItineraryBuilder({
                         </button>
                     )}
                     <button onClick={onBack} className="text-xs font-medium uppercase tracking-widest text-gray-400 hover:text-red-500 transition-colors">
-                        Exit Studio
+                        Exit planner
                     </button>
                 </div>
             </div>
 
             <AnimatePresence mode="wait">
-                {step === "INFORMATION" ? (
+                {step === "BASICS" ? (
                     <motion.div
-                        key="information"
+                        key="basics"
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -20 }}
@@ -422,91 +483,63 @@ export function CustomItineraryBuilder({
                         <div className="bg-amber-50/50 p-8 rounded-xs border border-amber-100 mb-8">
                             <div className="flex items-center gap-4 text-amber-900 mb-4">
                                 <Sparkles className="w-5 h-5" />
-                                <h3 className="text-sm font-bold uppercase tracking-widest">Bespoke Information Gathering</h3>
+                                <h3 className="text-sm font-bold uppercase tracking-widest">Trip basics</h3>
                             </div>
-                            <p className="text-sm text-amber-800/80 leading-relaxed font-light italic serif">
-                                To architect the most resonant journey and provide accurate estimations, we require the specific frequency of your delegation.
+                            <p className="text-sm text-amber-800/80 leading-relaxed font-light">
+                                Just your dates, group size and nationality &mdash; that is what the price is
+                                worked out from. We will ask who you are at the end, once you have built
+                                something worth sending.
                             </p>
                         </div>
 
                         <div className="space-y-16">
-                            {/* Personal Details */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+                            {/* Dates + nationality — the pricing inputs */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-10">
                                 <FormInput
-                                    label="Given Name"
-                                    name="firstName"
-                                    placeholder="Enter first name"
-                                    value={userDetails.firstName}
-                                    onChange={(e: any) => setUserDetails({ ...userDetails, firstName: e.target.value })}
+                                    label="Arrival date"
+                                    name="arrivalDate"
+                                    type="date"
+                                    min={minTripDate}
+                                    error={errors.arrivalDate}
+                                    value={userDetails.arrivalDate}
+                                    onChange={(e: any) => {
+                                        clearError("arrivalDate");
+                                        setUserDetails({ ...userDetails, arrivalDate: e.target.value });
+                                    }}
                                 />
                                 <FormInput
-                                    label="Family Name"
-                                    name="lastName"
-                                    placeholder="Enter last name"
-                                    value={userDetails.lastName}
-                                    onChange={(e: any) => setUserDetails({ ...userDetails, lastName: e.target.value })}
-                                />
-                                <FormInput
-                                    label="Digital Address"
-                                    name="email"
-                                    type="email"
-                                    placeholder="name@example.com"
-                                    value={userDetails.email}
-                                    onChange={(e: any) => setUserDetails({ ...userDetails, email: e.target.value })}
+                                    label="Departure date"
+                                    name="departureDate"
+                                    type="date"
+                                    min={minDepartureDate}
+                                    error={errors.departureDate}
+                                    value={userDetails.departureDate}
+                                    onChange={(e: any) => {
+                                        clearError("departureDate");
+                                        setUserDetails({ ...userDetails, departureDate: e.target.value });
+                                    }}
                                 />
                                 <div className="space-y-4 group">
-                                    <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
-                                        Country
+                                    <label id="builder-country-label" className="block text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
+                                        Nationality
                                     </label>
                                     <div className="border-b border-black/10 focus-within:border-amber-600 transition-all">
                                         <CountrySelect
                                             value={userDetails.country}
                                             onChange={(iso2) => {
                                                 setUserDetails({ ...userDetails, country: iso2 });
-                                                // Default the phone code to match — still independently editable below.
+                                                // Pre-fills the phone code on the contact step.
                                                 setPhoneCountry(iso2);
                                             }}
                                             placeholder="Select your country"
+                                            ariaLabelledBy="builder-country-label"
                                         />
                                     </div>
+                                    <p className="text-[11px] text-gray-400 leading-relaxed">
+                                        Indian, Bangladeshi and Maldivian nationals pay a different
+                                        Sustainable Development Fee.
+                                    </p>
                                 </div>
-                            </div>
-
-                            {/* Mobile & Dates */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-10">
-                                <div className="space-y-4 group">
-                                    <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
-                                        Mobile Connection
-                                    </label>
-                                    <div className="flex items-center gap-3 border-b border-black/10 focus-within:border-amber-600 transition-all">
-                                        <CountryCodeSelect value={phoneCountry} onChange={setPhoneCountry} />
-                                        <input
-                                            type="tel"
-                                            name="phone"
-                                            required
-                                            value={userDetails.phone}
-                                            onChange={(e: any) => setUserDetails({ ...userDetails, phone: e.target.value })}
-                                            className="w-full py-4 text-lg font-light text-black focus:outline-none bg-transparent rounded-none placeholder:text-gray-200"
-                                            placeholder="17 123 456"
-                                        />
-                                    </div>
-                                </div>
-                                <FormInput
-                                    label="Arrival Date"
-                                    name="arrivalDate"
-                                    type="date"
-                                    min={minTripDate}
-                                    value={userDetails.arrivalDate}
-                                    onChange={(e: any) => setUserDetails({ ...userDetails, arrivalDate: e.target.value })}
-                                />
-                                <FormInput
-                                    label="Departure Date"
-                                    name="departureDate"
-                                    type="date"
-                                    min={minDepartureDate}
-                                    value={userDetails.departureDate}
-                                    onChange={(e: any) => setUserDetails({ ...userDetails, departureDate: e.target.value })}
-                                />
                             </div>
 
                             {/* Travelers Grid */}
@@ -516,9 +549,11 @@ export function CustomItineraryBuilder({
                                     name="adults"
                                     type="number"
                                     min={1}
+                                    error={errors.adults}
                                     value={userDetails.adults}
                                     onChange={(e: any) => {
                                         const parsed = parseInt(e.target.value);
+                                        clearError("adults");
                                         setUserDetails({ ...userDetails, adults: Number.isNaN(parsed) ? 1 : Math.max(1, parsed) });
                                     }}
                                 />
@@ -534,7 +569,7 @@ export function CustomItineraryBuilder({
                                     }}
                                 />
                                 <FormInput
-                                    label="Infants (< 6)"
+                                    label="Infants (under 6)"
                                     name="children_under_6"
                                     type="number"
                                     min={0}
@@ -546,49 +581,15 @@ export function CustomItineraryBuilder({
                                 />
                             </div>
 
-                            {/* Narrative */}
-                            <div className="space-y-4 group">
-                                <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors font-mono">
-                                    // Narrative & Special Requirements
-                                </label>
-                                <textarea
-                                    name="message"
-                                    rows={4}
-                                    value={userDetails.message}
-                                    onChange={e => setUserDetails({ ...userDetails, message: e.target.value })}
-                                    className="w-full text-black border-b border-black/10 py-4 text-lg font-light focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none resize-none placeholder:text-gray-300 italic serif"
-                                    placeholder="Any dietary restrictions, physical limitations, or special occasions?"
-                                />
-                            </div>
-
                             <button
                                 onClick={() => {
-                                    if (!userDetails.firstName || !userDetails.lastName || !userDetails.email || !userDetails.phone || !userDetails.arrivalDate || !userDetails.departureDate) {
-                                        toast.error("Please fill in all required fields.");
-                                        return;
-                                    }
-                                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userDetails.email)) {
-                                        toast.error("Please enter a valid email address.");
-                                        return;
-                                    }
-                                    if (userDetails.arrivalDate < minTripDate || userDetails.departureDate < minTripDate) {
-                                        toast.error("Arrival and departure dates must be at least a week from today.");
-                                        return;
-                                    }
-                                    if (userDetails.departureDate <= userDetails.arrivalDate) {
-                                        toast.error("Departure date must be at least one day after the arrival date.");
-                                        return;
-                                    }
-                                    // Fire-and-forget: the badge appearing a
-                                    // moment later is fine, and a slow lookup
-                                    // must never hold up the builder.
-                                    refreshLoyalty(userDetails.email);
+                                    if (!validateBasics()) return;
                                     setStep("ENTRY_POINT");
                                 }}
                                 className="group relative w-full overflow-hidden bg-black py-8 text-white text-[10px] font-bold uppercase tracking-[0.5em] transition-all hover:bg-amber-600"
                             >
                                 <span className="relative z-10 flex items-center justify-center gap-6">
-                                    Continue to Entry Point <ArrowRight className="w-5 h-5 group-hover:translate-x-3 transition-transform duration-500" />
+                                    Continue <ArrowRight className="w-5 h-5 group-hover:translate-x-3 transition-transform duration-500" />
                                 </span>
                                 <div className="absolute inset-0 -translate-x-full group-hover:translate-x-0 bg-amber-500 transition-transform duration-700 ease-in-out" />
                             </button>
@@ -603,9 +604,9 @@ export function CustomItineraryBuilder({
                         className="space-y-12"
                     >
                         <div className="text-center space-y-4 mb-12">
-                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-amber-600 font-mono">// spatial initialization</span>
-                            <h3 className="text-4xl font-light uppercase tracking-tight text-black">Select Your <span className="italic normal-case text-amber-600">Entry Point</span></h3>
-                            <p className="text-gray-500 max-w-xl mx-auto font-light">Your choice of entry determines the initial coordinates of your Bhutanese narrative.</p>
+                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-amber-600 font-mono">// step 1 of 2</span>
+                            <h3 className="text-4xl font-light uppercase tracking-tight text-black">Where do you <span className="italic normal-case text-amber-600">start</span>?</h3>
+                            <p className="text-gray-500 max-w-xl mx-auto font-light">Pick the first place you want to visit. You can add more stops on any day.</p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -665,12 +666,12 @@ export function CustomItineraryBuilder({
                                 <div className="bg-black text-white p-8 rounded-xs shadow-2xl">
                                     <div className="flex items-center gap-3 mb-8 text-amber-500">
                                         <Sparkles className="w-5 h-5" />
-                                        <span className="text-[10px] font-bold uppercase tracking-[0.3em]">Estimated Investment</span>
+                                        <span className="text-[10px] font-bold uppercase tracking-[0.3em]">Estimated price</span>
                                     </div>
 
                                     <div className="space-y-6">
                                         <div className="flex justify-between items-end border-b border-white/10 pb-6">
-                                            <span className="text-white/60 text-xs uppercase tracking-widest font-mono">// Total Estimate</span>
+                                            <span className="text-white/60 text-xs uppercase tracking-widest font-mono">// Total</span>
                                             <span className="text-4xl font-light tracking-tighter text-amber-500">
                                                 ${discounted.total.toLocaleString()}
                                             </span>
@@ -705,101 +706,29 @@ export function CustomItineraryBuilder({
                                                 </>
                                             )}
                                         </div>
-
-                                        {/* Coupon redemption */}
-                                        <div className="pt-4 border-t border-white/10 space-y-3">
-                                            {couponPercent > 0 ? (
-                                                <div className="flex items-center justify-between gap-3">
-                                                    <span className="text-xs text-amber-500 font-mono tracking-wide">
-                                                        {couponCode} applied &mdash; {couponPercent}% off
-                                                    </span>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => {
-                                                            setCouponCode("");
-                                                            setCouponPercent(0);
-                                                            setCouponInput("");
-                                                            setCouponError("");
-                                                        }}
-                                                        className="text-[10px] uppercase tracking-widest text-white/40 hover:text-white transition-colors"
-                                                    >
-                                                        Remove
-                                                    </button>
-                                                </div>
-                                            ) : (
-                                                <>
-                                                    <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/40 block">
-                                                        Discount code
-                                                    </label>
-                                                    <div className="flex gap-2">
-                                                        <input
-                                                            type="text"
-                                                            value={couponInput}
-                                                            onChange={(e) => {
-                                                                setCouponInput(e.target.value.toUpperCase());
-                                                                setCouponError("");
-                                                            }}
-                                                            placeholder="BHU-XXXXXX"
-                                                            className="flex-1 bg-transparent border border-white/20 px-3 py-2 text-xs font-mono tracking-wider text-white placeholder:text-white/20 focus:border-amber-500 focus:outline-none"
-                                                        />
-                                                        <button
-                                                            type="button"
-                                                            onClick={handleApplyCoupon}
-                                                            disabled={isCheckingCoupon || !couponInput.trim()}
-                                                            className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest bg-white/10 hover:bg-amber-600 disabled:opacity-40 disabled:hover:bg-white/10 transition-colors"
-                                                        >
-                                                            {isCheckingCoupon ? <Loader2 className="w-3 h-3 animate-spin" /> : "Apply"}
-                                                        </button>
-                                                    </div>
-                                                    {couponError && (
-                                                        <p className="text-[11px] text-rose-400">{couponError}</p>
-                                                    )}
-                                                </>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* Honeypot — hidden from real users, catches bots */}
-                                    <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden">
-                                        <label>
-                                            Company
-                                            <input
-                                                type="text"
-                                                name="company"
-                                                tabIndex={-1}
-                                                autoComplete="off"
-                                                value={company}
-                                                onChange={(e) => setCompany(e.target.value)}
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div className="mt-8 flex justify-center">
-                                        <Turnstile
-                                            onVerify={setTurnstileToken}
-                                            onExpire={() => setTurnstileToken("")}
-                                        />
                                     </div>
 
                                     <button
-                                        onClick={async () => {
+                                        onClick={() => {
                                             const validation = validateItinerary();
                                             if (validation.valid) {
-                                                await handleSubmit(new Event('submit') as any);
+                                                setStep("CONTACT");
                                             } else {
                                                 toast.error(validation.message);
                                             }
                                         }}
-                                        disabled={isSubmitting}
                                         className="w-full mt-12 bg-amber-600 hover:bg-amber-500 py-6 text-[10px] font-bold uppercase tracking-[0.4em] transition-all flex items-center justify-center gap-4"
                                     >
-                                        {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : "Initiate Request"}
-                                        {!isSubmitting && <ArrowRight className="w-4 h-4" />}
+                                        Continue <ArrowRight className="w-4 h-4" />
                                     </button>
+
+                                    <p className="mt-4 text-center text-[11px] text-white/40 leading-relaxed">
+                                        No payment now &mdash; the next step just asks where to send it.
+                                    </p>
                                 </div>
 
-                                <div className="bg-neutral-50 p-6 rounded border border-neutral-100 italic serif text-sm text-gray-500 leading-relaxed">
-                                    "This estimation includes SDF, accommodation, and curated experiences. Final pricing may vary based on specific hotel availability and seasonality."
+                                <div className="bg-neutral-50 p-6 rounded border border-neutral-100 text-sm text-gray-500 leading-relaxed">
+This estimate covers the Sustainable Development Fee, accommodation and the experiences you have chosen. The final price can change with hotel availability and season.
                                 </div>
                             </div>
                         </div>
@@ -819,7 +748,7 @@ export function CustomItineraryBuilder({
                                         />
                                     )}
                                     <div>
-                                        <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 font-mono">// active coordinates</span>
+                                        <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 font-mono">// currently in</span>
                                         <h4 className="text-2xl font-light uppercase tracking-tight text-black">{activeDestination?.name}</h4>
                                     </div>
                                 </div>
@@ -867,8 +796,287 @@ export function CustomItineraryBuilder({
                                 className="w-full py-12 border-2 border-dashed border-neutral-200 rounded-xs text-neutral-400 hover:text-black hover:border-black transition-all flex flex-col items-center gap-4 group"
                             >
                                 <Plus className="w-8 h-8 group-hover:scale-110 transition-transform" />
-                                <span className="text-[10px] font-bold uppercase tracking-[0.4em]">Expand Chronology (Day {days.length + 1})</span>
+                                <span className="text-[10px] font-bold uppercase tracking-[0.4em]">Add day {days.length + 1}</span>
                             </button>
+                        </div>
+                    </motion.div>
+                ) : step === "CONTACT" ? (
+                    <motion.div
+                        key="contact"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        className="grid grid-cols-1 lg:grid-cols-12 gap-12"
+                    >
+                        {/* Contact details */}
+                        <div className="lg:col-span-7 space-y-12">
+                            <div>
+                                <h3 className="text-3xl md:text-4xl font-light uppercase tracking-tight text-black">
+                                    Where should we <span className="italic font-serif normal-case text-amber-600">send it</span>?
+                                </h3>
+                                <p className="mt-4 text-gray-500 font-light leading-relaxed max-w-md">
+                                    A specialist will review your {days.length}-day itinerary and email you a
+                                    detailed quote within 24 hours. Nothing is booked or charged.
+                                </p>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+                                <FormInput
+                                    label="First name"
+                                    name="firstName"
+                                    autoComplete="given-name"
+                                    placeholder="Enter first name"
+                                    error={errors.firstName}
+                                    value={userDetails.firstName}
+                                    onChange={(e: any) => {
+                                        clearError("firstName");
+                                        setUserDetails({ ...userDetails, firstName: e.target.value });
+                                    }}
+                                />
+                                <FormInput
+                                    label="Last name"
+                                    name="lastName"
+                                    autoComplete="family-name"
+                                    placeholder="Enter last name"
+                                    error={errors.lastName}
+                                    value={userDetails.lastName}
+                                    onChange={(e: any) => {
+                                        clearError("lastName");
+                                        setUserDetails({ ...userDetails, lastName: e.target.value });
+                                    }}
+                                />
+                                <FormInput
+                                    label="Email"
+                                    name="email"
+                                    type="email"
+                                    autoComplete="email"
+                                    placeholder="name@example.com"
+                                    error={errors.email}
+                                    value={userDetails.email}
+                                    onChange={(e: any) => {
+                                        clearError("email");
+                                        setUserDetails({ ...userDetails, email: e.target.value });
+                                    }}
+                                    // Fire-and-forget: a returning-traveller badge that appears a
+                                    // moment late is fine, and a slow lookup must never block typing.
+                                    onBlur={() => refreshLoyalty(userDetails.email)}
+                                />
+                                <div className="space-y-4 group">
+                                    <label
+                                        id="builder-phone-label"
+                                        htmlFor="builder-phone"
+                                        className="block text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors"
+                                    >
+                                        Phone
+                                    </label>
+                                    <div className={cn(
+                                        "flex items-center gap-3 border-b transition-all focus-within:border-amber-600",
+                                        errors.phone ? "border-rose-500" : "border-black/10"
+                                    )}>
+                                        <CountryCodeSelect
+                                            value={phoneCountry}
+                                            onChange={setPhoneCountry}
+                                            ariaLabelledBy="builder-phone-label"
+                                        />
+                                        <input
+                                            id="builder-phone"
+                                            type="tel"
+                                            name="phone"
+                                            required
+                                            autoComplete="tel"
+                                            aria-invalid={errors.phone ? true : undefined}
+                                            value={userDetails.phone}
+                                            onChange={(e: any) => {
+                                                clearError("phone");
+                                                setUserDetails({ ...userDetails, phone: e.target.value });
+                                            }}
+                                            className="w-full py-4 text-lg font-light text-black bg-transparent rounded-none placeholder:text-gray-400 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
+                                            placeholder="17 123 456"
+                                        />
+                                    </div>
+                                    {errors.phone && (
+                                        <p role="alert" className="text-[11px] font-medium text-rose-600">{errors.phone}</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="space-y-4 group">
+                                <label
+                                    htmlFor="builder-message"
+                                    className="block text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors"
+                                >
+                                    Anything we should know?
+                                </label>
+                                <textarea
+                                    id="builder-message"
+                                    name="message"
+                                    rows={4}
+                                    value={userDetails.message}
+                                    onChange={(e) => setUserDetails({ ...userDetails, message: e.target.value })}
+                                    className="w-full text-black border-b border-black/10 py-4 text-lg font-light bg-transparent rounded-none resize-none transition-all placeholder:text-gray-400 focus:outline-none focus:border-amber-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
+                                    placeholder="Dietary needs, mobility considerations, a special occasion..."
+                                />
+                            </div>
+
+                            {/* Honeypot — hidden from real users, catches bots */}
+                            <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden">
+                                <label>
+                                    Company
+                                    <input
+                                        type="text"
+                                        name="company"
+                                        tabIndex={-1}
+                                        autoComplete="off"
+                                        value={company}
+                                        onChange={(e) => setCompany(e.target.value)}
+                                    />
+                                </label>
+                            </div>
+
+                            <div className="flex justify-center">
+                                <Turnstile
+                                    onVerify={setTurnstileToken}
+                                    onExpire={() => setTurnstileToken("")}
+                                />
+                            </div>
+
+                            <button
+                                onClick={async () => {
+                                    if (!validateContact()) return;
+                                    const validation = validateItinerary();
+                                    if (!validation.valid) {
+                                        toast.error(validation.message);
+                                        setStep("BUILDER");
+                                        return;
+                                    }
+                                    await handleSubmit(new Event("submit") as any);
+                                }}
+                                disabled={isSubmitting}
+                                className="group relative w-full overflow-hidden bg-black py-8 text-white text-[10px] font-bold uppercase tracking-[0.5em] transition-all hover:bg-amber-600 disabled:opacity-60"
+                            >
+                                <span className="relative z-10 flex items-center justify-center gap-6">
+                                    {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : "Send to a specialist"}
+                                    {!isSubmitting && <ArrowRight className="w-5 h-5 group-hover:translate-x-3 transition-transform duration-500" />}
+                                </span>
+                            </button>
+                        </div>
+
+                        {/* What they are sending */}
+                        <div className="lg:col-span-5">
+                            <div className="sticky top-24 bg-black text-white p-8 rounded-xs shadow-2xl space-y-6">
+                                <div className="flex items-center gap-3 text-amber-500">
+                                    <Sparkles className="w-5 h-5" />
+                                    <span className="text-[10px] font-bold uppercase tracking-[0.3em]">Your trip</span>
+                                </div>
+
+                                <div className="space-y-3 text-xs border-b border-white/10 pb-6">
+                                    <div className="flex justify-between">
+                                        <span className="text-white/40">Days</span>
+                                        <span className="text-white/80">{days.length}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-white/40">Dates</span>
+                                        <span className="text-white/80">
+                                            {userDetails.arrivalDate} &rarr; {userDetails.departureDate}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-white/40">Travellers</span>
+                                        <span className="text-white/80">
+                                            {userDetails.adults} adult{userDetails.adults === 1 ? "" : "s"}
+                                            {userDetails.children_6_12 > 0 && `, ${userDetails.children_6_12} child`}
+                                            {userDetails.children_under_6 > 0 && `, ${userDetails.children_under_6} infant`}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Coupon — validated against the email entered on this step. */}
+                                <div className="space-y-3">
+                                    {couponPercent > 0 ? (
+                                        <div className="flex items-center justify-between gap-3">
+                                            <span className="text-xs text-amber-500 font-mono tracking-wide">
+                                                {couponCode} applied &mdash; {couponPercent}% off
+                                            </span>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setCouponCode("");
+                                                    setCouponPercent(0);
+                                                    setCouponInput("");
+                                                    setCouponError("");
+                                                }}
+                                                className="text-[10px] uppercase tracking-widest text-white/40 hover:text-white transition-colors"
+                                            >
+                                                Remove
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <label htmlFor="builder-coupon" className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/40 block">
+                                                Discount code
+                                            </label>
+                                            <div className="flex gap-2">
+                                                <input
+                                                    id="builder-coupon"
+                                                    type="text"
+                                                    value={couponInput}
+                                                    onChange={(e) => {
+                                                        setCouponInput(e.target.value.toUpperCase());
+                                                        setCouponError("");
+                                                    }}
+                                                    placeholder="BHU-XXXXXX"
+                                                    className="flex-1 bg-transparent border border-white/20 px-3 py-2 text-xs font-mono tracking-wider text-white placeholder:text-white/30 focus:border-amber-500 focus:outline-none"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={handleApplyCoupon}
+                                                    disabled={isCheckingCoupon || !couponInput.trim()}
+                                                    className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest bg-white/10 hover:bg-amber-600 disabled:opacity-40 disabled:hover:bg-white/10 transition-colors"
+                                                >
+                                                    {isCheckingCoupon ? <Loader2 className="w-3 h-3 animate-spin" /> : "Apply"}
+                                                </button>
+                                            </div>
+                                            {couponError && (
+                                                <p className="text-[11px] text-rose-400">{couponError}</p>
+                                            )}
+                                        </>
+                                    )}
+                                </div>
+
+                                <div className="space-y-3 border-t border-white/10 pt-6">
+                                    {discountPercent > 0 && (
+                                        <>
+                                            <div className="flex justify-between text-xs">
+                                                <span className="text-white/40">Subtotal</span>
+                                                <span className="text-white/80">${quoteSubtotal.toLocaleString()}</span>
+                                            </div>
+                                            <div className="flex justify-between text-xs">
+                                                <span className="text-amber-500/80">
+                                                    {discountKind === "coupon"
+                                                        ? `Coupon ${couponCode}`
+                                                        : `Returning traveller (${priorTrips} ${priorTrips === 1 ? "trip" : "trips"})`}
+                                                    {" "}&mdash; {discountPercent}%
+                                                </span>
+                                                <span className="text-amber-500">-${discounted.discountAmount.toLocaleString()}</span>
+                                            </div>
+                                        </>
+                                    )}
+                                    <div className="flex justify-between items-end">
+                                        <span className="text-white/60 text-xs uppercase tracking-widest font-mono">// Estimated total</span>
+                                        <span className="text-3xl font-light tracking-tighter text-amber-500">
+                                            ${discounted.total.toLocaleString()}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <button
+                                    type="button"
+                                    onClick={() => setStep("BUILDER")}
+                                    className="w-full border border-white/20 py-3 text-[10px] font-bold uppercase tracking-[0.3em] text-white/60 hover:text-white hover:border-white/50 transition-colors"
+                                >
+                                    Edit itinerary
+                                </button>
+                            </div>
                         </div>
                     </motion.div>
                 ) : step === "SUCCESS" ? (
@@ -881,15 +1089,16 @@ export function CustomItineraryBuilder({
                         <div className="w-24 h-24 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mx-auto">
                             <Sparkles className="w-12 h-12" />
                         </div>
-                        <h3 className="text-4xl font-light uppercase tracking-tight">Narrative Initialized</h3>
-                        <p className="text-gray-500 italic serif">
-                            A travel consultant will review your bespoke architecture and reach out via your digital address within 24 hours to finalize the frequency.
+                        <h3 className="text-4xl font-light uppercase tracking-tight">Request sent</h3>
+                        <p className="text-gray-500">
+                            A travel specialist will review your itinerary and email you within 24 hours
+                            with a detailed quote and any suggestions.
                         </p>
                         <button
                             onClick={onBack}
                             className="bg-black text-white px-12 py-5 rounded-sm uppercase tracking-[0.2em] text-xs font-bold hover:bg-amber-600 transition-colors shadow-xl mt-8"
                         >
-                            Return to Collections
+                            Back to the planner
                         </button>
                     </motion.div>
                 ) : null
@@ -912,9 +1121,9 @@ export function CustomItineraryBuilder({
                                 <div className="p-6 border-b border-gray-200 flex items-center justify-between bg-white z-10">
                                     <div>
                                         <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-amber-600 block mb-2">
-                                            // navigation
+                                            // add a stop
                                         </span>
-                                        <h2 className="text-black text-3xl font-light tracking-tight uppercase">Select Next Coordinate</h2>
+                                        <h2 className="text-black text-3xl font-light tracking-tight uppercase">Where to next?</h2>
                                     </div>
                                     <button
                                         onClick={() => setShowDestinationChangeGrid(false)}
@@ -997,22 +1206,3 @@ export function CustomItineraryBuilder({
     );
 }
 
-function FormInput({ label, name, value, onChange, placeholder, type = "text", ...rest }: any) {
-    return (
-        <div className="space-y-4 group">
-            <label className="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-500 group-focus-within:text-amber-600 transition-colors">
-                {label}
-            </label>
-            <input
-                type={type}
-                name={name}
-                required
-                value={value}
-                onChange={onChange}
-                className="w-full border-b border-black/10 py-4 text-lg font-light text-black focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none placeholder:text-gray-200"
-                placeholder={placeholder}
-                {...rest}
-            />
-        </div>
-    );
-}

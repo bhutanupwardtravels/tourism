@@ -15,6 +15,7 @@ import { FaqSection } from "@/components/common/faq-section";
 import { getFaqContent } from "@/lib/data/faq";
 import { Testimonials } from "@/components/home/testimonials";
 import { getFeaturedTestimonials } from "@/lib/data/testimonials";
+import { getAboutContent } from "@/lib/data/about";
 
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/site";
@@ -36,6 +37,7 @@ export default async function Home() {
     experienceTypes,
     faqContent,
     testimonials,
+    about,
   ] = await Promise.all([
     getTopPriorityTours(5),
     getBestHotels(6),
@@ -44,11 +46,17 @@ export default async function Home() {
     getExperienceTypes(),
     getFaqContent(),
     getFeaturedTestimonials(9),
+    // Only used for the hero trust strip; a missing About row must not 500 the homepage.
+    getAboutContent().catch(() => null),
   ]);
 
   return (
     <div className="flex flex-col min-h-screen">
-      < Hero />
+      <Hero
+        licenseNumber={about?.credentials.licenseNumber || undefined}
+        foundingYear={about?.credentials.foundingYear || undefined}
+        reviewCount={testimonials.length}
+      />
       <CompanyIntro />
       <ExperienceTypes experienceTypes={experienceTypes} />
       <FeaturedItinerary itineraries={featuredTours.slice(0, 5)} />

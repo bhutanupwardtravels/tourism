@@ -75,7 +75,7 @@ export default async function TourDayPage({ params }: PageProps) {
             className="group flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.4em] text-gray-500 hover:text-black transition-all font-bold"
           >
             <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-2" />
-            [ Back to Main Narrative ]
+            Back to the full itinerary
           </Link>
 
           <div className="flex items-center gap-8">

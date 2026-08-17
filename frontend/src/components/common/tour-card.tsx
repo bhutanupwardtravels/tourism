@@ -57,13 +57,6 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
                         </div>
                     </div>
                 )}
-
-                <div className="absolute bottom-6 left-6 flex items-center gap-4">
-                    <span className={`h-px w-10 shadow-[0_0_10px_rgba(245,158,11,0.5)] transition-colors ${isSelected ? 'bg-white' : 'bg-amber-500'}`} />
-                    <span className="font-mono text-[10px] text-white uppercase tracking-[0.2em] drop-shadow-md font-bold">
-                        Visual Record // BHU-EXP
-                    </span>
-                </div>
             </div>
 
             {/* Metadata */}
@@ -98,11 +91,6 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
             <p className="mt-6 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-md">
                 "{tour.description}"
             </p>
-
-            {/* Decorative ID - Vertical */}
-            <div className="absolute top-0 -right-4 font-mono text-[9px] tracking-[0.6em] text-gray-300 rotate-90 origin-top-left py-4 border-l border-black/5 uppercase select-none pointer-events-none">
-                LOG // {tour.slug.split('-')[0].toUpperCase()}
-            </div>
         </>
     );
 

@@ -81,17 +81,18 @@ export default function PlanMyTripClient({
                                         </div>
                                         <div>
                                             <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase mb-6 leading-none text-black">
-                                                Curated <br />
-                                                <span className="italic font-serif normal-case text-amber-600">Collections</span>
+                                                Choose a <br />
+                                                <span className="italic font-serif normal-case text-amber-600">ready-made trip</span>
                                             </h2>
-                                            <p className="text-gray-500 text-lg leading-relaxed font-light italic max-w-sm">
-                                                Select from our masterfully designed archetypes for a seamless immersion into Bhutan's soul.
+                                            <p className="text-gray-500 text-lg leading-relaxed font-light max-w-sm">
+                                                Complete itineraries from 5 to 15 days, each with a price and a
+                                                day-by-day plan. Pick one and we'll tailor the details to you.
                                             </p>
                                         </div>
                                     </div>
 
                                     <div className="flex items-center gap-6 text-[10px] font-bold uppercase tracking-[0.4em] text-gray-400 group-hover:text-black transition-all">
-                                        Explore Archetypes <ArrowRight className="w-4 h-4 group-hover:translate-x-3 transition-transform duration-500" />
+                                        See the itineraries <ArrowRight className="w-4 h-4 group-hover:translate-x-3 transition-transform duration-500" />
                                     </div>
 
                                     {/* Abstract Overlay */}
@@ -111,17 +112,18 @@ export default function PlanMyTripClient({
                                         </div>
                                         <div>
                                             <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase mb-6 leading-none text-black">
-                                                Bespoke <br />
-                                                <span className="italic font-serif normal-case text-amber-600">Architecture</span>
+                                                Build your own <br />
+                                                <span className="italic font-serif normal-case text-amber-600">day by day</span>
                                             </h2>
-                                            <p className="text-gray-500 text-lg leading-relaxed font-light italic max-w-sm">
-                                                Engage our interactive workshop to architect a unique journey that resonates with your specific narrative.
+                                            <p className="text-gray-500 text-lg leading-relaxed font-light max-w-sm">
+                                                Choose where you go, what you do and where you stay. The estimated
+                                                price updates as you build.
                                             </p>
                                         </div>
                                     </div>
 
                                     <div className="mt-4 flex items-center gap-6 text-[10px] font-bold uppercase tracking-[0.4em] text-gray-400 group-hover:text-amber-600 transition-all">
-                                        Commence Workshop <ArrowRight className="w-4 h-4 group-hover:translate-x-3 transition-transform duration-500" />
+                                        Start building <ArrowRight className="w-4 h-4 group-hover:translate-x-3 transition-transform duration-500" />
                                     </div>
 
                                     {/* Abstract Overlay */}

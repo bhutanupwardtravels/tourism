@@ -15,7 +15,7 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
         <section className="py-24 md:py-40 bg-white border-t border-black/5 relative overflow-hidden">
             {/* Background Decorative ID */}
             <div className="absolute top-0 right-12 font-mono text-[25vw] opacity-[0.03] select-none pointer-events-none font-bold uppercase tracking-tighter">
-                Intel
+                Explore
             </div>
 
             <div className="container mx-auto px-6 relative z-10">
@@ -46,7 +46,7 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
                             href="/experiences"
                             className="group inline-flex items-center gap-2 text-[10px] font-mono font-medium tracking-[0.3em] uppercase hover:text-amber-600 transition-all text-gray-400 border-b border-transparent hover:border-amber-600 pb-1"
                         >
-                            All Field Briefings
+                            See all experiences
                         </Link>
                     </motion.div>
                 </div>
@@ -105,7 +105,7 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
                                     className="group inline-flex items-center gap-4 text-gray-500 hover:text-black transition-colors"
                                 >
                                     <span className="h-px w-12 bg-black/20 group-hover:w-20 group-hover:bg-amber-600 transition-all duration-500" />
-                                    <span className="font-mono text-[10px] uppercase tracking-widest">Initialise Mission</span>
+                                    <span className="font-mono text-[10px] uppercase tracking-widest">Explore</span>
                                 </Link>
                             </div>
                         </motion.div>

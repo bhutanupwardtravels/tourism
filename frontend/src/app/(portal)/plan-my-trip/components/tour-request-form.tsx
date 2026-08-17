@@ -10,6 +10,7 @@ import { submitTourRequest } from "../actions";
 import { Tour } from "@/app/(website)/tours/schema";
 import { Turnstile } from "@/components/turnstile";
 import { DiscountNotice } from "@/components/promo/discount-notice";
+import { FormInput } from "@/components/common/form-input";
 import { CountryCodeSelect } from "@/components/common/country-code-select";
 import { CountrySelect } from "@/components/common/country-select";
 import { MonthSelect } from "@/components/common/month-select";
@@ -17,11 +18,11 @@ import { OptionSelect } from "@/components/common/option-select";
 import { COUNTRIES } from "@/lib/countries";
 
 const TRAVELER_OPTIONS = [
-    { value: "1", label: "Solitary [1]" },
-    { value: "2", label: "Duo [2]" },
-    { value: "3-4", label: "Small Group [3-4]" },
-    { value: "5-8", label: "Large Group [5-8]" },
-    { value: "9+", label: "Kingdom Delegation [9+]" },
+    { value: "1", label: "Just me" },
+    { value: "2", label: "2 travellers" },
+    { value: "3-4", label: "3-4 travellers" },
+    { value: "5-8", label: "5-8 travellers" },
+    { value: "9+", label: "9 or more travellers" },
 ];
 
 interface TourRequestFormProps {
@@ -40,7 +41,7 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
         travelers: "",
         message: "",
     });
-    const [phoneCountry, setPhoneCountry] = useState("BT");
+    const [phoneCountry, setPhoneCountry] = useState("");
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -168,7 +169,7 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                         <div className="absolute inset-0 p-8 flex flex-col justify-between">
                             <div className="flex justify-between items-start">
                                 <span className="inline-block bg-amber-600/90 backdrop-blur-sm px-3 py-1 font-mono text-[8px] font-bold uppercase tracking-widest text-white">
-                                    // Selected Archetype
+                                    // Your itinerary
                                 </span>
                             </div>
 
@@ -199,15 +200,17 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                         {/* Personal Name Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
                             <FormInput
-                                label="Given Name"
+                                label="First name"
                                 name="firstName"
+                                autoComplete="given-name"
                                 placeholder="Enter first name"
                                 value={formState.firstName}
                                 onChange={handleChange}
                             />
                             <FormInput
-                                label="Family Name"
+                                label="Last name"
                                 name="lastName"
+                                autoComplete="family-name"
                                 placeholder="Enter last name"
                                 value={formState.lastName}
                                 onChange={handleChange}
@@ -217,15 +220,16 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                         {/* Contact Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
                             <FormInput
-                                label="Digital Address"
+                                label="Email"
                                 name="email"
                                 type="email"
+                                autoComplete="email"
                                 placeholder="name@example.com"
                                 value={formState.email}
                                 onChange={handleChange}
                             />
                             <div className="space-y-4 group">
-                                <label className="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-500 group-focus-within:text-amber-600 transition-colors">
+                                <label id="request-country-label" className="block text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
                                     Country
                                 </label>
                                 <div className="border-b border-black/10 focus-within:border-amber-600 transition-all">
@@ -237,22 +241,25 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                                             setPhoneCountry(iso2);
                                         }}
                                         placeholder="Select your country"
+                                        ariaLabelledBy="request-country-label"
                                     />
                                 </div>
                             </div>
                             <div className="space-y-4 group md:col-span-2">
-                                <label className="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-500 group-focus-within:text-amber-600 transition-colors">
-                                    Mobile Connection
+                                <label id="request-phone-label" htmlFor="request-phone" className="block text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
+                                    Phone
                                 </label>
                                 <div className="flex items-center gap-3 border-b border-black/10 focus-within:border-amber-600 transition-all">
-                                    <CountryCodeSelect value={phoneCountry} onChange={setPhoneCountry} />
+                                    <CountryCodeSelect value={phoneCountry} onChange={setPhoneCountry} ariaLabelledBy="request-phone-label" />
                                     <input
+                                        id="request-phone"
                                         type="tel"
                                         name="phone"
                                         required
+                                        autoComplete="tel"
                                         value={formState.phone}
                                         onChange={handleChange}
-                                        className="w-full py-4 text-lg font-light text-black focus:outline-none bg-transparent rounded-none placeholder:text-gray-200"
+                                        className="w-full py-4 text-lg font-light text-black bg-transparent rounded-none placeholder:text-gray-400 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
                                         placeholder="17 123 456"
                                     />
                                 </div>
@@ -262,28 +269,30 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                         {/* Travel Details Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
                             <div className="space-y-4 group">
-                                <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
-                                    Traveler Count
+                                <label id="request-travellers-label" className="block text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
+                                    How many people?
                                 </label>
                                 <div className="border-b border-black/10 focus-within:border-amber-600 transition-all">
                                     <OptionSelect
                                         value={formState.travelers}
                                         onChange={(travelers) => setFormState({ ...formState, travelers })}
                                         options={TRAVELER_OPTIONS}
-                                        placeholder="Select volume"
+                                        placeholder="Select group size"
+                                        ariaLabelledBy="request-travellers-label"
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-4 group">
-                                <label className="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-500 group-focus-within:text-amber-600 transition-colors">
-                                    Anticipated Arrival
+                                <label id="request-month-label" className="block text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
+                                    When do you want to travel?
                                 </label>
                                 <div className="border-b border-black/10 focus-within:border-amber-600 transition-all">
                                     <MonthSelect
                                         value={formState.travelDate}
                                         onChange={(month) => setFormState({ ...formState, travelDate: month })}
                                         placeholder="Select month"
+                                        ariaLabelledBy="request-month-label"
                                     />
                                 </div>
                             </div>
@@ -291,10 +300,11 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
 
                         {/* Large Message Area */}
                         <div className="space-y-4 group">
-                            <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors font-mono">
-                                // Narrative & Requirements
+                            <label htmlFor="request-message" className="block text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
+                                Anything we should know?
                             </label>
                             <textarea
+                                id="request-message"
                                 name="message"
                                 rows={4}
                                 value={formState.message}
@@ -344,7 +354,7 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                                 )}
                             >
                                 <span className="text-xs relative z-10 flex items-center justify-center gap-6">
-                                    {isSubmitting ? "Initiating Transmission..." : "Submit Application"}
+                                    {isSubmitting ? "Sending..." : "Send my request"}
                                     {!isSubmitting && <ArrowRight className="w-5 h-5 group-hover:translate-x-3 transition-transform duration-500" />}
                                 </span>
                                 <div className="absolute inset-0 -translate-x-full group-hover:translate-x-0 bg-amber-500 transition-transform duration-700 ease-in-out" />
@@ -357,21 +367,3 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
     );
 }
 
-function FormInput({ label, name, value, onChange, placeholder, type = "text" }: any) {
-    return (
-        <div className="space-y-4 group">
-            <label className="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-500 group-focus-within:text-amber-600 transition-colors">
-                {label}
-            </label>
-            <input
-                type={type}
-                name={name}
-                required
-                value={value}
-                onChange={onChange}
-                className="w-full border-b border-black/10 py-4 text-lg font-light text-black focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none placeholder:text-gray-200"
-                placeholder={placeholder}
-            />
-        </div>
-    );
-}

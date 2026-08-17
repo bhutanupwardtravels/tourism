@@ -23,10 +23,10 @@ export function PackageSelection({ packages, selectedPackage, onBack, onSelect }
             <div className="flex justify-between items-end mb-24 pb-12">
                 <div className="space-y-4">
                     <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.5em] font-bold block">
-                        // selection mode
+                        // step 1 of 2
                     </span>
                     <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase leading-none text-black">
-                        Curated <span className="italic font-serif normal-case text-amber-600">Journeys</span>
+                        Choose an <span className="italic font-serif normal-case text-amber-600">itinerary</span>
                     </h2>
                 </div>
                 <button
@@ -34,7 +34,7 @@ export function PackageSelection({ packages, selectedPackage, onBack, onSelect }
                     className="group flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400 hover:text-amber-500 transition-colors"
                 >
                     <span className="w-8 h-px bg-gray-200 group-hover:w-12 group-hover:bg-amber-500 transition-all" />
-                    Change Mode
+                    Back
                 </button>
             </div>
 
@@ -42,7 +42,7 @@ export function PackageSelection({ packages, selectedPackage, onBack, onSelect }
                 {selectedPackage && (
                     <div className="md:col-span-2 mb-12">
                         <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.5em] font-bold block mb-8">
-                            // current selection
+                            // your selection
                         </span>
                         <TourCard
                             tour={selectedPackage}
@@ -51,7 +51,7 @@ export function PackageSelection({ packages, selectedPackage, onBack, onSelect }
                         />
                         <div className="mt-16 pt-16 border-t border-black/5">
                             <span className="font-mono text-gray-400 text-[10px] uppercase tracking-[0.5em] font-bold block">
-                                // other archetypes
+                                // other itineraries
                             </span>
                         </div>
                     </div>
@@ -70,7 +70,7 @@ export function PackageSelection({ packages, selectedPackage, onBack, onSelect }
 
             <div className="mt-32 text-center pt-24 border-t border-black/5">
                 <p className="font-mono text-[9px] text-gray-500 uppercase tracking-[0.5em] max-w-lg mx-auto leading-loose">
-                    All packages include premium logistics, visa management, and private guides certified by the Kingdom of Bhutan.
+                    Every itinerary includes a licensed private guide, private transport, visa processing and the Sustainable Development Fee.
                 </p>
             </div>
         </motion.div>

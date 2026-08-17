@@ -3,7 +3,21 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-export function Hero() {
+interface HeroProps {
+  /** Real, checkable credentials — already stored in the About content. */
+  licenseNumber?: string;
+  foundingYear?: string;
+  reviewCount?: number;
+}
+
+export function Hero({ licenseNumber, foundingYear, reviewCount }: HeroProps) {
+  const trustPoints = [
+    licenseNumber && `Licence ${licenseNumber}`,
+    foundingYear && `Operating since ${foundingYear}`,
+    reviewCount && reviewCount > 0 && `${reviewCount} traveller reviews`,
+    "Sustainable Development Fee included",
+  ].filter(Boolean) as string[];
+
   return (
     <section className="relative h-screen w-full overflow-hidden">
       {/* Background Video/Image */}
@@ -45,11 +59,12 @@ export function Hero() {
           transition={{ duration: 0.8, delay: 0.4 }}
         >
           <h1>
-            <span className="block text-6xl md:text-9xl font-light text-white tracking-tighter mb-4 uppercase mix-blend-overlay opacity-90">
+            <span className="block text-6xl md:text-9xl font-light text-white tracking-tighter mb-4 uppercase drop-shadow-2xl">
               Bhutan
             </span>
-            <span className="block font-mono text-sm md:text-lg tracking-[0.3em] uppercase text-white/80 mb-12">
-              Tours, Experiences &amp; Custom Travel Packages
+            <span className="block font-light text-base md:text-xl tracking-wide text-white/90 mb-12 max-w-2xl mx-auto drop-shadow-md">
+              Private guided journeys built with licensed Bhutanese specialists.
+              Sustainable Development Fee included, no fixed departures.
             </span>
           </h1>
         </motion.div>
@@ -59,14 +74,31 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <div className="flex flex-col md:flex-row gap-6 mt-8">
+          <div className="flex flex-col md:flex-row items-center gap-4 mt-8">
             <Link
-              href="/destinations"
+              href="/plan-my-trip"
+              className="bg-white text-black px-10 py-4 font-mono text-xs uppercase tracking-[0.2em] hover:bg-amber-600 hover:text-white transition-all duration-500"
+            >
+              Plan my trip
+            </Link>
+            <Link
+              href="/tours"
               className="bg-white/10 backdrop-blur-md border border-white/20 text-white px-10 py-4 font-mono text-xs uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all duration-500"
             >
-              Explore Regions
+              Browse itineraries
             </Link>
           </div>
+
+          {trustPoints.length > 0 && (
+            <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[11px] text-white/70">
+              {trustPoints.map((point) => (
+                <li key={point} className="flex items-center gap-2 drop-shadow-md">
+                  <span className="h-1 w-1 rounded-full bg-amber-500" />
+                  {point}
+                </li>
+              ))}
+            </ul>
+          )}
         </motion.div>
       </div>
 

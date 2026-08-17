@@ -27,13 +27,6 @@ export function ExperienceCard({ experience }: ExperienceCardProps) {
             </span>
           </div>
         )}
-
-        <div className="absolute bottom-6 left-6 flex items-center gap-4">
-          <span className="h-px w-8 bg-amber-500/50" />
-          <span className="font-mono text-[9px] text-white uppercase tracking-widest drop-shadow-md">
-            Visual Record // BHU-EXP
-          </span>
-        </div>
       </div>
 
       <div className="flex justify-between items-start">

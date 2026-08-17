@@ -19,9 +19,11 @@ interface MonthSelectProps {
     onChange: (value: string) => void;
     placeholder?: string;
     monthsAhead?: number; // how many upcoming months to list, starting this month
+    /** id of the visible <label> naming this control. */
+    ariaLabelledBy?: string;
 }
 
-export function MonthSelect({ value, onChange, placeholder = "Select month", monthsAhead = 24 }: MonthSelectProps) {
+export function MonthSelect({ value, onChange, placeholder = "Select month", monthsAhead = 24, ariaLabelledBy }: MonthSelectProps) {
     const [open, setOpen] = useState(false);
 
     // Rolls forward from the current month, so a bare month name like "March"
@@ -42,7 +44,8 @@ export function MonthSelect({ value, onChange, placeholder = "Select month", mon
             <PopoverTrigger asChild>
                 <button
                     type="button"
-                    className="flex w-full items-center justify-between py-4 text-lg font-light text-black focus:outline-none"
+                    aria-labelledby={ariaLabelledBy}
+                    className="flex w-full items-center justify-between py-4 text-lg font-light text-black focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
                 >
                     <span className={cn(!displayLabel && "text-gray-300")}>
                         {displayLabel || placeholder}

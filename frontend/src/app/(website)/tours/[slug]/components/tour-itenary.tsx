@@ -22,7 +22,7 @@ export function TourItinerary({ days, slug }: TourItineraryProps) {
                         </h2>
                     </div>
                     <div className="hidden md:block font-mono text-[10px] text-gray-400 uppercase tracking-widest text-right font-bold">
-                        Sequence Certified // Total Days: {days.length}
+                        {days.length} days
                     </div>
                 </div>
 

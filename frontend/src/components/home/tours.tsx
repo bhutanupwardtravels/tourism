@@ -115,7 +115,7 @@ export function FeaturedItinerary({ itineraries }: FeaturedItineraryProps) {
                                                     <div key={s} className="w-8 h-px bg-amber-500/50" />
                                                 ))}
                                             </div>
-                                            <span className="font-mono text-[8px] text-amber-500/50 uppercase tracking-widest">Active Sequence</span>
+                                            <span className="font-mono text-[8px] text-amber-500/50 uppercase tracking-widest">Featured</span>
                                         </div>
                                     </motion.div>
                                 </div>

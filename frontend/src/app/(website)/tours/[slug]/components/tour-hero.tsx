@@ -89,7 +89,7 @@ export function TourHero({
                     >
                         // exploring: {category}
                     </motion.span>
-                    <h1 className="text-6xl md:text-9xl font-light text-white tracking-tighter mb-12 uppercase mix-blend-overlay opacity-90 drop-shadow-2xl">
+                    <h1 className="text-6xl md:text-9xl font-light text-white tracking-tighter mb-12 uppercase drop-shadow-2xl">
                         {title.split(' ').map((word, i) => (
                             <span key={i} className={i % 2 !== 0 ? "italic font-serif normal-case text-amber-500" : "text-white"}>
                                 {word}{' '}

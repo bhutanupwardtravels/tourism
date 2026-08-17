@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { Turnstile } from "@/components/turnstile";
 import { DiscountNotice } from "@/components/promo/discount-notice";
 import { submitTourRequest } from "@/app/(portal)/plan-my-trip/actions";
+import { FormInput } from "@/components/common/form-input";
 import { CountryCodeSelect } from "@/components/common/country-code-select";
 import { CountrySelect } from "@/components/common/country-select";
 import { MonthSelect } from "@/components/common/month-select";
@@ -17,11 +18,11 @@ import { OptionSelect } from "@/components/common/option-select";
 import { COUNTRIES } from "@/lib/countries";
 
 const TRAVELER_OPTIONS = [
-    { value: "1", label: "Solitary [1]" },
-    { value: "2", label: "Duo [2]" },
-    { value: "3-4", label: "Small Group [3-4]" },
-    { value: "5-8", label: "Large Group [5-8]" },
-    { value: "9+", label: "Kingdom Delegation [9+]" },
+    { value: "1", label: "Just me" },
+    { value: "2", label: "2 travellers" },
+    { value: "3-4", label: "3-4 travellers" },
+    { value: "5-8", label: "5-8 travellers" },
+    { value: "9+", label: "9 or more travellers" },
 ];
 
 export default function EnquireClient() {
@@ -37,7 +38,7 @@ export default function EnquireClient() {
         message: "",
     });
 
-    const [phoneCountry, setPhoneCountry] = useState("BT");
+    const [phoneCountry, setPhoneCountry] = useState("");
     const [company, setCompany] = useState(""); // honeypot — hidden from real users
     // Advisory only: submitTourRequest re-validates the code server-side.
     const [couponCode, setCouponCode] = useState("");
@@ -101,13 +102,13 @@ export default function EnquireClient() {
 
                     <div className="space-y-4">
                         <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.6em] block font-bold">
-                            // journey initiated
+                            // enquiry received
                         </span>
-                        <h1 className="text-6xl md:text-9xl font-light text-white tracking-tighter mb-12 uppercase mix-blend-overlay opacity-90 drop-shadow-2xl">
-                            Your <span className="italic font-serif normal-case text-amber-600">Sanctuary</span> awaits
+                        <h1 className="text-5xl md:text-7xl font-light text-white tracking-tighter mb-12 uppercase drop-shadow-2xl">
+Thank you \u2014 we've <span className="italic font-serif normal-case text-amber-600">got it</span>
                         </h1>
                         <p className="text-gray-400 text-lg md:text-xl leading-relaxed font-light italic">
-                            "The path to the Kingdom is now being prepared for you. Our specialists will reach out to weave your story shortly."
+A travel specialist will email you within 24 business hours with a suggested itinerary and a full price. If it's urgent, call or WhatsApp us \u2014 the numbers are in the menu.
                         </p>
                     </div>
 
@@ -116,22 +117,10 @@ export default function EnquireClient() {
                             onClick={() => window.location.href = "/"}
                             className="group inline-flex items-center gap-6 text-[10px] font-bold uppercase tracking-[0.4em] text-white/50 hover:text-white transition-all"
                         >
-                            Return to Exploration <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
+                            Back to the site <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
                         </button>
                     </div>
                 </motion.div>
-
-                {/* Meta Footer */}
-                <div className="absolute bottom-12 left-12 right-12 flex justify-between items-end">
-                    <div className="font-mono text-[8px] text-white/20 uppercase tracking-[0.5em] leading-loose">
-                        Ref: ACK-2025 // BHUTAN <br />
-                        Auth: Kingdom Concierge
-                    </div>
-                    <div className="font-mono text-[8px] text-white/20 uppercase tracking-[0.5em] text-right">
-                        Status: Confirmed <br />
-                        T: {new Date().toLocaleTimeString()}
-                    </div>
-                </div>
             </div>
         );
     }
@@ -185,7 +174,7 @@ export default function EnquireClient() {
                                 Personal <span className="italic font-serif normal-case text-amber-600">Discovery</span>
                             </h2>
                             <p className="text-black font-light leading-relaxed">
-                                Our bespoke journey design begins with a conversation. Please share your preferences so we can pair you with the right specialist.
+Tell us roughly when you want to travel and who's coming. We'll come back with a suggested itinerary and a full price, including the Sustainable Development Fee.
                             </p>
                         </div>
 
@@ -220,15 +209,17 @@ export default function EnquireClient() {
                             {/* Personal Name Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12 transform transition-all duration-500">
                                 <FormInput
-                                    label="Given Name"
+                                    label="First name"
                                     name="firstName"
+                                    autoComplete="given-name"
                                     placeholder="Enter first name"
                                     value={formState.firstName}
                                     onChange={handleChange}
                                 />
                                 <FormInput
-                                    label="Family Name"
+                                    label="Last name"
                                     name="lastName"
+                                    autoComplete="family-name"
                                     placeholder="Enter last name"
                                     value={formState.lastName}
                                     onChange={handleChange}
@@ -238,15 +229,16 @@ export default function EnquireClient() {
                             {/* Contact Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
                                 <FormInput
-                                    label="Digital Address"
+                                    label="Email"
                                     name="email"
                                     type="email"
+                                    autoComplete="email"
                                     placeholder="name@example.com"
                                     value={formState.email}
                                     onChange={handleChange}
                                 />
                                 <div className="space-y-4 group">
-                                    <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
+                                    <label id="enquire-country-label" className="block text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
                                         Country
                                     </label>
                                     <div className="border-b border-black/10 focus-within:border-amber-600 transition-all">
@@ -258,22 +250,25 @@ export default function EnquireClient() {
                                                 setPhoneCountry(iso2);
                                             }}
                                             placeholder="Select your country"
+                                            ariaLabelledBy="enquire-country-label"
                                         />
                                     </div>
                                 </div>
                                 <div className="space-y-4 group md:col-span-2">
-                                    <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
-                                        Mobile Connection
+                                    <label id="enquire-phone-label" htmlFor="enquire-phone" className="block text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
+                                        Phone
                                     </label>
                                     <div className="flex items-center gap-3 border-b border-black/10 focus-within:border-amber-600 transition-all">
-                                        <CountryCodeSelect value={phoneCountry} onChange={setPhoneCountry} />
+                                        <CountryCodeSelect value={phoneCountry} onChange={setPhoneCountry} ariaLabelledBy="enquire-phone-label" />
                                         <input
+                                            id="enquire-phone"
                                             type="tel"
                                             name="phone"
                                             required
+                                            autoComplete="tel"
                                             value={formState.phone}
                                             onChange={handleChange}
-                                            className="w-full py-4 text-lg font-light text-black focus:outline-none bg-transparent rounded-none placeholder:text-gray-200"
+                                            className="w-full py-4 text-lg font-light text-black bg-transparent rounded-none placeholder:text-gray-400 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
                                             placeholder="17 123 456"
                                         />
                                     </div>
@@ -283,28 +278,30 @@ export default function EnquireClient() {
                             {/* Travel Details Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
                                 <div className="space-y-4 group">
-                                    <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
-                                        Traveler Count
+                                    <label id="enquire-travellers-label" className="block text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
+                                        How many people?
                                     </label>
                                     <div className="border-b border-black/10 focus-within:border-amber-600 transition-all">
                                         <OptionSelect
                                             value={formState.travelers}
                                             onChange={(travelers) => setFormState({ ...formState, travelers })}
                                             options={TRAVELER_OPTIONS}
-                                            placeholder="Select volume"
+                                            placeholder="Select group size"
+                                            ariaLabelledBy="enquire-travellers-label"
                                         />
                                     </div>
                                 </div>
 
                                 <div className="space-y-4 group">
-                                    <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
-                                        Anticipated Arrival
+                                    <label id="enquire-month-label" className="block text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
+                                        When do you want to travel?
                                     </label>
                                     <div className="border-b border-black/10 focus-within:border-amber-600 transition-all">
                                         <MonthSelect
                                             value={formState.travelDate}
                                             onChange={(month) => setFormState({ ...formState, travelDate: month })}
                                             placeholder="Select month"
+                                            ariaLabelledBy="enquire-month-label"
                                         />
                                     </div>
                                 </div>
@@ -312,16 +309,17 @@ export default function EnquireClient() {
 
                             {/* Large Message Area */}
                             <div className="space-y-4 group">
-                                <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors font-mono">
-                                    // Narrative & Requirements
+                                <label htmlFor="enquire-message" className="block text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
+                                    Anything we should know?
                                 </label>
                                 <textarea
+                                    id="enquire-message"
                                     name="message"
                                     rows={4}
                                     value={formState.message}
                                     onChange={handleChange}
-                                    className="w-full border-b border-black/10 py-4 text-lg font-light text-black focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none resize-none placeholder:text-gray-300 italic serif"
-                                    placeholder="Describe your vision, interests, or any special moments you wish to experience..."
+                                    className="w-full border-b border-black/10 py-4 text-lg font-light text-black bg-transparent rounded-none resize-none transition-all placeholder:text-gray-400 focus:outline-none focus:border-amber-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
+                                    placeholder="Interests, pace, dietary needs, a special occasion \u2014 anything that helps us plan."
                                 />
                             </div>
 
@@ -360,7 +358,7 @@ export default function EnquireClient() {
                                     )}
                                 >
                                     <span className="relative z-10 flex items-center justify-center gap-6">
-                                        {isSubmitting ? "Initiating Transmission..." : "Initiate Your Journey"}
+                                        {isSubmitting ? "Sending..." : "Send my enquiry"}
                                         {!isSubmitting && <ArrowRight className="w-5 h-5 group-hover:translate-x-3 transition-transform duration-500" />}
                                     </span>
                                     <div className="absolute inset-0 -translate-x-full group-hover:translate-x-0 bg-amber-500 transition-transform duration-700 ease-in-out" />
@@ -369,8 +367,8 @@ export default function EnquireClient() {
 
                             <div className="text-center">
                                 <span className="font-mono text-[9px] text-gray-400 uppercase tracking-widest leading-loose">
-                                    Bhutan Upward Travels // Private Exploration Auth <br />
-                                    By submitting, you agree to our bespoke processing terms.
+                                    A specialist replies within 24 business hours. <br />
+                                    By submitting, you agree to our privacy policy.
                                 </span>
                             </div>
                         </motion.form>
@@ -381,21 +379,3 @@ export default function EnquireClient() {
     );
 }
 
-function FormInput({ label, name, value, onChange, placeholder, type = "text" }: any) {
-    return (
-        <div className="space-y-4 group">
-            <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
-                {label}
-            </label>
-            <input
-                type={type}
-                name={name}
-                required
-                value={value}
-                onChange={onChange}
-                className="w-full border-b border-black/10 py-4 text-lg font-light text-black focus:outline-none focus:border-amber-600 transition-all bg-transparent rounded-none placeholder:text-gray-200"
-                placeholder={placeholder}
-            />
-        </div>
-    );
-}

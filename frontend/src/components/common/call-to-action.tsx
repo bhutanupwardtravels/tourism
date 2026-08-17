@@ -76,10 +76,10 @@ export default function CallToAction() {
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-12">
             <Link
-              href="/enquire"
+              href="/plan-my-trip"
               className="group relative inline-flex items-center gap-8 bg-black px-12 py-6 text-white text-[10px] font-bold uppercase tracking-[0.4em] transition-all hover:bg-amber-600 overflow-hidden"
             >
-              <span className="relative z-10">Plan Your Custom Trip</span>
+              <span className="relative z-10">Plan my trip</span>
               <div className="absolute inset-0 translate-y-full group-hover:translate-y-0 bg-amber-500 transition-transform duration-500" />
             </Link>
 

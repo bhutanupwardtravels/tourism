@@ -18,14 +18,14 @@ export function PlanMyTripHero() {
                     transition={{ duration: 0.7, ease: "easeOut" }}
                 >
                     <span className="font-mono text-amber-500 text-[10px] font-bold tracking-[0.5em] uppercase block mb-4">
-                        // your workspace
+                        // plan your trip
                     </span>
                     <h1 className="text-4xl md:text-6xl font-light tracking-tighter text-white uppercase leading-none">
                         Plan Your{" "}
                         <span className="italic font-serif normal-case text-amber-500">Bhutan Trip</span>
                     </h1>
-                    <p className="mt-5 text-base md:text-lg text-white/75 font-light max-w-xl leading-relaxed italic">
-                        Choose a curated collection or craft a custom journey — pick a starting point below to begin.
+                    <p className="mt-5 text-base md:text-lg text-white/80 font-light max-w-xl leading-relaxed">
+Two ways to start: pick one of our ready-made itineraries, or build your own day by day. Either way, a specialist reviews it and comes back to you with a full price.
                     </p>
                 </motion.div>
             </div>
