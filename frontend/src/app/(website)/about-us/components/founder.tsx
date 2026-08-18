@@ -57,7 +57,7 @@ export function Founder({ founder }: FounderProps) {
           <Reveal y={0} x={30} duration={1}
             className="lg:col-span-7">
             <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.5em] mb-6 block">
-              // {founder.subtitle || "founder"}
+              {"// {founder.subtitle || \"founder\"}"}
             </span>
 
             <h2 className="text-5xl md:text-7xl font-light tracking-tighter leading-tight mb-8 uppercase text-black">
@@ -81,7 +81,7 @@ export function Founder({ founder }: FounderProps) {
             {founder.bio && (
               <div className="relative pl-12 border-l border-black/10">
                 <p className="text-xl text-gray-500 leading-relaxed font-light italic whitespace-pre-line">
-                  "{founder.bio}"
+                  &quot;{founder.bio}&quot;
                 </p>
                 <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-amber-600/30" />
                 <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-amber-600/30" />

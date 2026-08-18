@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { MultiSelectOption } from "@/components/ui/multi-select";
 import { toast } from "sonner";
-import { Loader2, Save, Pencil, Check, ChevronsUpDown } from "lucide-react";
+import { Loader2, Pencil, Check, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AnimatedArrowLeft } from "@/components/ui/animated-arrow-left";
@@ -33,9 +33,24 @@ import { parseISO, format } from "date-fns";
 import { generateSlug } from "@/utils/slug-generator";
 import { ImageUpload } from "@/components/admin/image-upload";
 import { GalleryUpload } from "@/components/admin/gallery-upload";
+import type { ResolvedExperience } from "@/lib/data/experiences";
+
+/** A reference as older records embedded it, rather than as a bare id string. */
+type LegacyRef = { _id?: string; id?: string };
+
+/** Reads the id out of a reference stored either way. */
+const refId = (ref: string | LegacyRef | undefined): string =>
+    typeof ref === "string" ? ref : ref?._id || ref?.id || "";
 
 interface ExperienceFormProps {
-    initialData?: any;
+    // The edit pages hand over a resolved experience, which carries the
+    // destinationIds/categoryId the form reads back on top of the stored record.
+    // `category`/`destinations` are widened because records written before
+    // references were flattened to ids still embed the whole object.
+    initialData?: Omit<Partial<ResolvedExperience>, "category" | "destinations"> & {
+        category?: string | LegacyRef;
+        destinations?: (string | LegacyRef)[];
+    };
     action?: (formData: FormData) => Promise<{ success: boolean; message: string }>;
     slug?: string | null;
     title: string;
@@ -45,7 +60,7 @@ interface ExperienceFormProps {
 export function ExperienceForm({ initialData, action, slug = null, title: pageTitle, isReadOnly = false }: ExperienceFormProps) {
     const router = useRouter();
     const [isPending, startTransition] = React.useTransition();
-    const [selectedDestination, setSelectedDestination] = React.useState<string>(initialData?.destinationIds?.[0] || initialData?.destinations?.[0] || initialData?.destinationSlug || "");
+    const [selectedDestination, setSelectedDestination] = React.useState<string>(initialData?.destinationIds?.[0] || refId(initialData?.destinations?.[0]) || initialData?.destinationSlug || "");
     const [destinationOptions, setDestinationOptions] = React.useState<MultiSelectOption[]>([]);
     const [categoryOptions, setCategoryOptions] = React.useState<{ value: string; label: string }[]>([]);
     const [isLoading, setIsLoading] = React.useState(true);
@@ -60,7 +75,7 @@ export function ExperienceForm({ initialData, action, slug = null, title: pageTi
 
     const [startDate, setStartDate] = React.useState<Date | undefined>(initialData?.startDate ? parseISO(initialData.startDate) : undefined);
     const [endDate, setEndDate] = React.useState<Date | undefined>(initialData?.endDate ? parseISO(initialData.endDate) : undefined);
-    const [category, setCategory] = React.useState<string>(initialData?.categoryId || initialData?.category || "");
+    const [category, setCategory] = React.useState<string>(initialData?.categoryId || refId(initialData?.category) || "");
 
     const iconRef = React.useRef<AnimatedArrowLeftHandle>(null);
 
@@ -92,7 +107,7 @@ export function ExperienceForm({ initialData, action, slug = null, title: pageTi
                         const match = catOptions.find(o => o.label === initialData.category);
                         if (match) setCategory(match.value);
                     } else if (initialData.category && typeof initialData.category === 'object') {
-                        setCategory(initialData.category._id || initialData.category.id);
+                        setCategory(initialData.category._id || initialData.category.id || "");
                     }
 
                     // Match Destination
@@ -101,13 +116,13 @@ export function ExperienceForm({ initialData, action, slug = null, title: pageTi
                         // Try to match by slug or label (if initialDest is slug)
                         // Destinations usually store slug in legacy.
                         const match = destinations.find(d => d.slug === initialDest || d.name === initialDest);
-                        if (match) setSelectedDestination(match.id || match._id);
+                        if (match) setSelectedDestination(match.id || match._id || "");
                     } else if (initialDest && typeof initialDest === 'object') {
-                        setSelectedDestination(initialDest._id || initialDest.id);
+                        setSelectedDestination(initialDest._id || initialDest.id || "");
                     }
                 }
 
-            } catch (error) {
+            } catch {
                 toast.error("Failed to fetch form dependencies");
             } finally {
                 setIsLoading(false);
@@ -152,7 +167,7 @@ export function ExperienceForm({ initialData, action, slug = null, title: pageTi
                 } else {
                     toast.error(result.message);
                 }
-            } catch (error) {
+            } catch {
                 toast.error("An error occurred while saving experience");
             }
         });
@@ -348,7 +363,7 @@ export function ExperienceForm({ initialData, action, slug = null, title: pageTi
                                                 <CommandItem
                                                     key={opt}
                                                     value={opt}
-                                                    onSelect={(currentValue) => {
+                                                    onSelect={() => {
                                                         setDifficulty(opt);
                                                         setDifficultyPopoverOpen(false);
                                                     }}

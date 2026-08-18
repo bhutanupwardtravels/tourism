@@ -4,6 +4,7 @@ import { FadeImage } from "@/components/common/fade-image";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Reveal } from "@/components/ui/reveal";
+import { formatDuration } from "@/lib/utils";
 
 export interface Experience {
     slug?: string;
@@ -50,7 +51,7 @@ export function ExperienceCard({ experience, index, disableLink, className }: Ex
                     </span>
                     {experience.duration && (
                         <span className="font-mono text-[9px] tracking-widest uppercase bg-amber-500/20 backdrop-blur-md px-3 py-1 border border-amber-500/20 text-amber-500">
-                            {experience.duration}
+                            {formatDuration(experience.duration)}
                         </span>
                     )}
                 </div>
@@ -70,7 +71,7 @@ export function ExperienceCard({ experience, index, disableLink, className }: Ex
                         {experience.title}
                     </h4>
                     <p className="text-base text-white/60 font-light leading-relaxed line-clamp-2 italic mb-6">
-                        "{experience.description}"
+                        &quot;{experience.description}&quot;
                     </p>
                     <div className="flex items-center gap-4 text-white/50 group-hover:text-white transition-colors duration-500">
                         <span className="h-px w-8 bg-white/20 group-hover:w-16 group-hover:bg-amber-500 transition-all duration-500" />

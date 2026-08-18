@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Hotel } from "../../schema";
+import { Hotel } from "@/app/admin/hotels/schema";
 import { HotelCard } from "@/components/common/hotel-card";
 import { Reveal } from "@/components/ui/reveal";
 
@@ -37,7 +37,7 @@ export function DestinationHotels({ hotels }: DestinationHotelsProps) {
         <div className="text-center mb-32">
           <Reveal as="span" y={0}
             className="block font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4">
-            // plan your stay
+            {"// plan your stay"}
           </Reveal>
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter uppercase text-black leading-tight">
             Where to <span className="italic font-serif normal-case text-amber-600">Stay</span>

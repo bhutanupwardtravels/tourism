@@ -105,13 +105,13 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
 
                 <div className="space-y-4">
                     <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.6em] block font-bold">
-                        // request received
+                        {"// request received"}
                     </span>
                     <h2 className="text-5xl font-light tracking-tighter uppercase text-black">
                         Request <span className="italic font-serif normal-case text-amber-600">Confirmed</span>
                     </h2>
                     <p className="text-black leading-relaxed text-xl font-light italic max-w-lg mx-auto">
-                        "Your request for {selectedTour?.title} has been received. Our team will review your application and respond shortly."
+                        &quot;Your request for {selectedTour?.title} has been received. Our team will review your application and respond shortly.&quot;
                     </p>
                 </div>
 
@@ -136,7 +136,7 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
             <div className="flex justify-between items-end mb-24 border-b border-black/5 pb-12">
                 <div className="space-y-4">
                     <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.5em] font-bold block">
-                        // finalization
+                        {"// finalization"}
                     </span>
                     <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase leading-none text-black">
                         Complete <span className="italic font-serif normal-case text-amber-600">Inquiry</span>
@@ -169,7 +169,7 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                         <div className="absolute inset-0 p-8 flex flex-col justify-between">
                             <div className="flex justify-between items-start">
                                 <span className="inline-block bg-amber-600/90 backdrop-blur-sm px-3 py-1 font-mono text-[8px] font-bold uppercase tracking-widest text-white">
-                                    // Your itinerary
+                                    {"// Your itinerary"}
                                 </span>
                             </div>
 
@@ -178,7 +178,7 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                                     {selectedTour?.title}
                                 </h3>
                                 <p className="text-white/60 text-sm font-light italic mb-6 line-clamp-2">
-                                    "{selectedTour?.description}"
+                                    &quot;{selectedTour?.description}&quot;
                                 </p>
                                 <div className="border-t border-white/20 pt-6 flex justify-between items-end">
                                     <div>

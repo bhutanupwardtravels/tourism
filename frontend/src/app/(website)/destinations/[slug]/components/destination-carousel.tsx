@@ -81,7 +81,7 @@ export function DestinationCarousel({
         <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div className="max-w-2xl">
             <span className="font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 block">
-              // explore more
+              {"// explore more"}
             </span>
             <h2 className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase text-black">
               Other <span className="italic font-serif normal-case text-amber-600">Regions</span>
@@ -104,7 +104,7 @@ export function DestinationCarousel({
                 className="pl-8 md:basis-1/2 lg:basis-1/2"
               >
                 <Reveal y={30} delay={index * 0.1} duration={0.8}>
-                  <DestinationCard destination={dest as any} index={index} />
+                  <DestinationCard destination={dest} index={index} />
                 </Reveal>
               </CarouselItem>
             ))}

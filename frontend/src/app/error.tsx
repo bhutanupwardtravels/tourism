@@ -45,7 +45,7 @@ export default function GlobalError({ error, reset }: ErrorProps) {
                     System <span className="italic font-serif text-amber-600 normal-case">Error</span>
                 </h1>
                 <p className="text-lg text-gray-500 font-light italic">
-                    "We encountered an unexpected disruption in your journey. Please allow us a moment to realign."
+                    &quot;We encountered an unexpected disruption in your journey. Please allow us a moment to realign.&quot;
                 </p>
                 <div className="flex items-center justify-center gap-4 pt-4">
                     <button

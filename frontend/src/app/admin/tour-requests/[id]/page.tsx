@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { notFound, useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 import { toast } from "sonner";
 import { RequestStatus, TourRequest } from "../types";
 import { updateTourRequestStatus, getTourRequestById, markTourRequestRead } from "../actions";
@@ -27,7 +27,6 @@ export default function TourRequestDetailPage({ params }: PageProps) {
     const [tour, setTour] = useState<Tour | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-    const router = useRouter();
 
     useEffect(() => {
         const fetchData = async () => {

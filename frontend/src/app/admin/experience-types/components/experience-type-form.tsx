@@ -7,17 +7,18 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Save, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { ExperienceType } from "../schema";
 import { generateSlug } from "@/utils/slug-generator";
 import { AnimatedArrowLeft, type AnimatedArrowLeftHandle } from "@/components/ui/animated-arrow-left";
 import { ImageUpload } from "@/components/admin/image-upload";
 import { Pencil } from "lucide-react";
+import type { ActionState } from "@/lib/action-state";
 
 interface ExperienceTypeFormProps {
     initialData?: ExperienceType;
-    action?: (prevState: any, formData: FormData) => Promise<{ success: boolean; message: string }>;
+    action?: (prevState: ActionState, formData: FormData) => Promise<ActionState>;
     title: string;
     isReadOnly?: boolean;
 }

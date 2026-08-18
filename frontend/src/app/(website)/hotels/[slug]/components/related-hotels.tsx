@@ -43,7 +43,7 @@ export function RelatedHotels({ hotels }: RelatedHotelsProps) {
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-8">
                     <div className="max-w-4xl">
                         <span className="font-mono text-amber-600 text-[13px] uppercase tracking-[0.4em] mb-6 block font-bold">
-                            // refined selection
+                            {"// refined selection"}
                         </span>
                         <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter leading-tight mb-8 md:mb-12 uppercase text-black">
                             Other <span className="italic font-serif normal-case text-amber-600">Extraordinary</span> Stays

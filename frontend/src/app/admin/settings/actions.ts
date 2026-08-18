@@ -4,8 +4,9 @@
 import { revalidatePath } from "next/cache";
 import { createCost, updateCost, deleteCost, listCosts as listCostsData } from "@/lib/data/settings";
 import { costSchema } from "./schema";
+import type { CostFilters } from "@/lib/data/settings";
 
-export async function listCosts(page: number, pageSize: number, search?: string, filters?: any) {
+export async function listCosts(page: number, pageSize: number, search?: string, filters?: CostFilters) {
     return await listCostsData(page, pageSize, search, filters);
 }
 
@@ -24,7 +25,7 @@ export async function createCostAction(formData: FormData) {
         await createCost(validatedData);
         revalidatePath("/admin/settings");
         return { success: true, message: "Cost created successfully" };
-    } catch (error) {
+    } catch {
         return { success: false, message: "Failed to create cost" };
     }
 }
@@ -44,7 +45,7 @@ export async function updateCostAction(id: string, formData: FormData) {
         await updateCost(id, validatedData);
         revalidatePath("/admin/settings");
         return { success: true, message: "Cost updated successfully" };
-    } catch (error) {
+    } catch {
         return { success: false, message: "Failed to update cost" };
     }
 }
@@ -54,7 +55,7 @@ export async function deleteCostAction(id: string) {
         await deleteCost(id);
         revalidatePath("/admin/settings");
         return { success: true, message: "Cost deleted successfully" };
-    } catch (error) {
+    } catch {
         return { success: false, message: "Failed to delete cost" };
     }
 }

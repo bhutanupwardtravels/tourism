@@ -35,18 +35,10 @@ export default async function ToursPage() {
       />
       <ToursHeader />
 
+      {/* No second heading here. "Our Expeditions" above already orients the
+          reader; "The Selected Journeys" repeated the same idea and pushed the
+          first card off screen for no added information. */}
       <div className="container mx-auto px-6 pb-40">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-24 pb-12 gap-8">
-          <div className="max-w-xl">
-            <h2 className="text-4xl md:text-5xl font-light tracking-tighter uppercase mb-2">
-              The <span className="italic font-serif text-amber-600 normal-case">Selected</span> Journeys
-            </h2>
-            <p className="text-gray-500 font-light italic">
-              "A collection of verified expeditions curated for deep discovery."
-            </p>
-          </div>
-        </div>
-
         <ToursGrid tours={tours} />
       </div>
 

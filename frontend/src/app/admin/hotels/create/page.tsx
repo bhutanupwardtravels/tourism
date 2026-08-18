@@ -1,8 +1,9 @@
 import { HotelForm } from "../components/hotel-form";
 import { createHotel } from "../actions";
+import { initialActionState } from "@/lib/action-state";
 
 export default function CreateHotelPage() {
-  const createHotelWithPrevState = createHotel.bind(null, null);
+  const createHotelWithPrevState = createHotel.bind(null, initialActionState);
 
   return (
     <HotelForm

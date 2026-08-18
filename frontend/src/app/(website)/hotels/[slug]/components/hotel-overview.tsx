@@ -1,6 +1,6 @@
 "use client";
 
-import { Coffee, Wifi, Car, Tv, Wind, ShieldCheck } from "lucide-react";
+import { Coffee, Wifi, Car, Tv, Wind, ShieldCheck, type LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 
 interface HotelOverviewProps {
@@ -10,7 +10,7 @@ interface HotelOverviewProps {
 }
 
 export function HotelOverview({ description, amenities, rooms }: HotelOverviewProps) {
-    const amenityIcons: Record<string, any> = {
+    const amenityIcons: Record<string, LucideIcon> = {
         wifi: Wifi,
         "free wifi": Wifi,
         coffee: Coffee,
@@ -30,14 +30,14 @@ export function HotelOverview({ description, amenities, rooms }: HotelOverviewPr
                     <div className="lg:col-span-7">
                         <Reveal y={30} duration={0.8}>
                             <span className="font-mono text-amber-600 text-[13px] uppercase tracking-[0.4em] mb-4 block font-bold">
-                // sanctuary profile
+                {"// sanctuary profile"}
                             </span>
                             <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter leading-tight mb-8 md:mb-12 uppercase">
                                 The <span className="italic font-serif normal-case text-amber-600">Spirit</span> of Your Stay
                             </h2>
                             <div className="relative pl-8 border-l border-black/10">
                                 <p className="text-lg md:text-xl text-gray-500 leading-relaxed font-light italic">
-                                    "{description}"
+                                    &quot;{description}&quot;
                                 </p>
                                 <div className="mt-8 font-mono text-[10px] text-gray-500 uppercase tracking-widest flex items-center gap-3 font-bold">
                                     <ShieldCheck className="w-4 h-4 text-amber-600" />

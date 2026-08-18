@@ -4,12 +4,13 @@
 import { revalidatePath } from "next/cache";
 import { createUser, updateUser, deleteUser, getUserByEmail, listUsers as listUsersData } from "@/lib/data/users";
 import { userSchema } from "./schema";
+import type { ActionState } from "@/lib/action-state";
 
 export async function listUsers(page: number, pageSize: number, search?: string) {
     return await listUsersData(page, pageSize, search);
 }
 
-export async function createUserAction(prevState: any, formData: FormData) {
+export async function createUserAction(prevState: ActionState, formData: FormData) {
     const data = Object.fromEntries(formData.entries());
 
     const validatedFields = userSchema.safeParse(data);
@@ -44,12 +45,12 @@ export async function createUserAction(prevState: any, formData: FormData) {
 
         revalidatePath("/admin/users");
         return { success: true, message: "User created successfully" };
-    } catch (error) {
+    } catch {
         return { success: false, message: "Failed to create user" };
     }
 }
 
-export async function updateUserAction(id: string, prevState: any, formData: FormData) {
+export async function updateUserAction(id: string, prevState: ActionState, formData: FormData) {
     const data = Object.fromEntries(formData.entries());
     const validatedFields = userSchema.safeParse(data);
 
@@ -62,7 +63,7 @@ export async function updateUserAction(id: string, prevState: any, formData: For
 
     const { username, email, role, password } = validatedFields.data;
 
-    const updateData: any = {
+    const updateData: { username?: string; email?: string; role?: string; password?: string } = {
         username,
         email,
         role,
@@ -77,7 +78,7 @@ export async function updateUserAction(id: string, prevState: any, formData: For
         await updateUser(id, updateData);
         revalidatePath("/admin/users");
         return { success: true, message: "User updated successfully" };
-    } catch (error) {
+    } catch {
         return { success: false, message: "Failed to update user" };
     }
 }
@@ -87,7 +88,7 @@ export async function deleteUserAction(id: string) {
         await deleteUser(id);
         revalidatePath("/admin/users");
         return { success: true, message: "User deleted successfully" };
-    } catch (error) {
+    } catch {
         return { success: false, message: "Failed to delete user" };
     }
 }

@@ -15,7 +15,7 @@ export function TourItinerary({ days, slug }: TourItineraryProps) {
                 <div className="flex items-center justify-between mb-12">
                     <div>
                         <span className="font-mono text-amber-600 text-[13px] uppercase tracking-[0.4em] mb-4 block font-bold">
-              // expedition itinerary
+              {"// expedition itinerary"}
                         </span>
                         <h2 className="text-4xl md:text-5xl font-light tracking-tighter uppercase text-black">
                             Day by <span className="italic font-serif normal-case text-amber-600">Day</span>

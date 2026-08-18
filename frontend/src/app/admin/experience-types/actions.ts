@@ -5,6 +5,7 @@ import { PaginatedExperienceTypes, ExperienceType } from "./schema";
 import * as db from "@/lib/data/experience-types";
 import { getAdminUser as auth } from "@/lib/supabase/server";
 import { uploadImage } from "@/lib/upload";
+import type { ActionState } from "@/lib/action-state";
 
 export async function getExperienceTypes(
     page: number = 1,
@@ -14,7 +15,7 @@ export async function getExperienceTypes(
     try {
         const data = await db.listExperienceTypes(page, pageSize, search);
         return data as PaginatedExperienceTypes;
-    } catch (error) {
+    } catch {
         return {
             items: [],
             page: 1,
@@ -30,7 +31,7 @@ export async function getExperienceTypeBySlug(slug: string): Promise<ExperienceT
     try {
         const experienceType = await db.getExperienceTypeBySlug(slug);
         return experienceType as ExperienceType | null;
-    } catch (error) {
+    } catch {
         return null;
     }
 }
@@ -39,12 +40,12 @@ export async function getExperienceTypeById(id: string): Promise<ExperienceType 
     try {
         const experienceType = await db.getExperienceTypeById(id);
         return experienceType as ExperienceType | null;
-    } catch (error) {
+    } catch {
         return null;
     }
 }
 
-export async function createExperienceType(prevState: any, formData: FormData) {
+export async function createExperienceType(prevState: ActionState, formData: FormData) {
     const session = await auth();
     if (!session) {
         return { success: false, message: "Unauthorized" };
@@ -66,7 +67,7 @@ export async function createExperienceType(prevState: any, formData: FormData) {
             }
         }
 
-        const experienceTypeData: any = {
+        const experienceTypeData: Partial<ExperienceType> = {
             title,
             slug,
             description,
@@ -83,7 +84,7 @@ export async function createExperienceType(prevState: any, formData: FormData) {
             success: true,
             message: "Experience type created successfully",
         };
-    } catch (error) {
+    } catch {
         return {
             success: false,
             message: "Failed to create experience type",
@@ -93,7 +94,7 @@ export async function createExperienceType(prevState: any, formData: FormData) {
 
 export async function updateExperienceType(
     id: string,
-    prevState: any,
+    prevState: ActionState,
     formData: FormData
 ) {
     const session = await auth();
@@ -118,7 +119,7 @@ export async function updateExperienceType(
             }
         }
 
-        const experienceTypeData: any = {
+        const experienceTypeData: Partial<ExperienceType> = {
             title,
             slug,
             description,
@@ -135,7 +136,7 @@ export async function updateExperienceType(
             success: true,
             message: "Experience type updated successfully",
         };
-    } catch (error) {
+    } catch {
         return {
             success: false,
             message: "Failed to update experience type",
@@ -159,7 +160,7 @@ export async function deleteExperienceType(id: string) {
             success: true,
             message: "Experience type deleted successfully",
         };
-    } catch (error) {
+    } catch {
         return {
             success: false,
             message: "Failed to delete experience type",
@@ -170,11 +171,11 @@ export async function deleteExperienceType(id: string) {
 export async function getCategoriesForDropdown() {
     try {
         const categories = await db.getAllExperienceTypes();
-        return categories.map((cat: any) => ({
+        return categories.map((cat) => ({
             label: cat.title,
             value: cat.title,
         }));
-    } catch (error) {
+    } catch {
         return [];
     }
 }

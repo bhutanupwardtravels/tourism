@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2, Save, Pencil, X, Trash2, Plus } from "lucide-react";
+import { Loader2, Pencil, X, Trash2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -43,7 +43,7 @@ export default function AboutUsPage() {
       try {
         const data = await getAboutContentAction();
         setFormData(data);
-      } catch (error) {
+      } catch {
         toast.error("Failed to load content");
       } finally {
         setIsLoading(false);
@@ -75,7 +75,7 @@ export default function AboutUsPage() {
       } else {
         toast.error(result.message);
       }
-    } catch (error) {
+    } catch {
       toast.error("An unexpected error occurred");
     } finally {
       setIsSaving(false);

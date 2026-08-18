@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Quote, Star } from "lucide-react";
 import * as React from "react";
@@ -45,7 +46,7 @@ function TestimonialIdentity({ testimonial }: { testimonial: Testimonial }) {
       <div className="flex items-center gap-3">
         <div className="h-11 w-11 shrink-0 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center text-sm font-semibold text-zinc-500">
           {testimonial.avatar ? (
-            <img src={testimonial.avatar} alt={testimonial.name} className="w-full h-full object-cover" />
+            <Image src={testimonial.avatar} alt={testimonial.name} width={44} height={44} className="w-full h-full object-cover" />
           ) : (
             testimonial.name.charAt(0).toUpperCase()
           )}
@@ -163,7 +164,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
         <div className="text-center mb-24 max-w-4xl mx-auto">
           <Reveal y={30} duration={0.8}>
             <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-6 block">
-              // traveler stories
+              {"// traveler stories"}
             </span>
             <h2 className="text-5xl md:text-7xl font-light tracking-tighter uppercase leading-tight mb-8 text-black">
               What Our <span className="italic font-serif normal-case text-amber-600">Travelers Say</span>

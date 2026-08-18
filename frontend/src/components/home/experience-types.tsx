@@ -23,7 +23,7 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
                     <Reveal y={30} duration={0.8}
                         className="max-w-2xl">
                         <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block">
-                // curate your experience
+                {"// curate your experience"}
                         </span>
                         <h2 className="text-5xl md:text-7xl font-light text-black tracking-tighter leading-tight uppercase">
                             Why <span className="italic font-serif normal-case text-amber-600">Bhutan?</span>
@@ -72,7 +72,7 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
 
                             <div className="w-full md:w-1/2">
                                 <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.3em] mb-4 block">
-                            // Experience Type
+                            {"// Experience Type"}
                                 </span>
                                 <h3 className="text-4xl md:text-5xl font-light mb-6 text-black tracking-tight leading-tight">
                                     {experience.title}

@@ -1,4 +1,5 @@
 import { supabaseAdmin } from "../supabase/admin";
+import { omit } from "@/lib/utils";
 
 const TABLE = "site_promotions";
 
@@ -63,7 +64,7 @@ export async function getPromoSettings(): Promise<PromoSettings> {
 
 export async function updatePromoSettings(data: PromoSettings) {
     const supabase = supabaseAdmin();
-    const { updatedAt: _updatedAt, ...content } = data;
+    const content = omit(data, "updatedAt");
 
     const { error } = await supabase.from(TABLE).upsert({
         id: 1,

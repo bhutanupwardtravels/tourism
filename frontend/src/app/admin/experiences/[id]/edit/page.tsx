@@ -1,6 +1,7 @@
 import { getExperienceById, updateExperience } from "../../actions";
 import { ExperienceForm } from "../../components/experience-form";
 import { notFound } from "next/navigation";
+import { initialActionState } from "@/lib/action-state";
 
 export default async function EditExperiencePage({
   params,
@@ -14,7 +15,7 @@ export default async function EditExperiencePage({
     notFound();
   }
 
-  const updateExperienceWithId = updateExperience.bind(null, id, null);
+  const updateExperienceWithId = updateExperience.bind(null, id, initialActionState);
 
   return (
     <ExperienceForm

@@ -58,6 +58,7 @@ export function Header({ contact }: HeaderProps) {
       onClick={() => setIsMenuOpen(true)}
       aria-label="Open menu"
       aria-expanded={isMenuOpen}
+      aria-controls="overlay-menu"
       className={cn(
         "p-2 -m-2 rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600",
         isDarkText ? "hover:bg-black/10" : "hover:bg-white/10",

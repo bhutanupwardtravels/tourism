@@ -1,7 +1,10 @@
 import { z } from "zod";
 
 export const destinationSchema = z.object({
+  // rowToDoc surfaces the uuid under both keys; `_id` is the legacy spelling
+  // components still read, `id` is what newer code expects.
   _id: z.string().optional(),
+  id: z.string().optional(),
   slug: z.string(),
   name: z.string(),
   description: z.string(),

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { Star } from "lucide-react";
@@ -17,9 +18,11 @@ function AvatarCell({ imageUrl, name }: { imageUrl?: string; name: string }) {
     }
     return (
         <div className="h-10 w-10 overflow-hidden rounded-full bg-muted">
-            <img
+            <Image
                 src={imageUrl}
                 alt={name}
+                width={40}
+                height={40}
                 className="h-full w-full object-cover"
                 onError={(e) => {
                     e.currentTarget.style.display = "none";

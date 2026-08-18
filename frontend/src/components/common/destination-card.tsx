@@ -53,7 +53,7 @@ export function DestinationCard({ destination, className, onClick, disableLink }
             </div>
 
             <p className="mt-6 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-base">
-                "{destination.description}"
+                &quot;{destination.description}&quot;
             </p>
         </>
     );

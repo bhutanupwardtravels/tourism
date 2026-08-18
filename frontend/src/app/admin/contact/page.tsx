@@ -79,7 +79,7 @@ export default function ContactPage() {
             try {
                 const data = await getContactContentAction();
                 setFormData(data);
-            } catch (error) {
+            } catch {
                 toast.error("Failed to load contact details");
             } finally {
                 setIsLoading(false);
@@ -108,7 +108,7 @@ export default function ContactPage() {
             } else {
                 toast.error(result.message);
             }
-        } catch (error) {
+        } catch {
             toast.error("An unexpected error occurred");
         } finally {
             setIsSaving(false);

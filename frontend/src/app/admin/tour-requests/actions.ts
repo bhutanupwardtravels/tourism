@@ -133,7 +133,7 @@ export async function updateTourRequestStatus(id: string, status: RequestStatus)
 
         revalidatePath("/admin/tour-requests");
         return { success: true };
-    } catch (error) {
+    } catch {
         return { success: false, error: "Internal server error" };
     }
 }
@@ -146,7 +146,7 @@ export async function deleteTourRequest(id: string) {
             return { success: true };
         }
         return { success: false, error: "Failed to delete request" };
-    } catch (error) {
+    } catch {
         return { success: false, error: "Internal server error" };
     }
 }
@@ -155,7 +155,7 @@ export async function getTourRequestById(id: string) {
     try {
         const data = await tourRequestDb.getTourRequestById(id);
         return data;
-    } catch (error) {
+    } catch {
         return null;
     }
 }
@@ -180,7 +180,7 @@ export async function markTourRequestRead(id: string) {
         await tourRequestDb.markRead(id);
         revalidatePath("/admin/tour-requests");
         return { success: true };
-    } catch (error) {
+    } catch {
         return { success: false };
     }
 }
@@ -190,7 +190,7 @@ export async function markAllTourRequestsRead() {
         await tourRequestDb.markAllRead();
         revalidatePath("/admin/tour-requests");
         return { success: true };
-    } catch (error) {
+    } catch {
         return { success: false };
     }
 }
@@ -200,7 +200,7 @@ export async function markTourRequestUnread(id: string) {
         await tourRequestDb.markUnread(id);
         revalidatePath("/admin/tour-requests");
         return { success: true };
-    } catch (error) {
+    } catch {
         return { success: false };
     }
 }

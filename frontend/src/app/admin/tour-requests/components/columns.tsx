@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { RequestStatus, TourRequest } from "../types";
 import { DataTableRowActions } from "./data-table-row-actions";
 
-const formatDateSafe = (dateStr: string | any, formatStr: string) => {
+const formatDateSafe = (dateStr: string | Date | null | undefined, formatStr: string) => {
     if (!dateStr) return "N/A";
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) return "N/A";

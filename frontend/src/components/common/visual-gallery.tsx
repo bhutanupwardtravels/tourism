@@ -25,6 +25,21 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
         offset: ["start end", "end start"]
     });
 
+    // One parallax transform per mosaic slot, declared unconditionally and in a
+    // fixed order: the tiles below render conditionally on `images[n]`, so these
+    // hooks cannot live inside those branches without breaking hook ordering
+    // whenever the gallery is handed a different number of images.
+    const parallaxY = [
+        useTransform(scrollYProgress, [0, 1], [0, -20]),
+        useTransform(scrollYProgress, [0, 1], [10, -10]),
+        useTransform(scrollYProgress, [0, 1], [30, -30]),
+        useTransform(scrollYProgress, [0, 1], [0, -40]),
+        useTransform(scrollYProgress, [0, 1], [20, -50]),
+        useTransform(scrollYProgress, [0, 1], [-10, 10]),
+        useTransform(scrollYProgress, [0, 1], [-20, 20]),
+        useTransform(scrollYProgress, [0, 1], [-30, 30]),
+    ];
+
     if (!images || images.length === 0) return null;
 
     const openLightbox = (index: number) => {
@@ -78,7 +93,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                         className="absolute top-0 left-[22%] w-[56%] h-[53%] z-10 cursor-pointer overflow-hidden "
                         onClick={() => openLightbox(0)}>
                         <motion.img
-                            style={{ y: useTransform(scrollYProgress, [0, 1], [0, -20]) }}
+                            style={{ y: parallaxY[0] }}
                             src={images[0]}
                             className="w-full h-full object-cover"
                             alt={altFor(0)}
@@ -91,7 +106,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                             className="absolute top-[15%] left-0 w-[17%] h-[28%] z-10 cursor-pointer overflow-hidden"
                             onClick={() => openLightbox(1)}>
                             <motion.img
-                                style={{ y: useTransform(scrollYProgress, [0, 1], [10, -10]) }}
+                                style={{ y: parallaxY[1] }}
                                 src={images[1]}
                                 className="w-full h-full object-contain"
                                 alt={altFor(1)}
@@ -105,7 +120,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                             className="absolute top-[48%] left-0 w-[20%] h-[45%] z-10 cursor-pointer overflow-hidden"
                             onClick={() => openLightbox(2)}>
                             <motion.img
-                                style={{ y: useTransform(scrollYProgress, [0, 1], [30, -30]) }}
+                                style={{ y: parallaxY[2] }}
                                 src={images[2]}
                                 className="w-full h-full object-contain"
                                 alt={altFor(2)}
@@ -119,7 +134,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                             className="absolute top-[56%] left-[22%] w-[32%] h-[28%] z-10 cursor-pointer overflow-hidden"
                             onClick={() => openLightbox(3)}>
                             <motion.img
-                                style={{ y: useTransform(scrollYProgress, [0, 1], [0, -40]) }}
+                                style={{ y: parallaxY[3] }}
                                 src={images[3]}
                                 className="w-full h-full object-cover"
                                 alt={altFor(3)}
@@ -133,7 +148,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                             className="absolute top-[56%] left-[56%] w-[22%] h-[42%] z-10 cursor-pointer overflow-hidden"
                             onClick={() => openLightbox(4)}>
                             <motion.img
-                                style={{ y: useTransform(scrollYProgress, [0, 1], [20, -50]) }}
+                                style={{ y: parallaxY[4] }}
                                 src={images[4]}
                                 className="w-full h-full object-cover"
                                 alt={altFor(4)}
@@ -147,7 +162,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                             className="absolute top-[5%] right-[2%] w-[16%] h-[22%] z-10 cursor-pointer overflow-hidden"
                             onClick={() => openLightbox(5)}>
                             <motion.img
-                                style={{ y: useTransform(scrollYProgress, [0, 1], [-10, 10]) }}
+                                style={{ y: parallaxY[5] }}
                                 src={images[5]}
                                 className="w-full h-full object-cover"
                                 alt={altFor(5)}
@@ -161,7 +176,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                             className="absolute top-[32%] right-[2%] w-[24%] h-[28%] z-10 cursor-pointer overflow-hidden"
                             onClick={() => openLightbox(6)}>
                             <motion.img
-                                style={{ y: useTransform(scrollYProgress, [0, 1], [-20, 20]) }}
+                                style={{ y: parallaxY[6] }}
                                 src={images[6]}
                                 className="w-full h-full object-cover"
                                 alt={altFor(6)}
@@ -175,7 +190,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                             className="absolute top-[65%] right-[2%] w-[22%] h-[18%] z-10 cursor-pointer overflow-hidden"
                             onClick={() => openLightbox(7)}>
                             <motion.img
-                                style={{ y: useTransform(scrollYProgress, [0, 1], [-30, 30]) }}
+                                style={{ y: parallaxY[7] }}
                                 src={images[7]}
                                 className="w-full h-full object-contain"
                                 alt={altFor(7)}

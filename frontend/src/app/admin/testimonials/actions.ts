@@ -5,6 +5,7 @@ import { PaginatedTestimonials, Testimonial } from "./schema";
 import * as db from "@/lib/data/testimonials";
 import { getAdminUser as auth } from "@/lib/supabase/server";
 import { uploadImage } from "@/lib/upload";
+import type { ActionState } from "@/lib/action-state";
 
 export async function getTestimonials(
     page: number = 1,
@@ -35,7 +36,7 @@ export async function getTestimonialById(id: string): Promise<Testimonial | null
     }
 }
 
-export async function createTestimonial(prevState: any, formData: FormData) {
+export async function createTestimonial(prevState: ActionState, formData: FormData) {
     const session = await auth();
     if (!session) return { success: false, message: "Unauthorized" };
 
@@ -69,7 +70,7 @@ export async function createTestimonial(prevState: any, formData: FormData) {
     }
 }
 
-export async function updateTestimonial(id: string, prevState: any, formData: FormData) {
+export async function updateTestimonial(id: string, prevState: ActionState, formData: FormData) {
     const session = await auth();
     if (!session) return { success: false, message: "Unauthorized" };
 

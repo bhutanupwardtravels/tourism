@@ -97,13 +97,16 @@ export default function EnquireClient() {
 
                     <div className="space-y-4">
                         <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.6em] block font-bold">
-                            // enquiry received
+                            {"// enquiry received"}
                         </span>
                         <h1 className="text-5xl md:text-7xl font-light text-white tracking-tighter mb-12 uppercase drop-shadow-2xl">
-Thank you \u2014 we've <span className="italic font-serif normal-case text-amber-600">got it</span>
+                            Thank you &mdash; we&rsquo;ve{" "}
+                            <span className="italic font-serif normal-case text-amber-600">got it</span>
                         </h1>
                         <p className="text-gray-400 text-lg md:text-xl leading-relaxed font-light italic">
-A travel specialist will email you within 24 business hours with a suggested itinerary and a full price. If it's urgent, call or WhatsApp us \u2014 the numbers are in the menu.
+                            A travel specialist will email you within 24 business hours with a
+                            suggested itinerary and a full price. If it&rsquo;s urgent, call or
+                            WhatsApp us &mdash; the numbers are in the menu.
                         </p>
                     </div>
 
@@ -138,14 +141,14 @@ A travel specialist will email you within 24 business hours with a suggested iti
                 <div className="container mx-auto px-6 relative z-10 text-center">
                     <div className="space-y-8">
                         <span className="font-mono text-amber-500 text-[10px] uppercase tracking-[0.8em] font-bold block mb-4">
-                            // tailor your vision
+                            {"// tailor your vision"}
                         </span>
                         <h1 className="text-6xl md:text-9xl font-light tracking-tighter text-white uppercase leading-none">
                             Begin Your <br />
                             <span className="italic font-serif normal-case text-amber-600">Odyssey</span>
                         </h1>
                         <p className="text-lg md:text-xl text-white/60 font-light italic max-w-2xl mx-auto leading-relaxed">
-                            "Tell us the texture of your curiosity. Every journey we plan is a unique weave in the tapestry of the Kingdom of Bhutan."
+                            &quot;Tell us the texture of your curiosity. Every journey we plan is a unique weave in the tapestry of the Kingdom of Bhutan.&quot;
                         </p>
                     </div>
                 </div>
@@ -158,13 +161,13 @@ A travel specialist will email you within 24 business hours with a suggested iti
                     <div className="lg:col-span-4 space-y-12">
                         <div className="space-y-6">
                             <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.5em] font-bold block">
-                                // enquiry details
+                                {"// enquiry details"}
                             </span>
                             <h2 className="text-4xl font-light tracking-tighter uppercase leading-tight text-black">
                                 Personal <span className="italic font-serif normal-case text-amber-600">Discovery</span>
                             </h2>
                             <p className="text-black font-light leading-relaxed">
-Tell us roughly when you want to travel and who's coming. We'll come back with a suggested itinerary and a full price, including the Sustainable Development Fee.
+Tell us roughly when you want to travel and who&apos;s coming. We&apos;ll come back with a suggested itinerary and a full price, including the Sustainable Development Fee.
                             </p>
                         </div>
 
@@ -304,7 +307,7 @@ Tell us roughly when you want to travel and who's coming. We'll come back with a
                                     value={formState.message}
                                     onChange={handleChange}
                                     className="w-full border-b border-black/10 py-4 text-lg font-light text-black bg-transparent rounded-none resize-none transition-all placeholder:text-gray-400 focus:outline-none focus:border-amber-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
-                                    placeholder="Interests, pace, dietary needs, a special occasion \u2014 anything that helps us plan."
+                                    placeholder="Interests, pace, dietary needs, a special occasion — anything that helps us plan."
                                 />
                             </div>
 

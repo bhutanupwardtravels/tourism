@@ -19,7 +19,9 @@ export const experienceSchema = z.object({
   image: z.string(),
   duration: z.string().optional(),
   difficulty: z.enum(["Easy", "Moderate", "Challenging"]).optional(),
-  coordinates: z.tuple([z.number(), z.number()]).optional(),
+  // Nullable to match the admin schema and the column: rows written before
+  // coordinates were collected still hold NULL here.
+  coordinates: z.tuple([z.number(), z.number()]).nullable().optional(),
   destinationSlug: z.string().optional(),
   gallery: z.array(z.string()).optional(),
   priority: z.number().optional(),

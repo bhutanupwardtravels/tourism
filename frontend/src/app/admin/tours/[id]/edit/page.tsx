@@ -2,6 +2,7 @@ import { getTourById, updateTourAction } from "../../actions";
 import { notFound } from "next/navigation";
 import { TourForm } from "../../components/tour-form";
 import { getAllCosts } from "@/lib/data/settings";
+import { initialActionState } from "@/lib/action-state";
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -19,7 +20,7 @@ export default async function EditTourPage({ params }: PageProps) {
         notFound();
     }
 
-    const updateTourWithId = updateTourAction.bind(null, id, null);
+    const updateTourWithId = updateTourAction.bind(null, id, initialActionState);
 
     return (
         <TourForm

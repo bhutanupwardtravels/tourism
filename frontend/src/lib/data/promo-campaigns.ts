@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { supabaseAdmin } from "../supabase/admin";
-import { rowToDoc, docToRow, paginate, pageRange } from "../supabase/mapping";
+import { rowToDoc, rowsToDocs, docToRow, paginate, pageRange } from "../supabase/mapping";
 import { PromoCampaign } from "@/app/admin/promotions/campaigns/schema";
 
 const TABLE = "promo_campaigns";
@@ -41,7 +41,7 @@ export async function listCampaigns(
     if (error) throw error;
 
     return {
-        items: (data ?? []).map(rowToDoc) as PromoCampaign[],
+        items: rowsToDocs<PromoCampaign>(data),
         ...paginate(count ?? 0, page, pageSize),
     };
 }
@@ -50,7 +50,7 @@ export const getCampaignById = cache(async (id: string) => {
     try {
         const supabase = supabaseAdmin();
         const { data } = await supabase.from(TABLE).select("*").eq("id", id).maybeSingle();
-        return rowToDoc(data) as PromoCampaign | null;
+        return rowToDoc<PromoCampaign>(data);
     } catch {
         return null;
     }
@@ -80,7 +80,7 @@ export const getActiveBannerCampaign = cache(async (): Promise<PromoCampaign | n
             .limit(1)
             .maybeSingle();
 
-        return rowToDoc(data) as PromoCampaign | null;
+        return rowToDoc<PromoCampaign>(data);
     } catch {
         // The banner is never worth breaking the site layout over.
         return null;

@@ -1,6 +1,6 @@
 import { sendMail, senders } from "../src/lib/mail";
 import { emailTemplates } from "../src/lib/email/templates";
-import { RequestStatus } from "../src/app/admin/tour-requests/types";
+import { RequestStatus, type TourRequest } from "../src/app/admin/tour-requests/types";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -9,7 +9,7 @@ async function testEmail() {
     console.log("Starting email test...");
     console.log("Using RESEND_API_KEY:", process.env.RESEND_API_KEY ? "(set)" : "(missing)");
 
-    const mockData = {
+    const mockData: TourRequest = {
         _id: "test-id",
         firstName: "John",
         lastName: "Doe",
@@ -30,7 +30,7 @@ async function testEmail() {
     const userResult = await sendMail({
         to: mockData.email,
         subject: "TEST: Your Tour Request - Bhutan Upward Travels",
-        html: emailTemplates.userConfirmation(mockData as any),
+        html: emailTemplates.userConfirmation(mockData),
         from: senders.confirmation(),
         replyTo: operatorEmail,
     });
@@ -40,7 +40,7 @@ async function testEmail() {
     const operatorResult = await sendMail({
         to: operatorEmail,
         subject: "TEST: New Tour Request Notification",
-        html: emailTemplates.operatorNotification(mockData as any),
+        html: emailTemplates.operatorNotification(mockData),
         from: senders.operatorNotification(),
         replyTo: mockData.email,
     });
@@ -50,7 +50,7 @@ async function testEmail() {
     const approvedResult = await sendMail({
         to: mockData.email,
         subject: "TEST: Your Tour Request is Approved - Bhutan Upward Travels",
-        html: emailTemplates.requestApproved(mockData as any),
+        html: emailTemplates.requestApproved(mockData),
         from: senders.approved(),
         replyTo: operatorEmail,
     });
@@ -60,7 +60,7 @@ async function testEmail() {
     const rejectedResult = await sendMail({
         to: mockData.email,
         subject: "TEST: Update on Your Tour Request - Bhutan Upward Travels",
-        html: emailTemplates.requestRejected(mockData as any),
+        html: emailTemplates.requestRejected(mockData),
         from: senders.rejected(),
         replyTo: operatorEmail,
     });

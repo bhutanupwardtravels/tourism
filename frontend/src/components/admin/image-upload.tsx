@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Upload, X } from "lucide-react";
+import { Upload } from "lucide-react";
 import { Label } from "@/components/ui/label";
 
 interface ImageUploadProps {
@@ -79,18 +79,6 @@ export function ImageUpload({
         }
     };
 
-    const handleRemove = (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setPreviewUrl(null);
-        if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-        }
-        if (onFileSelect) {
-            onFileSelect(null);
-        }
-    };
-
     return (
         <div className={`space-y-2 ${className}`}>
             <Label className="text-black">{label} {required && "*"}</Label>
@@ -106,6 +94,9 @@ export function ImageUpload({
             >
                 {previewUrl ? (
                     <div className="group relative w-full h-full">
+                        {/* A blob: object URL once a file is picked, which
+                            next/image cannot optimise. */}
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                             src={previewUrl}
                             alt="Preview"

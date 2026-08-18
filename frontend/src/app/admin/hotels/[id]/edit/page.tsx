@@ -1,6 +1,7 @@
 import { getHotelById, updateHotel } from "../../actions";
 import { HotelForm } from "../../components/hotel-form";
 import { notFound } from "next/navigation";
+import { initialActionState } from "@/lib/action-state";
 
 export default async function EditHotelPage({
   params,
@@ -14,7 +15,7 @@ export default async function EditHotelPage({
     notFound();
   }
 
-  const updateHotelWithId = updateHotel.bind(null, id, null);
+  const updateHotelWithId = updateHotel.bind(null, id, initialActionState);
 
   return (
     <HotelForm

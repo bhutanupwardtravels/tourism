@@ -20,7 +20,9 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
     const page = Number(params.page) || 1;
     const pageSize = Number(params.page_size) || 10;
     const title = params.title || "";
-    const travelerCategory = params.travelerCategory || "";
+    // Query params are free-form strings; only forward one the column accepts.
+    const TRAVELER_CATEGORIES = ["adult", "child_6_12", "child_under_6"] as const;
+    const travelerCategory = TRAVELER_CATEGORIES.find((c) => c === params.travelerCategory);
     const isIndianNational = params.isIndianNational || "";
 
     const data = await listCosts(page, pageSize, title, { travelerCategory, isIndianNational });

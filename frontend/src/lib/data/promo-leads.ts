@@ -1,5 +1,5 @@
 import { supabaseAdmin } from "../supabase/admin";
-import { rowToDoc, docToRow, paginate, pageRange } from "../supabase/mapping";
+import { rowToDoc, rowsToDocs, docToRow, paginate, pageRange } from "../supabase/mapping";
 import { PromoLead } from "@/app/admin/promotions/leads/schema";
 
 const TABLE = "promo_leads";
@@ -62,7 +62,7 @@ export async function listLeads(
     if (error) throw error;
 
     return {
-        items: (data ?? []).map(rowToDoc) as PromoLead[],
+        items: rowsToDocs<PromoLead>(data),
         ...paginate(count ?? 0, page, pageSize),
     };
 }
@@ -81,7 +81,7 @@ export async function createLead(data: Partial<PromoLead>) {
         .select("*")
         .single();
     if (error) throw error;
-    return rowToDoc(inserted) as PromoLead;
+    return rowToDoc<PromoLead>(inserted) as PromoLead;
 }
 
 /** Codes are stored uppercase, so the caller must normalise before lookup. */
@@ -92,7 +92,7 @@ export async function findLeadByCode(code: string) {
         .select("*")
         .eq("code", code.trim().toUpperCase())
         .maybeSingle();
-    return data ? (rowToDoc(data) as PromoLead) : null;
+    return rowToDoc<PromoLead>(data);
 }
 
 export async function hasClaimed(campaignId: string, email: string) {

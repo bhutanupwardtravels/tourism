@@ -23,7 +23,7 @@ export function PackageSelection({ packages, selectedPackage, onBack, onSelect }
             <div className="flex justify-between items-end mb-12 pb-6">
                 <div className="space-y-4">
                     <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.5em] font-bold block">
-                        // step 1 of 2
+                        {"// step 1 of 2"}
                     </span>
                     <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase leading-none text-black">
                         Choose an <span className="italic font-serif normal-case text-amber-600">itinerary</span>
@@ -42,7 +42,7 @@ export function PackageSelection({ packages, selectedPackage, onBack, onSelect }
                 {selectedPackage && (
                     <div className="md:col-span-2 mb-12">
                         <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.5em] font-bold block mb-8">
-                            // your selection
+                            {"// your selection"}
                         </span>
                         <TourCard
                             tour={selectedPackage}
@@ -51,7 +51,7 @@ export function PackageSelection({ packages, selectedPackage, onBack, onSelect }
                         />
                         <div className="mt-16 pt-16 border-t border-black/5">
                             <span className="font-mono text-gray-400 text-[10px] uppercase tracking-[0.5em] font-bold block">
-                                // other itineraries
+                                {"// other itineraries"}
                             </span>
                         </div>
                     </div>

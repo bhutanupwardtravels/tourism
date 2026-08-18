@@ -30,7 +30,7 @@ export default function FaqPage() {
             try {
                 const data = await getFaqContentAction();
                 setFormData(data);
-            } catch (error) {
+            } catch {
                 toast.error("Failed to load FAQ content");
             } finally {
                 setIsLoading(false);
@@ -68,7 +68,7 @@ export default function FaqPage() {
             } else {
                 toast.error(result.message);
             }
-        } catch (error) {
+        } catch {
             toast.error("An unexpected error occurred");
         } finally {
             setIsSaving(false);

@@ -3,6 +3,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import * as topojson from "topojson-client";
+import type { Feature, FeatureCollection, Geometry } from "geojson";
+import type { Topology, GeometryCollection } from "topojson-specification";
+
+/** The only district property this map reads out of the topojson. */
+type DistrictProps = { shapeName?: string };
+type DistrictFeature = Feature<Geometry, DistrictProps>;
 
 interface BhutanMapProps {
   highlightDestination?: string; // slug of the destination to highlight
@@ -15,20 +21,20 @@ interface BhutanMapProps {
 
 export function BhutanMap({ highlightDestination, coordinates, route }: BhutanMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [geoJsonData, setGeoJsonData] = useState<any>(null);
+  const [geoJsonData, setGeoJsonData] = useState<FeatureCollection<Geometry, DistrictProps> | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("/data/Bhutan_ADM2.topojson");
         if (!response.ok) throw new Error("Failed to fetch map data");
-        const bhutanData = await response.json();
+        const bhutanData: Topology = await response.json();
 
         // Check keys to find the object name
         const objectKey = Object.keys(bhutanData.objects)[0];
         const featureCollection = topojson.feature(
-          bhutanData as any,
-          bhutanData.objects[objectKey] as any
+          bhutanData,
+          bhutanData.objects[objectKey] as GeometryCollection<DistrictProps>
         );
         setGeoJsonData(featureCollection);
       } catch (error) {
@@ -78,9 +84,9 @@ export function BhutanMap({ highlightDestination, coordinates, route }: BhutanMa
         .data(geoJsonData.features)
         .enter()
         .append("path")
-        .attr("d", path as any)
-        .attr("fill", (d: any) => {
-          const districtName = d.properties?.shapeName || "";
+        .attr("d", (d) => path(d as DistrictFeature))
+        .attr("fill", (d) => {
+          const districtName = (d as DistrictFeature).properties?.shapeName || "";
           if (
             highlightDestination &&
             districtName.toLowerCase() === highlightDestination.toLowerCase()
@@ -167,7 +173,7 @@ export function BhutanMap({ highlightDestination, coordinates, route }: BhutanMa
 }
 
 // Helper to draw a standard location marker
-function drawMarker(svg: any, x: number, y: number) {
+function drawMarker(svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, x: number, y: number) {
   // Ripple effect
   const ripple = svg
     .append("circle")

@@ -1,7 +1,7 @@
 "use client";
 
-import { ArrowRightLeft, Clock, MapPin, Plus, Star, Trash2 } from "lucide-react";
-import { Reorder, useDragControls } from "framer-motion";
+import { ArrowRightLeft, Clock, Plus, Star, Trash2 } from "lucide-react";
+import { Reorder } from "framer-motion";
 import { DayItinerary, ItineraryItem } from "@/app/admin/tour-requests/types";
 import { cn } from "@/lib/utils";
 

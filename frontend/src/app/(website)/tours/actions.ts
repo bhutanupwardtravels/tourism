@@ -4,14 +4,17 @@ import * as tourDb from "@/lib/data/tours";
 import * as hotelDb from "@/lib/data/hotels";
 import * as experienceDb from "@/lib/data/experiences";
 import * as destinationDb from "@/lib/data/destinations";
-import { Tour, TourDay } from "./schema";
+import { Tour } from "./schema";
+import type { ItineraryItem, TourDay } from "@/app/admin/tours/schema";
+import type { Hotel } from "@/app/admin/hotels/schema";
+import type { ResolvedExperience } from "@/lib/data/experiences";
 
 import * as experienceTypeDb from "@/lib/data/experience-types";
 
 // Supabase ids are uuids; 24-hex ids are legacy Mongo ObjectIds.
 const DB_ID_RE = /^([0-9a-f]{24}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
 
-async function resolveTourCategory(tour: any) {
+async function resolveTourCategory<T extends { category?: string }>(tour: T) {
   if (tour && tour.category && DB_ID_RE.test(tour.category)) {
     const categoryDoc = await experienceTypeDb.getExperienceTypeById(tour.category);
     if (categoryDoc) {
@@ -68,7 +71,8 @@ export async function getTourById(id: string): Promise<Tour | null> {
 // Fills in travel.from/to (name) and travel.fromCoordinates/toCoordinates for one
 // endpoint of a travel item. The destination id comes from destinationFromId/ToId
 // when present, otherwise from an id-shaped travel.from/to value (legacy data).
-async function resolveTravelPoint(item: any, side: "from" | "to") {
+async function resolveTravelPoint(item: ItineraryItem, side: "from" | "to") {
+  if (!item.travel) return;
   const explicitId = side === "from" ? item.destinationFromId : item.destinationToId;
   const value = item.travel[side];
   const id = explicitId || (value && DB_ID_RE.test(value) ? value : null);
@@ -84,12 +88,17 @@ async function resolveTravelPoint(item: any, side: "from" | "to") {
 export async function getTourDay(
   slug: string,
   dayNumber: number
-): Promise<{ dayData: any; tour: Tour; hotel?: any; experiences?: any[] } | null> {
+): Promise<{
+  dayData: TourDay;
+  tour: Tour;
+  hotel?: Hotel | null;
+  experiences?: ResolvedExperience[];
+} | null> {
   try {
     const tour = await tourDb.getTourBySlug(slug);
     if (!tour) return null;
 
-    const dayData = tour.days.find((d: any) => d.day === dayNumber);
+    const dayData = tour.days.find((d) => d.day === dayNumber);
     if (!dayData) return null;
 
     // Resolve Hotel — check day-level hotelId first, then items array
@@ -97,7 +106,7 @@ export async function getTourDay(
     if (dayData.hotelId) {
       hotel = await hotelDb.getHotelById(dayData.hotelId);
     } else if (dayData.items) {
-      const hotelItem = dayData.items.find((item: any) => item.hotelId);
+      const hotelItem = dayData.items.find((item) => item.hotelId);
       if (hotelItem?.hotelId) {
         hotel = await hotelDb.getHotelById(hotelItem.hotelId);
       }
@@ -106,10 +115,10 @@ export async function getTourDay(
     // Resolve Experiences and Travel Destinations from items. Items are
     // resolved in parallel; getDestinationById/getExperienceById are cache()'d
     // so repeated ids within the render collapse into one query each.
-    const themeExperiences: any[] = [];
+    const themeExperiences: ResolvedExperience[] = [];
     if (dayData.items) {
       const resolved = await Promise.all(
-        dayData.items.map(async (item: any) => {
+        dayData.items.map(async (item) => {
           if (item.type === "experience" && item.experienceId) {
             return experienceDb.getExperienceById(item.experienceId);
           }
@@ -152,7 +161,7 @@ export async function getRelatedTours(currentSlug: string, limit: number = 3): P
 export async function getToursByCategory(category: string): Promise<Tour[]> {
   try {
     const all = await tourDb.getAllTours();
-    return all.filter((tour: any) => tour.category === category) as Tour[];
+    return all.filter((tour) => tour.category === category) as Tour[];
   } catch (error) {
     console.error(`Error fetching tours by category ${category}:`, error);
     throw new Error("Failed to fetch tours by category");
@@ -162,7 +171,7 @@ export async function getToursByCategory(category: string): Promise<Tour[]> {
 export async function getFeaturedTour(): Promise<Tour> {
   try {
     const all = await tourDb.getAllTours();
-    const featured = all.find((tour: any) => tour.featured);
+    const featured = all.find((tour) => tour.featured);
     return (await resolveTourCategory(featured || all[0])) as Tour;
   } catch (error) {
     console.error("Error fetching featured tour:", error);

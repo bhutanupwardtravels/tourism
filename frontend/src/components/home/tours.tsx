@@ -62,7 +62,7 @@ export function FeaturedItinerary({ itineraries }: FeaturedItineraryProps) {
                 <div className="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
                     <Reveal y={20} duration={0.8} className="max-w-2xl">
                         <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block">
-                            // featured journeys
+                            {"// featured journeys"}
                         </span>
                         <h2 className="text-4xl md:text-6xl font-light text-black tracking-tighter leading-tight uppercase">
                             Trips You Can <span className="italic font-serif normal-case text-amber-600">Book</span>

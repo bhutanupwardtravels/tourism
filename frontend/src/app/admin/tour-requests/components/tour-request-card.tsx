@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Mail, Phone, Calendar, Users, Eye, Pencil, Trash2, CheckCircle2, XCircle } from "lucide-react";
+import { Mail, Calendar, Users, Eye, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { TourRequest, RequestStatus } from "../types";
 import { format, isValid } from "date-fns";
 
-const formatDate = (dateStr: string | any, formatStr: string) => {
+const formatDate = (dateStr: string | Date | null | undefined, formatStr: string) => {
     if (!dateStr) return "N/A";
     const date = new Date(dateStr);
     if (!isValid(date)) return "N/A";

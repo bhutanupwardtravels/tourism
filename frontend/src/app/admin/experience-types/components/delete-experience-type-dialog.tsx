@@ -38,7 +38,7 @@ export function DeleteExperienceTypeDialog({
                 } else {
                     toast.error(result.message);
                 }
-            } catch (error) {
+            } catch {
                 toast.error("An error occurred. Please try again.");
             }
         });
@@ -52,7 +52,7 @@ export function DeleteExperienceTypeDialog({
                     <AlertDialogDescription className="text-gray-500">
                         This will permanently delete the experience type{" "}
                         <strong className="text-amber-600">
-                            "{experienceType.title}"
+                            &quot;{experienceType.title}&quot;
                         </strong>
                         . This action cannot be undone.
                     </AlertDialogDescription>

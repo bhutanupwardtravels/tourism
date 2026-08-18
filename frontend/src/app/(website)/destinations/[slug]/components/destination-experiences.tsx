@@ -58,7 +58,7 @@ export function DestinationExperiences({
         <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8 pb-12">
           <div className="max-w-2xl">
             <span className="font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 block">
-              // local experiences
+              {"// local experiences"}
             </span>
             <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter leading-tight uppercase">
               Explore: <span className="italic font-serif normal-case text-amber-600">{destinationName}</span>

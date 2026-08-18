@@ -65,7 +65,7 @@ export default async function ExperienceDetailPage({ params }: PageProps) {
         endDate={experience.endDate || undefined}
       />
 
-      <div className="container mx-auto px-6 pt-40">
+      <div className="container mx-auto px-6 pt-20">
         <ExperienceDetails experience={experience} />
 
         {/* Map Section */}

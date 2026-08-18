@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { supabaseAdmin } from "../supabase/admin";
-import { rowToDoc, docToRow, paginate, pageRange, UUID_RE } from "../supabase/mapping";
+import { rowToDoc, rowsToDocs, docToRow, paginate, pageRange, UUID_RE } from "../supabase/mapping";
+import { Hotel } from "@/app/admin/hotels/schema";
 
 const TABLE = "hotels";
 
@@ -38,7 +39,7 @@ const loadDestinationIndex = cache(async () => {
     };
 });
 
-async function resolveDestinations(docs: any[]): Promise<any[]> {
+async function resolveDestinations(docs: Hotel[]): Promise<Hotel[]> {
     if (docs.length === 0) return docs;
 
     const { byId, bySlug } = await loadDestinationIndex();
@@ -74,7 +75,7 @@ export async function listHotels(page: number = 1, pageSize: number = 10, search
     if (error) throw error;
 
     return {
-        items: await resolveDestinations((data ?? []).map(rowToDoc)),
+        items: await resolveDestinations(rowsToDocs<Hotel>(data)),
         ...paginate(count ?? 0, page, pageSize),
     };
 }
@@ -84,9 +85,9 @@ export const getHotelById = cache(async (id: string) => {
         const supabase = supabaseAdmin();
         const { data } = await supabase.from(TABLE).select("*").eq("id", id).maybeSingle();
         if (!data) return null;
-        const [resolved] = await resolveDestinations([rowToDoc(data)]);
+        const [resolved] = await resolveDestinations([rowToDoc<Hotel>(data) as Hotel]);
         return resolved;
-    } catch (e) {
+    } catch {
         return null;
     }
 });
@@ -95,11 +96,11 @@ export const getHotelBySlug = cache(async (slug: string) => {
     const supabase = supabaseAdmin();
     const { data } = await supabase.from(TABLE).select("*").eq("slug", slug).maybeSingle();
     if (!data) return null;
-    const [resolved] = await resolveDestinations([rowToDoc(data)]);
+    const [resolved] = await resolveDestinations([rowToDoc<Hotel>(data) as Hotel]);
     return resolved;
 });
 
-export async function createHotel(data: any) {
+export async function createHotel(data: Partial<Hotel>) {
     const supabase = supabaseAdmin();
     const { data: inserted, error } = await supabase
         .from(TABLE)
@@ -110,7 +111,7 @@ export async function createHotel(data: any) {
     return inserted.id;
 }
 
-export async function updateHotel(id: string, data: any) {
+export async function updateHotel(id: string, data: Partial<Hotel>) {
     const supabase = supabaseAdmin();
     const { error } = await supabase
         .from(TABLE)
@@ -131,7 +132,7 @@ export const getAllHotels = cache(async () => {
     const supabase = supabaseAdmin();
     const { data, error } = await supabase.from(TABLE).select("*").order("name");
     if (error) throw error;
-    return resolveDestinations((data ?? []).map(rowToDoc));
+    return resolveDestinations(rowsToDocs<Hotel>(data));
 });
 
 // Top-N by priority in Postgres (homepage best hotels).
@@ -144,7 +145,7 @@ export async function getTopHotels(limit: number = 6) {
         .order("name")
         .limit(limit);
     if (error) throw error;
-    return resolveDestinations((data ?? []).map(rowToDoc));
+    return resolveDestinations(rowsToDocs<Hotel>(data));
 }
 
 export async function getHotelsByDestination(destinationId?: string, slug?: string) {
@@ -163,5 +164,5 @@ export async function getHotelsByDestination(destinationId?: string, slug?: stri
     const { data, error } = await supabase.from(TABLE).select("*").or(orParts.join(","));
     if (error) throw error;
 
-    return resolveDestinations((data ?? []).map(rowToDoc));
+    return resolveDestinations(rowsToDocs<Hotel>(data));
 }

@@ -26,7 +26,7 @@ export default function EditDestinationPage({
         } else {
           toast.error("Destination not found");
         }
-      } catch (error) {
+      } catch {
         toast.error("Failed to fetch destination data");
       } finally {
         setIsLoading(false);

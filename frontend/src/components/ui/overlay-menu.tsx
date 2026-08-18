@@ -2,8 +2,8 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 import { ArrowRight, X } from "lucide-react";
-import { cn } from "@/lib/utils";
 import type { ContactContent } from "@/lib/data/contact";
 
 interface OverlayMenuProps {
@@ -48,6 +48,67 @@ const itemVariants = {
 };
 
 export function OverlayMenu({ isOpen, onClose, contact }: OverlayMenuProps) {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  // Whatever had focus before the menu opened, so it can be handed back.
+  const openerRef = useRef<HTMLElement | null>(null);
+
+  // A full-screen panel that does not take focus with it is a keyboard trap in
+  // reverse: Tab walks into the page underneath while the overlay still covers
+  // the screen, so a keyboard or screen-reader user is operating links they
+  // cannot see. Escape to dismiss, Tab cycling inside the panel, and focus
+  // returned to the toggle on close are what make it behave like a dialog.
+  useEffect(() => {
+    if (!isOpen) return;
+
+    openerRef.current = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+
+    // Captured now: by the time cleanup runs the ref may already be detached.
+    const panel = panelRef.current;
+
+    // The page behind must not scroll while the overlay is up.
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const focusables = panel?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusables || focusables.length === 0) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+
+      if (event.shiftKey && (active === first || !panel?.contains(active))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
+      // Only pull focus back if it is still inside the panel being unmounted;
+      // if the user clicked a link, the new page owns focus now.
+      if (!panel || panel.contains(document.activeElement)) {
+        openerRef.current?.focus();
+      }
+    };
+  }, [isOpen, onClose]);
+
   const socialLinks = [
     { href: contact?.socials.instagram, label: "Instagram" },
     { href: contact?.socials.facebook, label: "Facebook" },
@@ -61,6 +122,11 @@ export function OverlayMenu({ isOpen, onClose, contact }: OverlayMenuProps) {
     <AnimatePresence>
       {isOpen && (
         <motion.div
+          ref={panelRef}
+          id="overlay-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Main menu"
           variants={menuVariants}
           initial="closed"
           animate="open"
@@ -70,10 +136,11 @@ export function OverlayMenu({ isOpen, onClose, contact }: OverlayMenuProps) {
           <div className="container mx-auto px-6 py-8 h-full flex flex-col">
             <div className="flex justify-end">
               <button
+                ref={closeButtonRef}
                 onClick={onClose}
-                className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                className="p-2 hover:bg-white/10 rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
               >
-                <X className="w-8 h-8" />
+                <X className="w-8 h-8" aria-hidden="true" />
                 <span className="sr-only">Close menu</span>
               </button>
             </div>

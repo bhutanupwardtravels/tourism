@@ -13,7 +13,7 @@ export function PlanMyTripHero() {
             <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6">
                 <div>
                     <span className="font-mono text-amber-500 text-[10px] font-bold tracking-[0.5em] uppercase block mb-4">
-                        // plan your trip
+                        {"// plan your trip"}
                     </span>
                     <h1 className="text-4xl md:text-6xl font-light tracking-tighter text-white uppercase leading-none">
                         Plan Your{" "}

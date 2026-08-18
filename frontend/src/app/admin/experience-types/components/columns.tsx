@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ExperienceType } from "../schema";
@@ -11,9 +12,11 @@ function ImageCell({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
     }
     return (
         <div className="h-10 w-16 overflow-hidden rounded-none bg-muted">
-            <img
+            <Image
                 src={imageUrl}
                 alt={alt}
+                width={64}
+                height={40}
                 className="h-full w-full object-cover"
                 onError={(e) => {
                     e.currentTarget.style.display = "none";

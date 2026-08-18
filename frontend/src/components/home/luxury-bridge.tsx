@@ -8,7 +8,7 @@ export function LuxuryBridge() {
                 <Reveal y={20} duration={1.5}
                     className="max-w-4xl mx-auto">
                     <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.8em] mb-12 block">
-            // Palate Cleanser
+            {"// Palate Cleanser"}
                     </span>
                     <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter text-black leading-tight">
                         Curated Expeditions for the <br />

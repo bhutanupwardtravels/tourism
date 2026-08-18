@@ -5,6 +5,7 @@ import { PaginatedHotels, Hotel } from "./schema";
 import * as db from "@/lib/data/hotels";
 import { getAdminUser as auth } from "@/lib/supabase/server";
 import { uploadImage } from "@/lib/upload";
+import type { ActionState } from "@/lib/action-state";
 
 export async function getHotels(
   page: number = 1,
@@ -14,7 +15,7 @@ export async function getHotels(
   try {
     const data = await db.listHotels(page, pageSize, search);
     return data as PaginatedHotels;
-  } catch (error) {
+  } catch {
     return {
       items: [],
       page: 1,
@@ -30,7 +31,7 @@ export async function getHotelBySlug(slug: string): Promise<Hotel | null> {
   try {
     const hotel = await db.getHotelBySlug(slug);
     return hotel as Hotel | null;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -39,7 +40,7 @@ export async function getHotelById(id: string): Promise<Hotel | null> {
   try {
     const hotel = await db.getHotelById(id);
     return hotel as Hotel | null;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -48,12 +49,12 @@ export async function getAllHotels() {
   try {
     const hotels = await db.getAllHotels();
     return hotels;
-  } catch (error) {
+  } catch {
     return [];
   }
 }
 
-export async function createHotel(prevState: any, formData: FormData) {
+export async function createHotel(prevState: ActionState, formData: FormData) {
   const session = await auth();
   if (!session) return { success: false, message: "Unauthorized" };
 
@@ -78,7 +79,7 @@ export async function createHotel(prevState: any, formData: FormData) {
 
     // Process Gallery
     const existingGalleryRaw = formData.get("existingGallery") as string;
-    let gallery: string[] = existingGalleryRaw ? JSON.parse(existingGalleryRaw) : [];
+    const gallery: string[] = existingGalleryRaw ? JSON.parse(existingGalleryRaw) : [];
 
     const galleryFiles = formData.getAll("gallery");
     for (const file of galleryFiles) {
@@ -90,7 +91,7 @@ export async function createHotel(prevState: any, formData: FormData) {
       }
     }
 
-    const hotelData: any = {
+    const hotelData: Partial<Hotel> = {
       name: getValue("name"),
       slug: getValue("slug"),
       location: getValue("location"),
@@ -116,12 +117,12 @@ export async function createHotel(prevState: any, formData: FormData) {
     revalidatePath("/");
 
     return { success: true, message: "Hotel created successfully" };
-  } catch (error) {
+  } catch {
     return { success: false, message: "Failed to create hotel" };
   }
 }
 
-export async function updateHotel(id: string, prevState: any, formData: FormData) {
+export async function updateHotel(id: string, prevState: ActionState, formData: FormData) {
   const session = await auth();
   if (!session) return { success: false, message: "Unauthorized" };
 
@@ -147,7 +148,7 @@ export async function updateHotel(id: string, prevState: any, formData: FormData
 
     // Process Gallery
     const existingGalleryRaw = formData.get("existingGallery") as string;
-    let gallery: string[] = existingGalleryRaw ? JSON.parse(existingGalleryRaw) : (existingHotel?.gallery || []);
+    const gallery: string[] = existingGalleryRaw ? JSON.parse(existingGalleryRaw) : (existingHotel?.gallery || []);
 
     const galleryFiles = formData.getAll("gallery");
     for (const file of galleryFiles) {
@@ -159,7 +160,7 @@ export async function updateHotel(id: string, prevState: any, formData: FormData
       }
     }
 
-    const hotelData: any = {
+    const hotelData: Partial<Hotel> = {
       name: getValue("name"),
       slug: getValue("slug"),
       location: getValue("location"),
@@ -194,7 +195,7 @@ export async function updateHotel(id: string, prevState: any, formData: FormData
     revalidatePath(`/admin/hotels/${id}/edit`);
 
     return { success: true, message: "Hotel updated successfully" };
-  } catch (error) {
+  } catch {
     return { success: false, message: "Failed to update hotel" };
   }
 }
@@ -211,7 +212,7 @@ export async function deleteHotel(id: string) {
     revalidatePath("/");
     if (hotel?.slug) revalidatePath(`/hotels/${hotel.slug}`);
     return { success: true, message: "Hotel deleted successfully" };
-  } catch (error) {
+  } catch {
     return { success: false, message: "Failed to delete hotel" };
   }
 }

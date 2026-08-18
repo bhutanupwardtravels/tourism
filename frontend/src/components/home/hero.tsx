@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useReducedMotion } from "framer-motion";
 import Link from "next/link";
 
@@ -15,10 +16,17 @@ export function Hero({ licenseNumber, foundingYear, reviewCount }: HeroProps) {
   // reduced motion, hold the poster frame instead.
   const prefersReducedMotion = useReducedMotion();
 
+  // A low review count is worse than none: "1 traveller review" turns a trust
+  // widget into evidence of inexperience. Below this many, the count is simply
+  // withheld rather than spun.
+  const MIN_REVIEWS_TO_SHOW = 5;
+
   const trustPoints = [
     licenseNumber && `Licence ${licenseNumber}`,
     foundingYear && `Operating since ${foundingYear}`,
-    reviewCount && reviewCount > 0 && `${reviewCount} traveller review${reviewCount === 1 ? "" : "s"}`,
+    reviewCount &&
+      reviewCount >= MIN_REVIEWS_TO_SHOW &&
+      `${reviewCount} traveller reviews`,
     "Sustainable Development Fee included",
   ].filter(Boolean) as string[];
 
@@ -29,11 +37,14 @@ export function Hero({ licenseNumber, foundingYear, reviewCount }: HeroProps) {
         <div className="absolute inset-0 bg-black/10 z-10" />
         <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-black/20 z-10" />
         {prefersReducedMotion ? (
-          <img
+          <Image
             src="/images/hero-poster.jpg"
             alt=""
             aria-hidden="true"
-            className="w-full h-full object-cover"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
           />
         ) : (
           <video
@@ -58,7 +69,7 @@ export function Hero({ licenseNumber, foundingYear, reviewCount }: HeroProps) {
       <div className="relative z-20 h-full flex flex-col items-center justify-center text-white px-6 text-center">
         <div>
           <span className="font-mono text-xs md:text-sm font-medium tracking-[0.5em] uppercase text-white/90 mb-8 block drop-shadow-md">
-                // welcome to the kingdom
+                {"// welcome to the kingdom"}
           </span>
         </div>
 

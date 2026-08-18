@@ -49,7 +49,7 @@ export function OurPurpose({ purpose }: OurPurposeProps) {
           <Reveal y={0} x={30} duration={1}
             className="lg:col-span-7 order-1 lg:order-2">
             <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.5em] mb-6 block">
-              // {purpose.subtitle || "The Purpose"}
+              {"// {purpose.subtitle || \"The Purpose\"}"}
             </span>
 
             <h2 className="text-5xl md:text-7xl font-light tracking-tighter leading-tight mb-12 uppercase text-black">
@@ -59,7 +59,7 @@ export function OurPurpose({ purpose }: OurPurposeProps) {
             <div className="relative pl-12 border-l border-black/10">
               <div className="space-y-8 text-xl text-gray-500 leading-relaxed font-light italic">
                 {purpose.content.map((paragraph, index) => (
-                  <p key={index}>"{paragraph}"</p>
+                  <p key={index}>&quot;{paragraph}&quot;</p>
                 ))}
               </div>
 

@@ -1,7 +1,7 @@
 import { getTourDay, getAllTours } from "../../../actions";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, MapPin, ShieldCheck, ChevronLeft, ChevronRight, Clock, ArrowRightLeft, Star, BedDouble, Eye } from "lucide-react";
+import { ArrowLeft, MapPin, ShieldCheck, ChevronLeft, ChevronRight, Clock, ArrowRightLeft, BedDouble, Eye } from "lucide-react";
 import { DayHero } from "../../components/day-hero";
 import { ExperienceCard } from "@/components/common/experience-card";
 import { HotelCard } from "@/components/common/hotel-card";
@@ -117,14 +117,14 @@ export default async function TourDayPage({ params }: PageProps) {
             <div className="flex flex-col gap-20">
               <div className="max-w-3xl">
                 <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-6 block">
-                  // day {dayNumber < 10 ? `0${dayNumber}` : dayNumber}
+                  {"// day {dayNumber < 10 ? `0${dayNumber}` : dayNumber}"}
                 </span>
                 <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter leading-tight mb-8 md:mb-12 uppercase">
                   The <span className="italic font-serif normal-case text-amber-600">Experience</span> <br />of {dayData.title}
                 </h2>
                 <div className="relative pl-12 border-l border-black/10">
                   <p className="text-lg md:text-xl text-gray-500 leading-relaxed font-light italic">
-                    "{dayData.description}"
+                    &quot;{dayData.description}&quot;
                   </p>
                   <div className="mt-10 font-mono text-[10px] text-gray-500 uppercase tracking-widest flex items-center gap-3 font-bold">
                     <ShieldCheck className="w-4 h-4 text-amber-600" />
@@ -146,10 +146,10 @@ export default async function TourDayPage({ params }: PageProps) {
                     {/* Timeline vertical line */}
                     <div className="absolute left-[23px] top-4 bottom-4 w-px bg-black/5 hidden md:block" />
 
-                    {dayData.items.map((item: any, idx: number) => {
+                    {dayData.items.map((item, idx) => {
                       // Pre-resolve experience object if available
                       const experience = item.type === "experience" && experiences
-                        ? experiences.find((e: any) => e._id === item.experienceId)
+                        ? experiences.find((e) => e._id === item.experienceId)
                         : null;
 
                       return (
@@ -228,7 +228,7 @@ export default async function TourDayPage({ params }: PageProps) {
               {(!dayData.items || dayData.items.length === 0) && dayData.activities && dayData.activities.length > 0 && (
                 <div className="bg-white p-16 hover:bg-neutral-50 transition-colors duration-500 group border border-black/5">
                   <h4 className="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.4em] text-amber-600 mb-10 font-bold">
-                    <MapPin className="w-4 h-4" /> What you'll do
+                    <MapPin className="w-4 h-4" /> What you&apos;ll do
                   </h4>
                   <ul className="space-y-8">
                     {dayData.activities.map((activity: string, index: number) => (

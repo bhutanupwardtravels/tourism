@@ -13,7 +13,7 @@ export function RequestMessage({ message }: RequestMessageProps) {
                 Message
             </h3>
             <div className="relative">
-                <span className="absolute -top-4 -left-2 text-4xl font-serif text-gray-100 italic select-none">"</span>
+                <span className="absolute -top-4 -left-2 text-4xl font-serif text-gray-100 italic select-none">&quot;</span>
                 <p className="text-sm text-gray-500 leading-relaxed italic relative z-10 pl-4">{message}</p>
             </div>
         </div>

@@ -8,7 +8,7 @@ export async function getFaqContentAction(): Promise<FaqContent> {
     try {
         const content = await getFaqContent();
         return JSON.parse(JSON.stringify(content));
-    } catch (error) {
+    } catch {
         throw new Error("Failed to fetch FAQ content");
     }
 }
@@ -26,7 +26,7 @@ export async function updateFaqContentAction(data: FaqContent) {
         revalidatePath("/llms.txt");
 
         return { success: true, message: "FAQ content updated successfully" };
-    } catch (error) {
+    } catch {
         return { success: false, message: "Failed to update FAQ content" };
     }
 }

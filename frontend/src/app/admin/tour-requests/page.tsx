@@ -36,7 +36,7 @@ export default async function TourRequestsPage({ searchParams }: TourRequestsPag
                 </p>
             </div>
             <TourRequestsTable
-                data={data.items as any}
+                data={data.items}
                 pageCount={data.total_pages}
                 pagination={{ pageIndex: data.page - 1, pageSize: data.page_size }}
             />

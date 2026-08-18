@@ -35,7 +35,7 @@ export default function NotFound() {
                     404 <span className="italic font-serif text-amber-600 normal-case">Lost</span>
                 </h1>
                 <p className="text-lg text-gray-500 font-light italic">
-                    "The path you seek has faded into the mist. Better to return to known lands."
+                    &quot;The path you seek has faded into the mist. Better to return to known lands.&quot;
                 </p>
                 <button
                     onClick={() => (window.location.href = "/")}

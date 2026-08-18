@@ -15,7 +15,7 @@ export function ReservationCard({ className = "" }: ReservationCardProps) {
                 <div className="absolute top-0 right-0 w-16 h-16 border-t border-r border-amber-600/20 group-hover:border-amber-600/50 transition-colors" />
 
                 <span className="font-mono text-[8px] md:text-[10px] text-amber-600 uppercase tracking-[0.4em] md:tracking-[0.5em] mb-6 md:mb-8 block font-bold">
-                    // plan this trip
+                    {"// plan this trip"}
                 </span>
 
                 <h3 className="text-3xl lg:text-4xl font-light tracking-tighter text-black mb-8 uppercase italic serif">

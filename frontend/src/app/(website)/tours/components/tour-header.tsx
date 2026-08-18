@@ -9,6 +9,7 @@ export function ToursHeader() {
             title="Our Expeditions"
             description="Carefully orchestrated journeys across the Kingdom. Each expedition is designed to immerse you deeply in the landscape, culture, and spirit of Bhutan."
             bgText="Journeys"
+            compact
         />
     );
 }

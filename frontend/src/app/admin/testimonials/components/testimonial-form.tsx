@@ -14,10 +14,11 @@ import { Testimonial } from "../schema";
 import { AnimatedArrowLeft, type AnimatedArrowLeftHandle } from "@/components/ui/animated-arrow-left";
 import { ImageUpload } from "@/components/admin/image-upload";
 import { cn } from "@/lib/utils";
+import type { ActionState } from "@/lib/action-state";
 
 interface TestimonialFormProps {
     initialData?: Testimonial;
-    action?: (prevState: any, formData: FormData) => Promise<{ success: boolean; message: string }>;
+    action?: (prevState: ActionState, formData: FormData) => Promise<ActionState>;
     title: string;
     isReadOnly?: boolean;
 }

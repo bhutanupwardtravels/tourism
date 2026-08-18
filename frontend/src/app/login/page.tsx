@@ -160,7 +160,7 @@ export default function AdminLoginPage() {
                             />
                         </motion.div>
                         <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.3em] mb-2 block">
-                            // SECURE ACCESS
+                            {"// SECURE ACCESS"}
                         </span>
                         <h1 className="text-2xl font-light text-black tracking-tighter uppercase">Bhutan Upward Admin</h1>
                     </div>

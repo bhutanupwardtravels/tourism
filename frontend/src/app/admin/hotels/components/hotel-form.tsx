@@ -83,7 +83,7 @@ export function HotelForm({ initialData, action, title, isReadOnly = false }: Ho
                         label: dest.name,
                     }))
                 );
-            } catch (error) {
+            } catch {
                 toast.error("Failed to fetch destinations");
             } finally {
                 setIsLoading(false);
@@ -138,7 +138,7 @@ export function HotelForm({ initialData, action, title, isReadOnly = false }: Ho
                 } else {
                     toast.error(result.message || `Failed to ${initialData ? 'update' : 'create'} hotel`);
                 }
-            } catch (error) {
+            } catch {
                 toast.error(`Failed to ${initialData ? 'update' : 'create'} hotel`);
             }
         });

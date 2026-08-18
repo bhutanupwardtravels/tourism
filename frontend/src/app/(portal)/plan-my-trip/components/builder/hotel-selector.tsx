@@ -38,7 +38,7 @@ export function HotelSelector({ hotels, onSelect, onClose }: HotelSelectorProps)
                 <div className="p-6 border-b border-gray-200 flex items-center justify-between bg-white z-10">
                     <div>
                         <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-amber-600 block mb-2">
-                            // accommodation selection
+                            {"// accommodation selection"}
                         </span>
                         <h2 className="text-black text-3xl font-light tracking-tight uppercase">Select Hotel</h2>
                     </div>

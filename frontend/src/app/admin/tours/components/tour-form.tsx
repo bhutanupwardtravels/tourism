@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,15 +9,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import {
-    Loader2, Plus, X, Search, MapPin, Star, BedDouble,
-    ArrowRightLeft, Clock, AlertCircle, ChevronUp, ChevronDown, Trash2
-} from "lucide-react";
+import { Loader2, Plus, X, Search, MapPin, Star, BedDouble, ArrowRightLeft, Clock, AlertCircle, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AnimatedArrowLeft } from "@/components/ui/animated-arrow-left";
 import type { AnimatedArrowLeftHandle } from "@/components/ui/animated-arrow-left";
-import { tourSchema, Tour } from "../schema";
+import { tourSchema, Tour, type TourInput, type ItineraryItem } from "../schema";
 import {
     getCategoriesForDropdown,
     getExperiencesForDropdown,
@@ -59,18 +57,9 @@ interface HotelObj {
     destinationSlug?: string;
 }
 
-interface BuilderItem {
-    id: string;
-    type: "experience" | "travel";
-    order: number;
-    experienceId?: string;
-    experience?: { title: string; duration: string; image?: string };
-    hotelId?: string;
-    hotel?: { name: string; image?: string };
-    destinationFromId?: string;
-    destinationToId?: string;
-    travel?: { from: string; to: string; duration: number };
-}
+// The itinerary item as the builder holds it: the stored shape, plus the
+// locally generated id every row needs for drag/drop keys.
+type BuilderItem = ItineraryItem & { id: string };
 
 interface BuilderDay {
     day: number;
@@ -145,8 +134,8 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
     const initDone = React.useRef(false);
 
     // ── React-hook-form (static fields only) ─────────────────────────────────
-    const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<Tour>({
-        resolver: zodResolver(tourSchema) as any,
+    const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<TourInput, unknown, Tour>({
+        resolver: zodResolver(tourSchema),
         defaultValues: initialData ? {
             ...initialData,
             price: Number(initialData.price),
@@ -172,7 +161,13 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
     });
 
     const watchedTitle = watch("title");
-    const watchedSelectedCostIds = watch("selectedCostIds") || [];
+    // Memoised so the `|| []` fallback does not hand the price effect below a
+    // fresh array identity on every render.
+    const rawSelectedCostIds = watch("selectedCostIds");
+    const watchedSelectedCostIds = React.useMemo(
+        () => rawSelectedCostIds || [],
+        [rawSelectedCostIds]
+    );
 
     // ── Auto-slug ────────────────────────────────────────────────────────────
     React.useEffect(() => {
@@ -221,8 +216,8 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
 
         initDone.current = true;
 
-        const loadedDays: BuilderDay[] = initialData.days.map((day: any) => {
-            const items: BuilderItem[] = (day.items || []).map((item: any) => ({
+        const loadedDays: BuilderDay[] = initialData.days.map((day) => {
+            const items: BuilderItem[] = (day.items || []).map((item) => ({
                 id: item.id || generateId(),
                 type: item.type,
                 order: item.order ?? 0,
@@ -272,7 +267,7 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
             }
         }
         if (foundDest) setActiveDestination(foundDest);
-    }, [initialData, isLoadingOptions, destinationObjects]);
+    }, [initialData, isLoadingOptions, destinationObjects, hotelOptions]);
 
     // ── Price calculation ────────────────────────────────────────────────────
     const calculateTotal = React.useCallback(() => {
@@ -458,15 +453,6 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
         });
     };
 
-    const moveDay = (from: number, to: number) => {
-        setDays(prev => {
-            const updated = [...prev];
-            const [moved] = updated.splice(from, 1);
-            updated.splice(to, 0, moved);
-            return updated.map((d, i) => ({ ...d, day: i + 1 }));
-        });
-    };
-
     // ── Form submit ───────────────────────────────────────────────────────────
 
     const onSubmit = (data: Tour) => {
@@ -640,7 +626,7 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                                                 className="group relative overflow-hidden rounded-sm border border-gray-200 hover:border-amber-500 transition-all text-left"
                                             >
                                                 {dest.image ? (
-                                                    <img src={dest.image} alt={dest.name} className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300" />
+                                                    <Image src={dest.image} alt={dest.name} width={256} height={96} className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300" />
                                                 ) : (
                                                     <div className="w-full h-24 bg-gray-100 flex items-center justify-center">
                                                         <MapPin className="h-6 w-6 text-gray-300" />
@@ -918,7 +904,7 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                     <div className="bg-white w-full max-w-2xl max-h-[80vh] flex flex-col shadow-2xl rounded-sm" onClick={e => e.stopPropagation()}>
                         <div className="p-5 border-b border-gray-200 flex items-center justify-between">
                             <div>
-                                <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600">// Navigation</p>
+                                <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600">{"// Navigation"}</p>
                                 <h3 className="text-xl font-semibold text-black">Select Next Destination</h3>
                             </div>
                             <button onClick={() => setShowDestModal(false)} className="p-1.5 hover:bg-gray-100 rounded"><X className="h-5 w-5 text-gray-500" /></button>
@@ -947,7 +933,7 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                                         className="group relative overflow-hidden rounded-sm border border-gray-200 hover:border-amber-500 transition-all text-left"
                                     >
                                         {dest.image ? (
-                                            <img src={dest.image} alt={dest.name} className="w-full h-20 object-cover group-hover:scale-105 transition-transform duration-300" />
+                                            <Image src={dest.image} alt={dest.name} width={256} height={80} className="w-full h-20 object-cover group-hover:scale-105 transition-transform duration-300" />
                                         ) : (
                                             <div className="w-full h-20 bg-gray-100 flex items-center justify-center"><MapPin className="h-6 w-6 text-gray-300" /></div>
                                         )}
@@ -967,7 +953,7 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                     <div className="bg-white w-full max-w-2xl max-h-[80vh] flex flex-col shadow-2xl rounded-sm" onClick={e => e.stopPropagation()}>
                         <div className="p-5 border-b border-gray-200 flex items-center justify-between">
                             <div>
-                                <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600">// Curated Activity</p>
+                                <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600">{"// Curated Activity"}</p>
                                 <h3 className="text-xl font-semibold text-black">Add Experience</h3>
                                 {activeDayIndex !== null && (getContextDestination(activeDayIndex) || activeDestination) && (
                                     <p className="text-xs text-gray-400 mt-0.5">
@@ -1016,7 +1002,7 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                                         className="w-full flex items-center gap-3 p-3 border border-gray-100 hover:border-amber-400 hover:bg-amber-50/50 transition-all text-left rounded-sm"
                                     >
                                         {exp.image ? (
-                                            <img src={exp.image} alt={exp.label} className="w-12 h-12 object-cover rounded shrink-0" />
+                                            <Image src={exp.image} alt={exp.label} width={48} height={48} className="w-12 h-12 object-cover rounded shrink-0" />
                                         ) : (
                                             <div className="w-12 h-12 bg-amber-50 rounded flex items-center justify-center shrink-0"><Star className="h-5 w-5 text-amber-400" /></div>
                                         )}
@@ -1038,7 +1024,7 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                     <div className="bg-white w-full max-w-2xl max-h-[80vh] flex flex-col shadow-2xl rounded-sm" onClick={e => e.stopPropagation()}>
                         <div className="p-5 border-b border-gray-200 flex items-center justify-between">
                             <div>
-                                <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600">// Overnight Stay</p>
+                                <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600">{"// Overnight Stay"}</p>
                                 <h3 className="text-xl font-semibold text-black">Select Hotel</h3>
                                 {activeDayIndex !== null && (getContextDestination(activeDayIndex) || activeDestination) && (
                                     <p className="text-xs text-gray-400 mt-0.5">
@@ -1087,7 +1073,7 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                                         className="w-full flex items-center gap-3 p-3 border border-gray-100 hover:border-blue-400 hover:bg-blue-50/50 transition-all text-left rounded-sm"
                                     >
                                         {hotel.image ? (
-                                            <img src={hotel.image} alt={hotel.label} className="w-12 h-12 object-cover rounded shrink-0" />
+                                            <Image src={hotel.image} alt={hotel.label} width={48} height={48} className="w-12 h-12 object-cover rounded shrink-0" />
                                         ) : (
                                             <div className="w-12 h-12 bg-blue-50 rounded flex items-center justify-center shrink-0"><BedDouble className="h-5 w-5 text-blue-400" /></div>
                                         )}

@@ -23,7 +23,7 @@ export default function NotificationsPage() {
                 const data: OperatorEmailsContent = await getOperatorEmailsAction();
                 setEmails(data.emails.length > 0 ? data.emails : [""]);
                 setUpdatedAt(data.updatedAt);
-            } catch (error) {
+            } catch {
                 toast.error("Failed to load notification emails");
             } finally {
                 setIsLoading(false);
@@ -53,7 +53,7 @@ export default function NotificationsPage() {
             } else {
                 toast.error(result.message);
             }
-        } catch (error) {
+        } catch {
             toast.error("An unexpected error occurred");
         } finally {
             setIsSaving(false);

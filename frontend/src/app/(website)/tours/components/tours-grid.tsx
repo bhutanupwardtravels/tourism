@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Tour } from "../schema";
 import { TourCard } from "@/components/common/tour-card";
+import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TIER_META, TIER_ORDER, tripDays, type TourTier } from "@/lib/pricing/tour-tier";
 
@@ -101,27 +102,31 @@ export function ToursGrid({ tours }: ToursGridProps) {
 
     return (
         <>
-            <div className="mb-16 flex flex-col gap-4 border-y border-black/5 py-6 md:flex-row md:items-center md:justify-between">
-                <div className="flex flex-wrap items-center gap-2">
-                    <span className="mr-2 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400">
-                        Length
-                    </span>
-                    {LENGTH_BANDS.map((b) => (
-                        <button
-                            key={b.id}
-                            type="button"
-                            aria-pressed={band === b.id}
-                            onClick={() => setBand(band === b.id ? null : b.id)}
-                            className={chip(band === b.id)}
-                        >
-                            {b.label}
-                        </button>
-                    ))}
+            <div className="mb-10 flex flex-col gap-4 border-y border-black/5 py-6 md:flex-row md:items-center md:justify-between">
+                {/* Each label + its chips is one flex-wrap unit. Flat wrapping put
+                    a stray comfort chip at the head of the next line, directly
+                    before the "Theme" label, where it read as a theme. */}
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                    <div className="flex flex-wrap items-center gap-2">
+                        <span className="mr-1 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400">
+                            Length
+                        </span>
+                        {LENGTH_BANDS.map((b) => (
+                            <button
+                                key={b.id}
+                                type="button"
+                                aria-pressed={band === b.id}
+                                onClick={() => setBand(band === b.id ? null : b.id)}
+                                className={chip(band === b.id)}
+                            >
+                                {b.label}
+                            </button>
+                        ))}
+                    </div>
 
                     {tiers.length > 1 && (
-                        <>
-                            <span className="mx-2 hidden h-5 w-px bg-black/10 md:block" />
-                            <span className="mr-2 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <span className="mr-1 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400">
                                 Comfort
                             </span>
                             {tiers.map((t) => (
@@ -136,12 +141,14 @@ export function ToursGrid({ tours }: ToursGridProps) {
                                     {TIER_META[t].label}
                                 </button>
                             ))}
-                        </>
+                        </div>
                     )}
 
                     {categories.length > 1 && (
-                        <>
-                            <span className="mx-2 hidden h-5 w-px bg-black/10 md:block" />
+                        <div className="flex flex-wrap items-center gap-2">
+                            <span className="mr-1 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400">
+                                Theme
+                            </span>
                             {categories.map((c) => (
                                 <button
                                     key={c}
@@ -153,7 +160,7 @@ export function ToursGrid({ tours }: ToursGridProps) {
                                     {c}
                                 </button>
                             ))}
-                        </>
+                        </div>
                     )}
                 </div>
 
@@ -161,28 +168,40 @@ export function ToursGrid({ tours }: ToursGridProps) {
                     <label htmlFor="tours-sort" className="sr-only">
                         Sort itineraries
                     </label>
-                    <select
-                        id="tours-sort"
-                        value={sort}
-                        onChange={(e) => setSort(e.target.value)}
-                        className="border border-black/15 bg-white px-3 py-2 text-[12px] text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
-                    >
-                        {SORTS.map((option) => (
-                            <option key={option.id} value={option.id}>
-                                {option.label}
-                            </option>
-                        ))}
-                    </select>
-                    <span aria-live="polite">
-                        {visible.length} of {tours.length} itineraries
+                    {/* appearance-none strips the OS widget so the control reads as
+                        part of the same system as the filter chips; the chevron is
+                        drawn back in and the select stays a real <select>, keeping
+                        native keyboard and mobile behaviour. */}
+                    <div className="relative">
+                        <select
+                            id="tours-sort"
+                            value={sort}
+                            onChange={(e) => setSort(e.target.value)}
+                            className="appearance-none border border-black/15 bg-white py-2 pl-4 pr-10 text-[11px] font-medium uppercase tracking-[0.15em] text-gray-600 transition-colors hover:border-black hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
+                        >
+                            {SORTS.map((option) => (
+                                <option key={option.id} value={option.id} className="normal-case tracking-normal">
+                                    {option.label}
+                                </option>
+                            ))}
+                        </select>
+                        <ChevronDown
+                            className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400"
+                            aria-hidden="true"
+                        />
+                    </div>
+                    <span aria-live="polite" className="whitespace-nowrap">
+                        <strong className="font-semibold text-black">{visible.length}</strong>
+                        {" of "}
+                        {tours.length} itineraries
                     </span>
                     {hasFilters && (
                         <button
                             type="button"
                             onClick={clearFilters}
-                            className="text-[11px] font-bold uppercase tracking-[0.2em] text-amber-600 hover:text-black transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
+                            className="whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.2em] text-amber-600 hover:text-black transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
                         >
-                            Clear
+                            Clear all
                         </button>
                     )}
                 </div>

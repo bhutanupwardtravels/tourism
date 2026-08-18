@@ -3,7 +3,6 @@
 import * as React from "react";
 import { Upload, X, Plus } from "lucide-react";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 
 interface GalleryUploadProps {
     label?: string;
@@ -97,6 +96,9 @@ export function GalleryUpload({
                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                         {previews.map((preview, index) => (
                             <div key={index} className="relative group aspect-square rounded-none overflow-hidden border border-gray-100 shadow-sm bg-gray-50">
+                                {/* Previews are blob: object URLs for freshly picked
+                                    files, which next/image cannot optimise. */}
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                     src={preview}
                                     alt={`Gallery ${index + 1}`}

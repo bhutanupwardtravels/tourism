@@ -1,9 +1,14 @@
 "use server";
 
-import * as tourDb from "@/lib/data/tours";
+// Not the raw tour table: the website action layer resolves tour.category,
+// which is stored as an experience-type id, into its display title. Reading
+// the table directly leaves that id unresolved and the package cards render
+// a raw uuid where the category badge should be.
+import { getAllTours } from "@/app/(website)/tours/actions";
 import * as destinationDb from "@/lib/data/destinations";
 import * as experienceDb from "@/lib/data/experiences";
 import { tourRequestDb } from "@/lib/data/tour-requests";
+import type { TourRequest } from "@/app/admin/tour-requests/types";
 import { Tour } from "@/app/(website)/tours/schema";
 import { Destination } from "@/app/(website)/destinations/schema";
 import { Experience } from "@/app/(website)/experiences/schema";
@@ -25,7 +30,7 @@ export interface PlanMyTripData {
 export async function getPlanMyTripData(): Promise<PlanMyTripData> {
     try {
         const [allTours, entryPointDestinations, allDestinations, allExperiences, allHotels, allCosts] = await Promise.all([
-            tourDb.getAllTours(),
+            getAllTours(),
             destinationDb.getEntryPointDestinations(),
             destinationDb.getAllDestinations(),
             experienceDb.getAllExperiences(),
@@ -35,7 +40,7 @@ export async function getPlanMyTripData(): Promise<PlanMyTripData> {
 
         // Filter packages if needed (e.g. only featured or specific category)
         // For now we return the top 4 featured or general tours as "packages"
-        const packages = (allTours.filter((t: any) => t.featured).slice(0, 4)) as Tour[];
+        const packages = (allTours.filter((t) => t.featured).slice(0, 4)) as unknown as Tour[];
         // Fallback if no featured tours
         const finalPackages = packages.length > 0 ? packages : (allTours.slice(0, 4) as Tour[]);
 
@@ -88,7 +93,11 @@ async function getClientIp(): Promise<string> {
     return h.get("x-real-ip") ?? "unknown";
 }
 
-export async function submitTourRequest(data: any) {
+/**
+ * `data` arrives straight from the browser, so it is typed as an untrusted JSON
+ * object and only reaches the database via `publicTourRequestSchema`.
+ */
+export async function submitTourRequest(data: Record<string, unknown>) {
     try {
         // 1. Honeypot: a hidden field real users never fill. If it has a value,
         //    it's almost certainly a bot — pretend success and drop it silently.
@@ -105,7 +114,10 @@ export async function submitTourRequest(data: any) {
         }
 
         // 3. Bot challenge.
-        const passed = await verifyTurnstile(data?.turnstileToken, ip);
+        const passed = await verifyTurnstile(
+            typeof data?.turnstileToken === "string" ? data.turnstileToken : undefined,
+            ip
+        );
         if (!passed) {
             return { success: false, error: "Verification failed. Please try again." };
         }
@@ -126,7 +138,7 @@ export async function submitTourRequest(data: any) {
                 ? data.customItinerary
                 : undefined;
 
-        const doc: any = {
+        const doc: Omit<TourRequest, "_id" | "createdAt" | "updatedAt" | "status"> = {
             ...parsed.data,
             tourId: typeof data.tourId === "string" ? data.tourId.slice(0, 100) : undefined,
             tourName: typeof data.tourName === "string" ? data.tourName.slice(0, 200) : undefined,
@@ -285,7 +297,7 @@ export async function validateCoupon(code: string, email?: string) {
  * is emailed as well as returned: an address that never receives it is worth
  * nothing to the follow-up campaign this feature exists to feed.
  */
-export async function claimCoupon(data: any) {
+export async function claimCoupon(data: Record<string, unknown>) {
     try {
         if (typeof data?.company === "string" && data.company.trim() !== "") {
             return { success: true, code: "" };
@@ -298,7 +310,10 @@ export async function claimCoupon(data: any) {
             return { success: false, error: "Too many requests. Please try again later." };
         }
 
-        const passed = await verifyTurnstile(data?.turnstileToken, ip);
+        const passed = await verifyTurnstile(
+            typeof data?.turnstileToken === "string" ? data.turnstileToken : undefined,
+            ip
+        );
         if (!passed) {
             return { success: false, error: "Verification failed. Please try again." };
         }

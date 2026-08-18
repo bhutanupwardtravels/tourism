@@ -40,7 +40,7 @@ export function DeleteTourDialog({
             } else {
                 toast.error(result.message || "Failed to delete tour");
             }
-        } catch (error) {
+        } catch {
             toast.error("An unexpected error occurred");
         } finally {
             setIsDeleting(false);

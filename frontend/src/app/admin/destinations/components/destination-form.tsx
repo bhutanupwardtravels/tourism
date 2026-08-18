@@ -30,10 +30,11 @@ import { DZONGKHAGS, DZONGKHAG_REGIONS } from "@/constants/dzongkhags";
 import { generateSlug } from "@/utils/slug-generator";
 import { Destination } from "../schema";
 import { getAllDestinations } from "../actions";
+import { initialActionState, type ActionState } from "@/lib/action-state";
 
 interface DestinationFormProps {
     initialData?: Destination;
-    action: (idOrSlug: string, prevState: any, formData: FormData) => Promise<{ success: boolean; message: string }>;
+    action: (idOrSlug: string, prevState: ActionState, formData: FormData) => Promise<ActionState>;
     title: string;
     isReadOnly?: boolean;
 }
@@ -62,7 +63,7 @@ export function DestinationForm({ initialData, action, title, isReadOnly = false
         const fetchAvailableDzongkhags = async () => {
             try {
                 const allDestinations = await getAllDestinations();
-                const usedDzongkhags = allDestinations.map((dest: any) => dest.name);
+                const usedDzongkhags = allDestinations.map((dest) => dest.name);
 
                 // Filter out used Dzongkhags, but keep the current one if editing
                 const available = DZONGKHAGS.filter(dzongkhag => {
@@ -73,7 +74,7 @@ export function DestinationForm({ initialData, action, title, isReadOnly = false
                 });
 
                 setAvailableDzongkhags(available);
-            } catch (error) {
+            } catch {
                 toast.error("Failed to load available Dzongkhags");
                 setAvailableDzongkhags(DZONGKHAGS); // Fallback to all
             } finally {
@@ -92,7 +93,7 @@ export function DestinationForm({ initialData, action, title, isReadOnly = false
             try {
                 // For updates, use _id; for creates, use empty string or slug
                 const idOrSlug = initialData?._id || initialData?.slug || "";
-                const result = await action(idOrSlug, null, formData);
+                const result = await action(idOrSlug, initialActionState, formData);
 
                 if (result.success) {
                     toast.success(result.message);
@@ -100,7 +101,7 @@ export function DestinationForm({ initialData, action, title, isReadOnly = false
                 } else {
                     toast.error(result.message || `Failed to ${initialData ? 'update' : 'create'} destination`);
                 }
-            } catch (error) {
+            } catch {
                 toast.error(`Failed to ${initialData ? 'update' : 'create'} destination`);
             }
         });

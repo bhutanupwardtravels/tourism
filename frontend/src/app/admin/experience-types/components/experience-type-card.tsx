@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -37,10 +38,12 @@ export function ExperienceTypeCard({ experienceType, showActionsOnClick }: Exper
             >
                 {/* Image Section */}
                 <div className="aspect-4/3 overflow-hidden relative">
-                    <img
+                    <Image
                         src={experienceType.image}
                         alt={experienceType.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
                     />
 
                     {/* Content Overlay */}

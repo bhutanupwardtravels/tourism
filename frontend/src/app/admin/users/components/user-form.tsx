@@ -7,11 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Loader2, Save, Lock } from "lucide-react";
+import { Loader2, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AnimatedArrowLeft, AnimatedArrowLeftHandle } from "@/components/ui/animated-arrow-left";
-import { userSchema, User } from "../schema";
+import { userSchema, User, type UserInput } from "../schema";
+import { initialActionState, type ActionState } from "@/lib/action-state";
 import { Card, CardContent } from "@/components/ui/card";
 import {
     Form,
@@ -25,7 +26,7 @@ import {
 
 interface UserFormProps {
     initialData?: User;
-    action: (prevState: any, formData: FormData) => Promise<{ success: boolean; message: string }>;
+    action: (prevState: ActionState, formData: FormData) => Promise<ActionState>;
     title: string;
 }
 
@@ -34,8 +35,8 @@ export function UserForm({ initialData, action, title: pageTitle }: UserFormProp
     const [isPending, startTransition] = React.useTransition();
     const iconRef = React.useRef<AnimatedArrowLeftHandle>(null);
 
-    const form = useForm<User>({
-        resolver: zodResolver(userSchema) as any,
+    const form = useForm<UserInput, unknown, User>({
+        resolver: zodResolver(userSchema),
         defaultValues: initialData || {
             username: "",
             email: "",
@@ -55,7 +56,7 @@ export function UserForm({ initialData, action, title: pageTitle }: UserFormProp
 
         startTransition(async () => {
             try {
-                const result = await action(null, formData);
+                const result = await action(initialActionState, formData);
                 if (result.success) {
                     toast.success(result.message);
                     router.push("/admin/users");
@@ -63,7 +64,7 @@ export function UserForm({ initialData, action, title: pageTitle }: UserFormProp
                 } else {
                     toast.error(result.message);
                 }
-            } catch (error) {
+            } catch {
                 toast.error("An error occurred while saving user");
             }
         });

@@ -43,16 +43,16 @@ export default async function HotelsPage() {
                             The <span className="italic font-serif text-amber-600 normal-case">Hospitality</span> Collection
                         </h2>
                         <p className="text-gray-500 font-light italic">
-                            "A curated selection of sanctuaries offering authentic Bhutanese hospitality."
+                            &quot;A curated selection of sanctuaries offering authentic Bhutanese hospitality.&quot;
                         </p>
                     </div>
                     <div className="font-mono text-[10px] text-gray-400 uppercase tracking-widest text-right">
-                        Total Sanctuaries: {hotels.length} // BHU-HOTEL-2025
+                        Total Sanctuaries: {hotels.length} {"// BHU-HOTEL-2025"}
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-24">
-                    {hotels.map((hotel, index) => (
+                    {hotels.map((hotel) => (
                         <Link
                             key={hotel.id}
                             href={`/hotels/${hotel.slug}`}
@@ -114,7 +114,7 @@ export default async function HotelsPage() {
                             </div>
 
                             <p className="mt-6 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-md">
-                                "{hotel.description}"
+                                &quot;{hotel.description}&quot;
                             </p>
 
                             {/* Decorative ID */}

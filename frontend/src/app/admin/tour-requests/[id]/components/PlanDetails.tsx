@@ -7,7 +7,7 @@ interface PlanDetailsProps {
     request: TourRequest;
 }
 
-const formatDate = (dateStr: string | any, formatStr: string) => {
+const formatDate = (dateStr: string | Date | null | undefined, formatStr: string) => {
     if (!dateStr) return "N/A";
     const date = new Date(dateStr);
     if (!isValid(date)) return "N/A";

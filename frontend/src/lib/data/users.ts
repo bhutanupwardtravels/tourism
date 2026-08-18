@@ -62,7 +62,7 @@ export async function getUserById(id: string) {
         const { data, error } = await supabase.auth.admin.getUserById(id);
         if (error) return null;
         return formatUser(data.user);
-    } catch (e) {
+    } catch {
         return null;
     }
 }
@@ -92,7 +92,7 @@ export async function updateUser(
 ) {
     const supabase = supabaseAdmin();
 
-    const attributes: Record<string, any> = {};
+    const attributes: Record<string, unknown> = {};
     if (data.email) attributes.email = data.email;
     if (data.password) attributes.password = data.password;
     if (data.username) attributes.user_metadata = { username: data.username };

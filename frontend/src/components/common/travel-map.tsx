@@ -6,8 +6,9 @@ import { ArrowRight } from "lucide-react";
 interface TravelMapProps {
     from: string;
     to: string;
-    fromCoordinates?: [number, number];
-    toCoordinates?: [number, number];
+    // Nullable: a leg whose destination has no coordinates stores null.
+    fromCoordinates?: [number, number] | null;
+    toCoordinates?: [number, number] | null;
 }
 
 export function TravelMap({ from, to, fromCoordinates, toCoordinates }: TravelMapProps) {
@@ -19,7 +20,7 @@ export function TravelMap({ from, to, fromCoordinates, toCoordinates }: TravelMa
     } : undefined;
 
     // Fallback coordinates if only one is present (though logic should ensure both or neither ideally)
-    const displayCoordinates = fromCoordinates || toCoordinates;
+    const displayCoordinates = fromCoordinates || toCoordinates || undefined;
 
     return (
         <div className="relative w-full aspect-4/3 sm:aspect-video bg-neutral-100 border border-black/5 rounded-xs overflow-hidden group">

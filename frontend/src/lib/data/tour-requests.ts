@@ -1,5 +1,5 @@
 import { supabaseAdmin } from "../supabase/admin";
-import { rowToDoc, docToRow, pageRange } from "../supabase/mapping";
+import { rowToDoc, rowsToDocs, docToRow, pageRange } from "../supabase/mapping";
 import { RequestStatus, TourRequest } from "@/app/admin/tour-requests/types";
 
 const TABLE = "tour_requests";
@@ -60,7 +60,7 @@ export const tourRequestDb = {
 
         const total = count ?? 0;
         return {
-            items: (data ?? []).map(rowToDoc) as TourRequest[],
+            items: rowsToDocs<TourRequest>(data),
             total,
             page,
             limit,
@@ -71,7 +71,7 @@ export const tourRequestDb = {
     async getTourRequestById(id: string) {
         const supabase = supabaseAdmin();
         const { data } = await supabase.from(TABLE).select("*").eq("id", id).maybeSingle();
-        return data ? (rowToDoc(data) as TourRequest) : null;
+        return rowToDoc<TourRequest>(data);
     },
 
     async createTourRequest(data: Omit<TourRequest, "_id" | "createdAt" | "updatedAt" | "status">) {
@@ -82,7 +82,7 @@ export const tourRequestDb = {
             .select("*")
             .single();
         if (error) throw error;
-        return rowToDoc(inserted) as TourRequest;
+        return rowToDoc<TourRequest>(inserted) as TourRequest;
     },
 
     async updateTourRequestStatus(id: string, status: RequestStatus) {
@@ -128,7 +128,7 @@ export const tourRequestDb = {
             .order("created_at", { ascending: false })
             .limit(limit);
         if (error) throw error;
-        return (data ?? []).map(rowToDoc) as TourRequest[];
+        return rowsToDocs<TourRequest>(data);
     },
 
     // Mark a single request read (no-op if already read).

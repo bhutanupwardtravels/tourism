@@ -9,6 +9,7 @@ import * as experienceDb from "@/lib/data/experiences";
 import * as hotelDb from "@/lib/data/hotels";
 import * as destinationDb from "@/lib/data/destinations";
 import * as experienceTypeDb from "@/lib/data/experience-types";
+import type { ActionState } from "@/lib/action-state";
 
 export async function getTours(page: number = 1, pageSize: number = 10, category?: string | string[], search?: string): Promise<PaginatedTours> {
     try {
@@ -32,7 +33,7 @@ export async function getTours(page: number = 1, pageSize: number = 10, category
         }
 
         return data as PaginatedTours;
-    } catch (error) {
+    } catch {
         return {
             items: [],
             page,
@@ -48,7 +49,7 @@ export async function getTourBySlug(slug: string): Promise<Tour | null> {
     try {
         const tour = await tourDb.getTourBySlug(slug);
         return tour as Tour | null;
-    } catch (error) {
+    } catch {
         return null;
     }
 }
@@ -57,7 +58,7 @@ export async function getRelatedTours(slug: string): Promise<Tour[]> {
     try {
         const tours = await tourDb.getRelatedTours(slug);
         return tours as Tour[];
-    } catch (error) {
+    } catch {
         return [];
     }
 }
@@ -67,12 +68,12 @@ export async function getTourById(id: string): Promise<Tour | null> {
     try {
         const tour = await tourDb.getTourById(id);
         return tour as Tour | null;
-    } catch (error) {
+    } catch {
         return null;
     }
 }
 
-export async function createTourAction(prevState: any, formData: FormData) {
+export async function createTourAction(prevState: ActionState, formData: FormData) {
     const session = await auth();
     if (!session) return { success: false, message: "Unauthorized" };
 
@@ -88,7 +89,7 @@ export async function createTourAction(prevState: any, formData: FormData) {
         const highlights = JSON.parse(highlightsStr || "[]");
 
         const daysStr = formData.get("days") as string;
-        let days = JSON.parse(daysStr || "[]");
+        const days = JSON.parse(daysStr || "[]");
 
         let imageUrl = formData.get("image") as string;
         const imageFile = formData.get("imageFile") as File;
@@ -130,12 +131,12 @@ export async function createTourAction(prevState: any, formData: FormData) {
         revalidatePath("/admin/tours");
         revalidatePath("/tours");
         return { success: true, message: "Tour created successfully", id: String(id) };
-    } catch (error) {
+    } catch {
         return { success: false, message: "Failed to create tour" };
     }
 }
 
-export async function updateTourAction(id: string, prevState: any, formData: FormData) {
+export async function updateTourAction(id: string, prevState: ActionState, formData: FormData) {
     const session = await auth();
     if (!session) return { success: false, message: "Unauthorized" };
 
@@ -151,7 +152,7 @@ export async function updateTourAction(id: string, prevState: any, formData: For
         const highlights = JSON.parse(highlightsStr || "[]");
 
         const daysStr = formData.get("days") as string;
-        let days = JSON.parse(daysStr || "[]");
+        const days = JSON.parse(daysStr || "[]");
 
         let imageUrl = formData.get("image") as string;
         const imageFile = formData.get("imageFile") as File;
@@ -196,7 +197,7 @@ export async function updateTourAction(id: string, prevState: any, formData: For
         revalidatePath("/tours");
         revalidatePath(`/tours/${slug}`);
         return { success: true, message: "Tour updated successfully" };
-    } catch (error) {
+    } catch {
         return { success: false, message: "Failed to update tour" };
     }
 }
@@ -212,7 +213,7 @@ export async function deleteTourAction(id: string) {
         revalidatePath("/tours");
         if (tour?.slug) revalidatePath(`/tours/${tour.slug}`);
         return { success: true, message: "Tour deleted successfully" };
-    } catch (error) {
+    } catch {
         return { success: false, message: "Failed to delete tour" };
     }
 }
@@ -220,11 +221,11 @@ export async function deleteTourAction(id: string) {
 export async function getCategoriesForDropdown(): Promise<{ value: string; label: string }[]> {
     try {
         const categories = await experienceTypeDb.getAllExperienceTypes();
-        return categories.map((cat: any) => ({
+        return categories.map((cat) => ({
             value: cat._id || cat.id || cat.title,
             label: cat.title,
         }));
-    } catch (error) {
+    } catch {
         return [];
     }
 }
@@ -232,8 +233,8 @@ export async function getCategoriesForDropdown(): Promise<{ value: string; label
 export async function getExperiencesForDropdown(): Promise<{ value: string; label: string; price?: number; duration?: string; image?: string; destinationIds?: string[]; destinationSlug?: string }[]> {
     try {
         const experiences = await experienceDb.getAllExperiences();
-        return experiences.map((exp: any) => ({
-            value: exp._id,
+        return experiences.map((exp) => ({
+            value: exp._id || exp.id || "",
             label: exp.title,
             price: exp.price != null ? Number(exp.price) : 0,
             duration: exp.duration || "2 Hours",
@@ -242,7 +243,7 @@ export async function getExperiencesForDropdown(): Promise<{ value: string; labe
             destinationIds: exp.destinationIds || exp.destinations || [],
             destinationSlug: exp.destinationSlug || (exp.resolvedDestinations?.[0] ?? ""),
         }));
-    } catch (error) {
+    } catch {
         return [];
     }
 }
@@ -250,8 +251,8 @@ export async function getExperiencesForDropdown(): Promise<{ value: string; labe
 export async function getHotelsForDropdown(): Promise<{ value: string; label: string; price?: number; image?: string; destinationId?: string; destinationSlug?: string }[]> {
     try {
         const hotels = await hotelDb.getAllHotels();
-        return hotels.map((hotel: any) => ({
-            value: hotel._id,
+        return hotels.map((hotel) => ({
+            value: hotel._id || hotel.id || "",
             label: hotel.name,
             price: hotel.price != null ? Number(hotel.price) : 0,
             image: hotel.image || "",
@@ -259,7 +260,7 @@ export async function getHotelsForDropdown(): Promise<{ value: string; label: st
             destinationId: hotel.destinationId || hotel.destination || "",
             destinationSlug: hotel.resolvedDestinationSlug || hotel.destinationSlug || "",
         }));
-    } catch (error) {
+    } catch {
         return [];
     }
 }
@@ -267,11 +268,11 @@ export async function getHotelsForDropdown(): Promise<{ value: string; label: st
 export async function getDestinationsForDropdown(): Promise<{ value: string; label: string }[]> {
     try {
         const destinations = await destinationDb.getAllDestinations();
-        return destinations.map((dest: any) => ({
-            value: dest._id,
+        return destinations.map((dest) => ({
+            value: dest._id || dest.id || "",
             label: dest.name,
         }));
-    } catch (error) {
+    } catch {
         return [];
     }
 }
@@ -279,13 +280,13 @@ export async function getDestinationsForDropdown(): Promise<{ value: string; lab
 export async function getAllDestinationObjects(): Promise<{ _id: string; name: string; image?: string; slug?: string }[]> {
     try {
         const destinations = await destinationDb.getAllDestinations();
-        return destinations.map((dest: any) => ({
-            _id: dest._id,
+        return destinations.map((dest) => ({
+            _id: dest._id || dest.id || "",
             name: dest.name,
             image: dest.image || "",
             slug: dest.slug || "",
         }));
-    } catch (error) {
+    } catch {
         return [];
     }
 }
@@ -293,13 +294,13 @@ export async function getAllDestinationObjects(): Promise<{ _id: string; name: s
 export async function getEntryPointDestinationObjects(): Promise<{ _id: string; name: string; image?: string; slug?: string }[]> {
     try {
         const destinations = await destinationDb.getEntryPointDestinations();
-        return destinations.map((dest: any) => ({
-            _id: dest._id,
+        return destinations.map((dest) => ({
+            _id: dest._id || dest.id || "",
             name: dest.name,
             image: dest.image || "",
             slug: dest.slug || "",
         }));
-    } catch (error) {
+    } catch {
         return [];
     }
 }

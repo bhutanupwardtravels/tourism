@@ -60,7 +60,7 @@ export function BestHotels({ hotels }: BestHotelsProps) {
         <div className="text-center mb-24 max-w-4xl mx-auto">
           <Reveal y={30} duration={0.8}>
             <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-6 block">
-              // where to stay
+              {"// where to stay"}
             </span>
             <h2 className="text-5xl md:text-7xl font-light tracking-tighter uppercase leading-tight mb-8 text-black">
               Best <span className="italic font-serif normal-case text-amber-600">Hotels</span>

@@ -27,7 +27,7 @@ const iconMap: Record<string, LucideIcon> = {
   key: Key,
 };
 
-export function WhyBhutan({ items, title, subtitle }: WhyBhutanProps) {
+export function WhyBhutan({ items, title }: WhyBhutanProps) {
   const titleWords = (title || "The Kingdom of Happiness").split(" ");
 
   return (
@@ -40,7 +40,7 @@ export function WhyBhutan({ items, title, subtitle }: WhyBhutanProps) {
         <div className="text-center mb-24">
           <Reveal as="span" y={0}
             className="block font-mono text-amber-600 text-xs uppercase tracking-[0.5em] mb-4">
-            // {subtitle || "unique identifiers"}
+            {"// {subtitle || \"unique identifiers\"}"}
           </Reveal>
           <h2 className="text-5xl md:text-7xl font-light tracking-tighter uppercase leading-tight text-black">
             {titleWords.slice(0, -1).join(" ")}{" "}
@@ -69,7 +69,7 @@ export function WhyBhutan({ items, title, subtitle }: WhyBhutanProps) {
                   {item.title}
                 </h4>
                 <p className="text-gray-500 leading-relaxed font-light text-sm italic group-hover:text-gray-900 transition-colors">
-                  "{item.description}"
+                  &quot;{item.description}&quot;
                 </p>
 
                 {/* Tactical Footer */}

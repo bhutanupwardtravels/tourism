@@ -41,7 +41,7 @@ export async function getHotelBySlug(slug: string): Promise<Hotel | null> {
     }
 }
 
-export async function getRelatedHotels(destinationIdOrSlug: string, excludeId: string, limit: number = 6): Promise<Hotel[]> {
+export async function getRelatedHotels(destinationIdOrSlug: string | undefined, excludeId: string | undefined, limit: number = 6): Promise<Hotel[]> {
     try {
         const all = await hotelDb.getAllHotels();
         return all
@@ -68,10 +68,46 @@ export async function getAllHotels(): Promise<Hotel[]> {
     }
 }
 
+/**
+ * Properties are named "Amankora (Paro)", "Six Senses (Bumthang)" and so on,
+ * so the brand is whatever precedes the parenthesised location.
+ */
+function hotelBrand(name: string): string {
+    return name.split("(")[0].trim().toLowerCase() || name.toLowerCase();
+}
+
 export async function getBestHotels(limit: number = 6): Promise<Hotel[]> {
     try {
-        const top = await hotelDb.getTopHotels(limit);
-        return top as Hotel[];
+        // Every showcase hotel currently shares priority 11, so the underlying
+        // query's name tiebreak decided the row alphabetically — which returned
+        // five consecutive Amankora properties. Rank on rating within priority
+        // and show one property per brand, so the row reads as a catalogue
+        // rather than one operator's alphabet.
+        const pool = await hotelDb.getTopHotels(limit * 8);
+        const ranked = ([...pool] as Hotel[]).sort(
+            (a, b) =>
+                (b.priority || 0) - (a.priority || 0) ||
+                (Number(b.rating) || 0) - (Number(a.rating) || 0)
+        );
+
+        const seen = new Set<string>();
+        const distinct = ranked.filter((hotel) => {
+            const brand = hotelBrand(hotel.name);
+            if (seen.has(brand)) return false;
+            seen.add(brand);
+            return true;
+        });
+
+        const selected = distinct.slice(0, limit);
+        if (selected.length < limit) {
+            // Thin catalogue: fall back to filling the row with repeats rather
+            // than rendering a short one.
+            const chosen = new Set(selected);
+            selected.push(
+                ...ranked.filter((h) => !chosen.has(h)).slice(0, limit - selected.length)
+            );
+        }
+        return selected;
     } catch (error) {
         console.error("Error fetching best hotels:", error);
         return [];

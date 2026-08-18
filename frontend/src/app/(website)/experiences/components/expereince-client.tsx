@@ -1,8 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Experience } from "@/app/admin/experiences/schema";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
@@ -19,15 +16,9 @@ export function ExperiencesClient({ initialExperiences }: ExperiencesClientProps
     const pathname = usePathname();
     const categoryParam = searchParams.get("category");
 
-    const [activeCategory, setActiveCategory] = useState(categoryParam || "All");
-
-    useEffect(() => {
-        if (categoryParam) {
-            setActiveCategory(categoryParam);
-        } else {
-            setActiveCategory("All");
-        }
-    }, [categoryParam]);
+    // The URL is the single source of truth for the filter, so deriving it here
+    // keeps the two from drifting apart on back/forward navigation.
+    const activeCategory = categoryParam || "All";
 
     const handleCategoryChange = (category: string) => {
         const params = new URLSearchParams(searchParams.toString());
@@ -99,7 +90,7 @@ export function ExperiencesClient({ initialExperiences }: ExperiencesClientProps
                 <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-12 pl-12 border-l border-black/10">
                     <div className="max-w-xl">
                         <span className="font-mono text-amber-600/60 text-[10px] uppercase tracking-[0.3em] mb-4 block">
-                        // viewing: {activeCategory.toLowerCase()}
+                        {"// viewing: {activeCategory.toLowerCase()}"}
                         </span>
                         <p className="text-gray-500 font-light italic leading-relaxed text-sm">
                             Explore our curated collection of {activeCategory === "All" ? "Bhutanese experiences" : activeCategory.toLowerCase() + " journeys"}.

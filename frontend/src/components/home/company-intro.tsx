@@ -14,7 +14,7 @@ export function CompanyIntro() {
       <div className="container mx-auto px-6 relative z-10">
         <Reveal y={20} duration={0.8} className="max-w-4xl mx-auto text-center">
           <span className="font-mono text-amber-500/60 text-xs uppercase tracking-[0.4em] mb-6 block">
-            // the bhutanese essence
+            {"// the bhutanese essence"}
           </span>
 
           <h2 className="text-3xl md:text-5xl font-light tracking-tighter text-white uppercase mb-8 leading-tight">
@@ -22,7 +22,7 @@ export function CompanyIntro() {
           </h2>
 
           <p className="text-base font-light text-neutral-400 leading-relaxed max-w-2xl mx-auto">
-            Every journey honours Bhutan's heritage and its philosophy of Gross National Happiness —
+            Every journey honours Bhutan&apos;s heritage and its philosophy of Gross National Happiness —
             and contributes directly to the Sustainable Development Fee that funds free healthcare,
             education and conservation for the Kingdom.
           </p>

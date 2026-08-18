@@ -6,6 +6,17 @@ import * as db from "@/lib/data/experiences";
 import * as experienceTypeDb from "@/lib/data/experience-types";
 import { getAdminUser as auth } from "@/lib/supabase/server";
 import { uploadImage, updateImage, deleteImage } from "@/lib/upload";
+import type { ActionState } from "@/lib/action-state";
+
+const DIFFICULTIES = ["Easy", "Moderate", "Challenging"] as const;
+
+/**
+ * FormData hands back an arbitrary string; only the three values the schema
+ * accepts should reach the database, and anything else is dropped rather than
+ * stored as an unrecognised difficulty.
+ */
+const toDifficulty = (value: string) =>
+  DIFFICULTIES.find((d) => d === value);
 
 // Helper function to extract filename from image URL
 function extractFilenameFromUrl(imageUrl: string): string | null {
@@ -14,7 +25,7 @@ function extractFilenameFromUrl(imageUrl: string): string | null {
     const parts = imageUrl.split("/");
     const filename = parts[parts.length - 1];
     return filename && filename.length > 0 ? filename : null;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -28,7 +39,7 @@ export async function getExperiences(
   try {
     const data = await db.listExperiences(page, pageSize, search, category);
     return data as PaginatedExperiences;
-  } catch (error) {
+  } catch {
     return {
       items: [],
       page: 1,
@@ -44,7 +55,7 @@ export async function getExperienceBySlug(slug: string): Promise<Experience | nu
   try {
     const experience = await db.getExperienceBySlug(slug);
     return experience as Experience | null;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -53,7 +64,7 @@ export async function getExperienceById(id: string): Promise<Experience | null> 
   try {
     const experience = await db.getExperienceById(id);
     return experience as Experience | null;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -62,12 +73,12 @@ export async function getAllExperiences() {
   try {
     const experiences = await db.getAllExperiences();
     return experiences;
-  } catch (error) {
+  } catch {
     return [];
   }
 }
 
-export async function createExperience(prevState: any, formData: FormData) {
+export async function createExperience(prevState: ActionState, formData: FormData) {
   const session = await auth();
 
   if (!session) {
@@ -118,13 +129,13 @@ export async function createExperience(prevState: any, formData: FormData) {
       }
     }
 
-    const experienceData: any = {
+    const experienceData: Partial<Experience> = {
       title,
       slug,
       category,
       description,
       duration,
-      difficulty: difficulty as any,
+      difficulty: toDifficulty(difficulty),
       destinations,
       image: imageUrl,
       startDate,
@@ -151,7 +162,7 @@ export async function createExperience(prevState: any, formData: FormData) {
       success: true,
       message: "Experience created successfully",
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       message: "Failed to create experience",
@@ -161,7 +172,7 @@ export async function createExperience(prevState: any, formData: FormData) {
 
 export async function updateExperience(
   id: string,
-  prevState: any,
+  prevState: ActionState,
   formData: FormData
 ) {
   const session = await auth();
@@ -245,13 +256,13 @@ export async function updateExperience(
       }
     }
 
-    const experienceData: any = {
+    const experienceData: Partial<Experience> = {
       title,
       slug,
       category,
       description,
       duration,
-      difficulty: difficulty as any,
+      difficulty: toDifficulty(difficulty),
       destinations,
       image: imageUrl,
       startDate,
@@ -280,7 +291,7 @@ export async function updateExperience(
       success: true,
       message: "Experience updated successfully",
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       message: "Failed to update experience",
@@ -335,7 +346,7 @@ export async function deleteExperience(id: string) {
       success: true,
       message: "Experience deleted successfully",
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       message: "Failed to delete experience",
@@ -346,11 +357,11 @@ export async function deleteExperience(id: string) {
 export async function getCategoriesForDropdown() {
   try {
     const categories = await experienceTypeDb.getAllExperienceTypes();
-    return categories.map((cat: any) => ({
+    return categories.map((cat) => ({
       label: cat.title,
-      value: cat._id || cat.id,
+      value: cat._id || cat.id || "",
     }));
-  } catch (error) {
+  } catch {
     return [];
   }
 }

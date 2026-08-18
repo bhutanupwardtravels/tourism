@@ -5,6 +5,7 @@ import { PaginatedDestinations, Destination } from "./schema";
 import * as db from "@/lib/data/destinations";
 import { getAdminUser as auth } from "@/lib/supabase/server";
 import { uploadImage } from "@/lib/upload";
+import type { ActionState } from "@/lib/action-state";
 
 export async function getDestinations(
   page: number = 1,
@@ -16,7 +17,7 @@ export async function getDestinations(
   try {
     const data = await db.listDestinations(page, pageSize, search, region, isEntryPoint);
     return data as PaginatedDestinations;
-  } catch (error) {
+  } catch {
     return {
       items: [],
       page: 1,
@@ -32,7 +33,7 @@ export async function getDestinationBySlug(slug: string): Promise<Destination | 
   try {
     const destination = await db.getDestinationBySlug(slug);
     return destination as Destination | null;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -41,7 +42,7 @@ export async function getDestinationById(id: string): Promise<Destination | null
   try {
     const destination = await db.getDestinationById(id);
     return destination as Destination | null;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -50,12 +51,12 @@ export async function getAllDestinations() {
   try {
     const destinations = await db.getAllDestinations();
     return destinations;
-  } catch (error) {
+  } catch {
     return [];
   }
 }
 
-export async function createDestination(prevState: any, formData: FormData) {
+export async function createDestination(prevState: ActionState, formData: FormData) {
   const session = await auth();
   if (!session) {
     return { success: false, message: "Unauthorized" };
@@ -84,7 +85,7 @@ export async function createDestination(prevState: any, formData: FormData) {
       }
     }
 
-    const destinationData: any = {
+    const destinationData: Partial<Destination> = {
       name,
       slug,
       region,
@@ -108,7 +109,7 @@ export async function createDestination(prevState: any, formData: FormData) {
       success: true,
       message: "Destination created successfully",
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       message: "Failed to create destination",
@@ -118,7 +119,7 @@ export async function createDestination(prevState: any, formData: FormData) {
 
 export async function updateDestination(
   id: string,
-  prevState: any,
+  prevState: ActionState,
   formData: FormData
 ) {
   const session = await auth();
@@ -150,7 +151,7 @@ export async function updateDestination(
       }
     }
 
-    const destinationData: any = {
+    const destinationData: Partial<Destination> = {
       name,
       slug,
       region,
@@ -175,7 +176,7 @@ export async function updateDestination(
       success: true,
       message: "Destination updated successfully",
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       message: "Failed to update destination",
@@ -201,7 +202,7 @@ export async function deleteDestination(id: string) {
       success: true,
       message: "Destination deleted successfully",
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       message: "Failed to delete destination",

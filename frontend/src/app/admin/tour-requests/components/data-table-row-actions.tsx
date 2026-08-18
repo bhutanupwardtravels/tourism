@@ -14,7 +14,7 @@ import {
 import Link from "next/link";
 import { toast } from "sonner";
 import { RequestStatus, TourRequest } from "../types";
-import { deleteTourRequest, updateTourRequestStatus, markTourRequestRead, markTourRequestUnread } from "../actions";
+import { updateTourRequestStatus, markTourRequestRead, markTourRequestUnread } from "../actions";
 
 import { useState } from "react";
 import { DeleteTourRequestDialog } from "./delete-tour-request-dialog";

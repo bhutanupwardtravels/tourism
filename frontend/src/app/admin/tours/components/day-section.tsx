@@ -6,15 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Trash2, ChevronDown, ChevronUp, GripVertical, MapPin, Clock, ArrowRightLeft, Star } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Trash2, ChevronDown, ChevronUp, GripVertical, ArrowRightLeft, Star } from "lucide-react";
 import { ImageUpload } from "@/components/admin/image-upload";
 import { Combobox } from "./combobox-wrapper";
 import { Tour } from "../schema";
 
 interface DaySectionProps {
     index: number;
-    field: any;
     control: Control<Tour>;
     register: UseFormRegister<Tour>;
     setValue: UseFormSetValue<Tour>;
@@ -31,7 +29,6 @@ interface DaySectionProps {
 
 export function DaySection({
     index,
-    field,
     control,
     register,
     setValue,
@@ -47,7 +44,7 @@ export function DaySection({
 }: DaySectionProps) {
     const { fields: itemFields, append: appendItem, remove: removeItem, move: moveItem } = useFieldArray({
         control,
-        name: `days.${index}.items` as any,
+        name: `days.${index}.items`,
     });
 
     return (
@@ -132,7 +129,7 @@ export function DaySection({
                                                 <Combobox
                                                     options={experienceOptions}
                                                     value={watch(`days.${index}.items.${itemIdx}.experienceId`) || ""}
-                                                    onChange={(val) => setValue(`days.${index}.items.${itemIdx}.experienceId` as any, val)}
+                                                    onChange={(val) => setValue(`days.${index}.items.${itemIdx}.experienceId`, val)}
                                                     placeholder="Link Experience"
                                                     className="h-9 text-xs"
                                                 />
@@ -148,15 +145,15 @@ export function DaySection({
                                                 <div className="grid grid-cols-2 gap-2">
                                                     <Combobox
                                                         options={destinationOptions}
-                                                        value={watch(`days.${index}.items.${itemIdx}.travel.from` as any) || ""}
-                                                        onChange={(val) => setValue(`days.${index}.items.${itemIdx}.travel.from` as any, val)}
+                                                        value={watch(`days.${index}.items.${itemIdx}.travel.from`) || ""}
+                                                        onChange={(val) => setValue(`days.${index}.items.${itemIdx}.travel.from`, val)}
                                                         placeholder="From"
                                                         className="w-full h-9 text-xs bg-gray-50/50"
                                                     />
                                                     <Combobox
                                                         options={destinationOptions}
-                                                        value={watch(`days.${index}.items.${itemIdx}.travel.to` as any) || ""}
-                                                        onChange={(val) => setValue(`days.${index}.items.${itemIdx}.travel.to` as any, val)}
+                                                        value={watch(`days.${index}.items.${itemIdx}.travel.to`) || ""}
+                                                        onChange={(val) => setValue(`days.${index}.items.${itemIdx}.travel.to`, val)}
                                                         placeholder="To"
                                                         className="h-9 text-xs bg-gray-50/50"
                                                     />
@@ -188,7 +185,7 @@ export function DaySection({
                             <Combobox
                                 options={hotelOptions}
                                 value={watch(`days.${index}.hotelId`) || ""}
-                                onChange={(val) => setValue(`days.${index}.hotelId` as any, val)}
+                                onChange={(val) => setValue(`days.${index}.hotelId`, val)}
                                 placeholder="Select Hotel"
                             />
                             {(() => {

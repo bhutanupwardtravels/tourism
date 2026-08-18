@@ -1,8 +1,9 @@
 process.env.NEXT_PUBLIC_SITE_URL = "https://bhutanupwardtravels.com";
 import { emailTemplates } from "./src/lib/email/templates";
+import { RequestStatus, type TourRequest } from "./src/app/admin/tour-requests/types";
 import fs from "fs";
 
-const sample: any = {
+const sample: TourRequest = {
   _id: "abc123",
   firstName: "Sonam",
   lastName: "Wangchuk",
@@ -13,7 +14,7 @@ const sample: any = {
   travelers: "2 Adults",
   message: "Would love a cultural + trekking mix, mid-range hotels.",
   tourName: "Bhutan Cultural Explorer",
-  status: "pending",
+  status: RequestStatus.PENDING,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
 };

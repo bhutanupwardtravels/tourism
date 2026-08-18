@@ -105,7 +105,7 @@ function tripDateRows(data: TourRequest): { label: string; value: string }[] {
             { label: "Departure Date", value: data.departureDate || "Not specified" },
         ];
     }
-    return [{ label: "Travel Date", value: data.travelDate }];
+    return [{ label: "Travel Date", value: data.travelDate || "Not specified" }];
 }
 
 /** Adult/children breakdown for bespoke builder submissions, otherwise the free-text traveler count. */
@@ -116,7 +116,7 @@ function travelersRow(data: TourRequest): { label: string; value: string } {
         if (data.children_under_6) parts.push(`${data.children_under_6} Infant${data.children_under_6 === 1 ? "" : "s"} (under 6)`);
         return { label: "Travelers", value: parts.join(", ") };
     }
-    return { label: "Travelers", value: data.travelers };
+    return { label: "Travelers", value: data.travelers || "Not specified" };
 }
 
 function money(amount: number, currency?: string | null): string {

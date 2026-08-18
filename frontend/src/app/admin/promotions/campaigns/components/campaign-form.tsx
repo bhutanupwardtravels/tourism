@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -71,6 +71,9 @@ export function CampaignForm({ initialData, action, title: pageTitle }: Campaign
                   priority: 0,
               },
     });
+
+    // Drives the live example code shown under the prefix field.
+    const codePrefix = useWatch({ control: form.control, name: "codePrefix" });
 
     const onSubmit = (data: PromoCampaign) => {
         const formData = new FormData();
@@ -292,7 +295,7 @@ export function CampaignForm({ initialData, action, title: pageTitle }: Campaign
                                                 />
                                             </FormControl>
                                             <FormDescription>
-                                                Codes look like <span className="font-mono">{form.watch("codePrefix") || "BHU"}-7F3K9Q</span>.
+                                                Codes look like <span className="font-mono">{codePrefix || "BHU"}-7F3K9Q</span>.
                                             </FormDescription>
                                             <FormMessage className="text-xs" />
                                         </FormItem>

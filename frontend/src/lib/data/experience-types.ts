@@ -1,5 +1,5 @@
 import { supabaseAdmin } from "../supabase/admin";
-import { rowToDoc, docToRow, paginate, pageRange } from "../supabase/mapping";
+import { rowToDoc, rowsToDocs, docToRow, paginate, pageRange } from "../supabase/mapping";
 import { ExperienceType } from "@/app/admin/experience-types/schema";
 
 const TABLE = "experience_types";
@@ -26,7 +26,7 @@ export async function listExperienceTypes(page: number = 1, pageSize: number = 1
     if (error) throw error;
 
     return {
-        items: (data ?? []).map(rowToDoc),
+        items: rowsToDocs<ExperienceType>(data),
         ...paginate(count ?? 0, page, pageSize),
     };
 }
@@ -34,15 +34,15 @@ export async function listExperienceTypes(page: number = 1, pageSize: number = 1
 export async function getExperienceTypeBySlug(slug: string) {
     const supabase = supabaseAdmin();
     const { data } = await supabase.from(TABLE).select("*").eq("slug", slug).maybeSingle();
-    return rowToDoc(data);
+    return rowToDoc<ExperienceType>(data);
 }
 
 export async function getExperienceTypeById(id: string) {
     try {
         const supabase = supabaseAdmin();
         const { data } = await supabase.from(TABLE).select("*").eq("id", id).maybeSingle();
-        return rowToDoc(data);
-    } catch (error) {
+        return rowToDoc<ExperienceType>(data);
+    } catch {
         return null;
     }
 }
@@ -68,7 +68,7 @@ export async function getAllExperienceTypes() {
         .order("display_order", { ascending: false })
         .order("title");
     if (error) throw error;
-    return (data ?? []).map(rowToDoc);
+    return rowsToDocs<ExperienceType>(data);
 }
 
 export async function createExperienceType(data: Partial<ExperienceType>) {

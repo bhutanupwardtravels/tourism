@@ -12,10 +12,6 @@ import { DestinationExperiences } from "@/app/(website)/destinations/[slug]/comp
 import { DestinationFestivals } from "@/app/(website)/destinations/[slug]/components/destination-festivals";
 import { DestinationHotels } from "@/app/(website)/destinations/[slug]/components/destination-hotels";
 
-interface PageProps {
-  params: { id: string };
-}
-
 // Destination View Page - Admin
 export default async function DestinationViewPage({
   params,

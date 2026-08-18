@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -27,7 +28,7 @@ export function DestinationCard({ destination, showActionsOnClick }: Destination
   return (
     <>
       <DeleteDestinationDialog
-        destination={destination as any}
+        destination={destination}
         open={showDeleteDialog}
         onOpenChange={setShowDeleteDialog}
       />
@@ -42,10 +43,12 @@ export function DestinationCard({ destination, showActionsOnClick }: Destination
       >
         {/* Image Section */}
         <div className="aspect-4/3 overflow-hidden relative">
-          <img
-            src={destination.image}
-            alt={destination.name}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          <Image
+              src={destination.image}
+              alt={destination.name}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+              className="object-cover transition-transform duration-700 group-hover:scale-110"
           />
 
           {/* Content Overlay */}

@@ -1,10 +1,8 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import { ExperienceCard } from "@/components/common/experience-card";
+import { ExperienceCard, type Experience } from "@/components/common/experience-card";
 import {
   Carousel,
   CarouselApi,
@@ -17,7 +15,7 @@ import * as React from "react";
 import { Reveal } from "@/components/ui/reveal";
 
 interface ExperiencesProps {
-  experiences: any[]; // Use any or specific type if preferred
+  experiences: Experience[];
 }
 
 export function Experiences({ experiences }: ExperiencesProps) {
@@ -62,7 +60,7 @@ export function Experiences({ experiences }: ExperiencesProps) {
           <div>
             <Reveal as="span" y={0} x={-20}
               className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block">
-              // curated experiences
+              {"// curated experiences"}
             </Reveal>
             <Reveal as="h3" y={20} delay={0.1}
               className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase">

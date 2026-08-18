@@ -10,7 +10,15 @@ export const costSchema = z.object({
     travelerCategory: z.enum(["adult", "child_6_12", "child_under_6"]).default("adult"),
 });
 
-export type Cost = z.infer<typeof costSchema> & {
+/**
+ * What the cost form holds while being edited. Distinct from the validated
+ * output because the schema's `.default()`s make those fields optional on the
+ * way in and guaranteed on the way out.
+ */
+export type CostInput = z.input<typeof costSchema>;
+export type CostOutput = z.output<typeof costSchema>;
+
+export type Cost = CostOutput & {
     id?: string;
     _id?: string;
     createdAt?: string;

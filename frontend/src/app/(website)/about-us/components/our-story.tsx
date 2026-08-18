@@ -23,7 +23,7 @@ export function OurStory({ story }: OurStoryProps) {
           <Reveal y={0} x={-30} duration={1}
             className="lg:col-span-7">
             <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.5em] mb-6 block">
-              // {story.subtitle || "Our Narrative"}
+              {"// {story.subtitle || \"Our Narrative\"}"}
             </span>
 
             <h2 className="text-5xl md:text-7xl font-light tracking-tighter leading-tight mb-12 uppercase text-black">
@@ -33,7 +33,7 @@ export function OurStory({ story }: OurStoryProps) {
             <div className="relative pl-12 border-l border-black/10">
               <div className="space-y-8 text-xl text-gray-500 leading-relaxed font-light italic">
                 {story.content.map((paragraph, index) => (
-                  <p key={index}>"{paragraph}"</p>
+                  <p key={index}>&quot;{paragraph}&quot;</p>
                 ))}
               </div>
 

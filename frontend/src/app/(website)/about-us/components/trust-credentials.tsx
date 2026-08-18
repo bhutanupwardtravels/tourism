@@ -79,7 +79,7 @@ export function TrustCredentials({ credentials, address, phone, whatsapp }: Trus
         <div className="text-center mb-24">
           <Reveal as="span" y={0}
             className="block font-mono text-amber-500 text-xs uppercase tracking-[0.5em] mb-6">
-            // {credentials.subtitle || "why travel with us"}
+            {"// {credentials.subtitle || \"why travel with us\"}"}
           </Reveal>
           <h2 className="text-5xl md:text-7xl font-light tracking-tighter uppercase leading-tight">
             {titleWords[0]}{" "}

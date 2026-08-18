@@ -39,7 +39,7 @@ export function ExperienceCard({ experience }: ExperienceCardProps) {
       </div>
 
       <p className="mt-4 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-sm">
-        "{experience.description}"
+        &quot;{experience.description}&quot;
       </p>
     </div>
   );

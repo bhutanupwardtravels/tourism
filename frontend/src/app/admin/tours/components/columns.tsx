@@ -1,9 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { Tour } from "../schema";
-import { DataTableColumnHeader } from "@/components/admin/data-table/data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { Badge } from "@/components/ui/badge";
 
@@ -13,9 +13,11 @@ function ImageCell({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
     }
     return (
         <div className="h-10 w-16 overflow-hidden rounded-none bg-muted border border-gray-100 shadow-sm">
-            <img
+            <Image
                 src={imageUrl}
                 alt={alt}
+                width={64}
+                height={40}
                 className="h-full w-full object-cover"
                 onError={(e) => {
                     e.currentTarget.style.display = "none";

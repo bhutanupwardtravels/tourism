@@ -13,9 +13,14 @@ export interface TourRequest {
     phone: string;
     country?: string; // ISO2 country code, e.g. "IN" — captured via the bespoke planner
     destination?: string;
-    travelDate: string;
-    travelers: string;
-    message: string;
+    // Like `message`, both are optional on the way in (the bespoke builder
+    // sends arrival/departure dates and traveller counts instead) and their
+    // columns default to ''.
+    travelDate?: string;
+    travelers?: string;
+    // Optional on the way in: the public plan-my-trip form allows an empty
+    // note and the column defaults to ''.
+    message?: string;
     // Bespoke builder fields — only present for custom itinerary submissions.
     adults?: number;
     children_6_12?: number;

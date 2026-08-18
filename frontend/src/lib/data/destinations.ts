@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { supabaseAdmin } from "../supabase/admin";
-import { rowToDoc, docToRow, paginate, pageRange } from "../supabase/mapping";
+import { rowToDoc, rowsToDocs, docToRow, paginate, pageRange } from "../supabase/mapping";
 import { Destination } from "@/app/admin/destinations/schema";
 
 const TABLE = "destinations";
@@ -38,7 +38,7 @@ export async function listDestinations(page: number = 1, pageSize: number = 10, 
     if (error) throw error;
 
     return {
-        items: (data ?? []).map(rowToDoc),
+        items: rowsToDocs<Destination>(data),
         ...paginate(count ?? 0, page, pageSize),
     };
 }
@@ -51,7 +51,7 @@ export const getAllDestinations = cache(async () => {
         .order("priority", { ascending: false })
         .order("name");
     if (error) throw error;
-    return (data ?? []).map(rowToDoc);
+    return rowsToDocs<Destination>(data);
 });
 
 // Top-N by priority in Postgres (homepage featured destinations).
@@ -64,21 +64,21 @@ export async function getTopDestinations(limit: number = 4) {
         .order("name")
         .limit(limit);
     if (error) throw error;
-    return (data ?? []).map(rowToDoc);
+    return rowsToDocs<Destination>(data);
 }
 
 export const getDestinationBySlug = cache(async (slug: string) => {
     const supabase = supabaseAdmin();
     const { data } = await supabase.from(TABLE).select("*").eq("slug", slug).maybeSingle();
-    return rowToDoc(data);
+    return rowToDoc<Destination>(data);
 });
 
 export const getDestinationById = cache(async (id: string) => {
     try {
         const supabase = supabaseAdmin();
         const { data } = await supabase.from(TABLE).select("*").eq("id", id).maybeSingle();
-        return rowToDoc(data);
-    } catch (error) {
+        return rowToDoc<Destination>(data);
+    } catch {
         return null;
     }
 });
@@ -128,5 +128,5 @@ export async function getEntryPointDestinations() {
         .order("priority", { ascending: false })
         .order("name");
     if (error) throw error;
-    return (data ?? []).map(rowToDoc);
+    return rowsToDocs<Destination>(data);
 }

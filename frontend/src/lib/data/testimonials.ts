@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { supabaseAdmin } from "../supabase/admin";
-import { rowToDoc, docToRow, paginate, pageRange } from "../supabase/mapping";
+import { rowToDoc, rowsToDocs, docToRow, paginate, pageRange } from "../supabase/mapping";
 import { Testimonial } from "@/app/admin/testimonials/schema";
 
 const TABLE = "testimonials";
@@ -23,7 +23,7 @@ export async function listTestimonials(page: number = 1, pageSize: number = 10, 
     if (error) throw error;
 
     return {
-        items: (data ?? []).map(rowToDoc),
+        items: rowsToDocs<Testimonial>(data),
         ...paginate(count ?? 0, page, pageSize),
     };
 }
@@ -32,7 +32,7 @@ export const getTestimonialById = cache(async (id: string) => {
     try {
         const supabase = supabaseAdmin();
         const { data } = await supabase.from(TABLE).select("*").eq("id", id).maybeSingle();
-        return rowToDoc(data);
+        return rowToDoc<Testimonial>(data);
     } catch {
         return null;
     }
@@ -70,7 +70,7 @@ export const getAllTestimonials = cache(async () => {
     const supabase = supabaseAdmin();
     const { data, error } = await supabase.from(TABLE).select("*").order("priority", { ascending: false });
     if (error) throw error;
-    return (data ?? []).map(rowToDoc);
+    return rowsToDocs<Testimonial>(data);
 });
 
 // Featured testimonials by priority (homepage section).
@@ -84,5 +84,5 @@ export const getFeaturedTestimonials = cache(async (limit: number = 6) => {
         .order("created_at", { ascending: false })
         .limit(limit);
     if (error) throw error;
-    return (data ?? []).map(rowToDoc);
+    return rowsToDocs<Testimonial>(data);
 });

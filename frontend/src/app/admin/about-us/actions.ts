@@ -9,7 +9,7 @@ export async function getAboutContentAction() {
     const content = await getAboutContent();
     // Serialize the data to plain objects
     return JSON.parse(JSON.stringify(content));
-  } catch (error) {
+  } catch {
     throw new Error("Failed to fetch about content");
   }
 }
@@ -98,7 +98,7 @@ export async function updateAboutContentAction(formData: FormData) {
     revalidatePath("/", "layout");
 
     return { success: true, message: "Content updated successfully" };
-  } catch (error) {
+  } catch {
     return { success: false, message: "Failed to update content" };
   }
 }

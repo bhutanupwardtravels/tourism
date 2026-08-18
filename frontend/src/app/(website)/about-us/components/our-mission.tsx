@@ -10,7 +10,7 @@ interface OurMissionProps {
   subtitle?: string;
 }
 
-export function OurMission({ items, title, subtitle }: OurMissionProps) {
+export function OurMission({ items, title }: OurMissionProps) {
   const titleWords = (title || "Mission Parameters").split(" ");
 
   return (
@@ -29,7 +29,7 @@ export function OurMission({ items, title, subtitle }: OurMissionProps) {
         <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8 pb-12 border-b border-white/5">
           <div className="max-w-2xl">
             <span className="font-mono text-amber-500 text-xs uppercase tracking-[0.5em] mb-4 block">
-              // {subtitle || "what we stand for"}
+              {"// {subtitle || \"what we stand for\"}"}
             </span>
             <h2 className="text-5xl md:text-[6rem] font-light tracking-tighter uppercase leading-none">
               {titleWords[0]} <span className="italic font-serif normal-case text-amber-500">{titleWords.slice(1).join(" ")}</span>
@@ -57,7 +57,7 @@ export function OurMission({ items, title, subtitle }: OurMissionProps) {
                 </h3>
 
                 <p className="text-gray-400 font-light leading-relaxed italic text-lg line-clamp-4 group-hover:text-gray-200 transition-colors">
-                  "{item.description}"
+                  &quot;{item.description}&quot;
                 </p>
 
               </div>

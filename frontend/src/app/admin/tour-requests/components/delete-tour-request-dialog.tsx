@@ -39,7 +39,7 @@ export function DeleteTourRequestDialog({
             } else {
                 toast.error(result.error || "Failed to delete request");
             }
-        } catch (error) {
+        } catch {
             toast.error("An unexpected error occurred");
         } finally {
             setIsDeleting(false);

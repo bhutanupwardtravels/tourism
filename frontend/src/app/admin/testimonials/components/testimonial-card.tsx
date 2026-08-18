@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -36,7 +37,7 @@ export function TestimonialCard({ testimonial, showActionsOnClick }: Testimonial
                     <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center text-sm font-semibold text-zinc-500 shrink-0">
                             {testimonial.avatar ? (
-                                <img src={testimonial.avatar} alt={testimonial.name} className="w-full h-full object-cover" />
+                                <Image src={testimonial.avatar} alt={testimonial.name} width={40} height={40} className="w-full h-full object-cover" />
                             ) : (
                                 testimonial.name.charAt(0).toUpperCase()
                             )}

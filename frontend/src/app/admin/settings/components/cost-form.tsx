@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
@@ -12,7 +11,7 @@ import { Loader2, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import Link from "next/link";
-import { costSchema, Cost } from "../schema";
+import { costSchema, Cost, type CostInput, type CostOutput } from "../schema";
 import { AnimatedArrowLeft, AnimatedArrowLeftHandle } from "@/components/ui/animated-arrow-left";
 import * as React from "react";
 
@@ -44,8 +43,8 @@ export function CostForm({ initialData, action, title: pageTitle }: CostFormProp
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
 
-    const form = useForm<Cost>({
-        resolver: zodResolver(costSchema) as any,
+    const form = useForm<CostInput, unknown, CostOutput>({
+        resolver: zodResolver(costSchema),
         defaultValues: initialData || {
             title: "",
             description: "",
@@ -56,7 +55,7 @@ export function CostForm({ initialData, action, title: pageTitle }: CostFormProp
         },
     });
 
-    const onSubmit = (data: Cost) => {
+    const onSubmit = (data: CostOutput) => {
         const formData = new FormData();
         formData.append("title", data.title);
         formData.append("description", data.description || "");

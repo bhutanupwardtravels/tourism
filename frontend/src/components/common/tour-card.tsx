@@ -101,7 +101,7 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
             </div>
 
             <p className="mt-6 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-md">
-                "{tour.description}"
+                &quot;{tour.description}&quot;
             </p>
         </>
     );

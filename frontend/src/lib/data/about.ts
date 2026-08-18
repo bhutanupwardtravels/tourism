@@ -1,4 +1,5 @@
 import { supabaseAdmin } from "../supabase/admin";
+import { omit } from "@/lib/utils";
 
 const TABLE = "about";
 
@@ -71,7 +72,12 @@ export interface AboutContent {
 export async function getAboutContent(): Promise<AboutContent> {
     const supabase = supabaseAdmin();
     const { data: row } = await supabase.from(TABLE).select("content, updated_at").eq("id", 1).maybeSingle();
-    const doc = row ? { ...(row.content as any), updatedAt: row.updated_at } : null;
+    // Stored rows predate several shape changes, so every section is optional and
+    // `mission` may still be the pre-array object with a `content` string.
+    type StoredAboutContent = Partial<Omit<AboutContent, "mission">> & {
+        mission?: Partial<AboutContent["mission"]> & { content?: string };
+    };
+    const doc = row ? { ...(row.content as StoredAboutContent), updatedAt: row.updated_at } : null;
 
     if (!doc) {
         // Return default content if none exists
@@ -85,6 +91,9 @@ export async function getAboutContent(): Promise<AboutContent> {
     const merged: AboutContent = {
         ...defaultContent,
         ...doc,
+        // Seeded from defaults here and then rebuilt below, which is where the
+        // legacy single-object mission shape gets normalised into items[].
+        mission: defaultContent.mission,
         hero: { ...defaultContent.hero, ...doc.hero },
         story: { ...defaultContent.story, ...doc.story },
         founder: { ...defaultContent.founder, ...doc.founder },
@@ -231,7 +240,7 @@ async function getStaticDefaultContent(): Promise<AboutContent> {
 
 export async function updateAboutContent(data: AboutContent) {
     const supabase = supabaseAdmin();
-    const { updatedAt: _updatedAt, ...content } = data as any;
+    const content = omit(data, "updatedAt");
 
     // Upsert: update if exists, insert if not
     const { error } = await supabase.from(TABLE).upsert({
@@ -246,7 +255,7 @@ export async function updateAboutContent(data: AboutContent) {
 
 async function createDefaultAboutContent(): Promise<AboutContent> {
     const defaultContent = await getStaticDefaultContent();
-    (defaultContent as any).updatedAt = new Date().toISOString();
+    defaultContent.updatedAt = new Date().toISOString();
 
     // Insert default content into database
     const supabase = supabaseAdmin();

@@ -1,7 +1,8 @@
 import { cache } from "react";
 import { supabaseAdmin } from "../supabase/admin";
-import { rowToDoc, docToRow, paginate, pageRange } from "../supabase/mapping";
+import { rowToDoc, docToRow, paginate, pageRange, type Row } from "../supabase/mapping";
 import { summarizeTourPricing, type HotelRateIndex } from "../pricing/tour-tier";
+import { Tour } from "@/app/admin/tours/schema";
 
 const TABLE = "tours";
 
@@ -41,16 +42,16 @@ const hotelRates = cache(async (): Promise<HotelRateIndex> => {
 });
 
 /** Row -> document, with the derived pricing summary attached. */
-async function toPricedDoc(row: unknown) {
-    const doc = rowToDoc(row);
+async function toPricedDoc(row: Row | null) {
+    const doc = rowToDoc<Tour>(row);
     if (!doc) return doc;
     return { ...doc, pricing: summarizeTourPricing(doc, await hotelRates()) };
 }
 
-async function toPricedDocs(rows: unknown[]) {
+async function toPricedDocs(rows: Row[] | null) {
     const rates = await hotelRates();
     return (rows ?? []).map((row) => {
-        const doc = rowToDoc(row);
+        const doc = rowToDoc<Tour>(row);
         return { ...doc, pricing: summarizeTourPricing(doc, rates) };
     });
 }
@@ -94,7 +95,7 @@ export const getTourById = cache(async (id: string) => {
         const supabase = supabaseAdmin();
         const { data } = await supabase.from(TABLE).select("*").eq("id", id).maybeSingle();
         return toPricedDoc(data);
-    } catch (error) {
+    } catch {
         return null;
     }
 });
@@ -135,7 +136,7 @@ export async function getRelatedTours(slug: string, limit: number = 3) {
     return toPricedDocs(data ?? []);
 }
 
-export async function createTour(data: any) {
+export async function createTour(data: Partial<Tour>) {
     const supabase = supabaseAdmin();
     const { data: inserted, error } = await supabase
         .from(TABLE)
@@ -146,7 +147,7 @@ export async function createTour(data: any) {
     return inserted.id;
 }
 
-export async function updateTour(id: string, data: any) {
+export async function updateTour(id: string, data: Partial<Tour>) {
     const supabase = supabaseAdmin();
     const { error } = await supabase
         .from(TABLE)

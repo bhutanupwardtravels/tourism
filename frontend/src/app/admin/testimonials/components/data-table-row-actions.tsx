@@ -12,7 +12,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
-import { testimonialSchema } from "../schema";
+import { testimonialSchema, Testimonial } from "../schema";
 import { DeleteTestimonialDialog } from "./delete-testimonial-dialog";
 
 interface DataTableRowActionsProps<TData> {
@@ -21,7 +21,7 @@ interface DataTableRowActionsProps<TData> {
 
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
     const parseResult = testimonialSchema.safeParse(row.original);
-    const testimonial = parseResult.success ? parseResult.data : (row.original as any);
+    const testimonial = parseResult.success ? parseResult.data : (row.original as Testimonial);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
     return (

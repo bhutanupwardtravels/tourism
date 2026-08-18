@@ -29,7 +29,7 @@ export function DataTableToolbar<TData>({
   useEffect(() => {
     getRegionsForDropdown().then((regs) => {
       setRegions(
-        regs.map((reg: any) => ({
+        regs.map((reg) => ({
           label: reg.title,
           value: reg.value,
         }))

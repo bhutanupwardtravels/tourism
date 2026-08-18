@@ -1,11 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Search, X, Check } from "lucide-react";
 import { Experience } from "@/app/(website)/experiences/schema";
 import { ExperienceCard } from "@/components/common/experience-card";
-import { Button } from "@/components/ui/button";
 
 interface ExperienceSelectorProps {
     experiences: Experience[];
@@ -45,7 +44,7 @@ export function ExperienceSelector({ experiences, onSelect, onClose }: Experienc
                 <div className="p-6 border-b border-gray-200 flex items-center justify-between bg-white z-10">
                     <div>
                         <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-amber-600 block mb-2">
-              // curated selection
+              {"// curated selection"}
                         </span>
                         <h2 className="text-black text-3xl font-light tracking-tight uppercase">Select Experience</h2>
                     </div>

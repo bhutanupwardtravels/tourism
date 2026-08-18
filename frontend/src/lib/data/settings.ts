@@ -1,5 +1,6 @@
 import { supabaseAdmin } from "../supabase/admin";
-import { rowToDoc, docToRow, paginate, pageRange } from "../supabase/mapping";
+import { rowToDoc, rowsToDocs, docToRow, paginate, pageRange } from "../supabase/mapping";
+import { Cost } from "@/app/admin/settings/schema";
 
 const TABLE = "global_costs";
 
@@ -12,7 +13,14 @@ const COLUMNS = [
     "traveler_category",
 ];
 
-export async function listCosts(page: number = 1, pageSize: number = 10, search?: string, filters?: any) {
+/** Optional column filters the cost table exposes, as they arrive from the URL. */
+export type CostFilters = {
+    travelerCategory?: Cost["travelerCategory"];
+    /** A string because it comes straight off a query parameter. */
+    isIndianNational?: string;
+};
+
+export async function listCosts(page: number = 1, pageSize: number = 10, search?: string, filters?: CostFilters) {
     const supabase = supabaseAdmin();
 
     let query = supabase.from(TABLE).select("*", { count: "exact" });
@@ -33,7 +41,7 @@ export async function listCosts(page: number = 1, pageSize: number = 10, search?
     if (error) throw error;
 
     return {
-        items: (data ?? []).map(rowToDoc),
+        items: rowsToDocs<Cost>(data),
         ...paginate(count ?? 0, page, pageSize),
     };
 }
@@ -42,20 +50,20 @@ export async function getAllCosts() {
     const supabase = supabaseAdmin();
     const { data, error } = await supabase.from(TABLE).select("*").order("title");
     if (error) throw error;
-    return (data ?? []).map(rowToDoc);
+    return rowsToDocs<Cost>(data);
 }
 
 export async function getCostById(id: string) {
     try {
         const supabase = supabaseAdmin();
         const { data } = await supabase.from(TABLE).select("*").eq("id", id).maybeSingle();
-        return rowToDoc(data);
-    } catch (e) {
+        return rowToDoc<Cost>(data);
+    } catch {
         return null;
     }
 }
 
-export async function createCost(data: any) {
+export async function createCost(data: Partial<Cost>) {
     const supabase = supabaseAdmin();
     const { data: inserted, error } = await supabase
         .from(TABLE)
@@ -66,7 +74,7 @@ export async function createCost(data: any) {
     return inserted.id;
 }
 
-export async function updateCost(id: string, data: any) {
+export async function updateCost(id: string, data: Partial<Cost>) {
     const supabase = supabaseAdmin();
     const { error } = await supabase
         .from(TABLE)

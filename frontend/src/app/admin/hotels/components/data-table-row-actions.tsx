@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
-import { hotelSchema } from "../schema";
+import { hotelSchema, Hotel } from "../schema";
 import { DeleteHotelDialog } from "./delete-hotel-dialog";
 
 interface DataTableRowActionsProps<TData> {
@@ -26,7 +26,7 @@ export function DataTableRowActions<TData>({
   if (!parseResult.success) {
     // Silent fail, fallback to raw data
   }
-  const hotel = parseResult.success ? parseResult.data : (row.original as any);
+  const hotel = parseResult.success ? parseResult.data : (row.original as Hotel);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   return (

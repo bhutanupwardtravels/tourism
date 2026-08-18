@@ -17,7 +17,9 @@ import { deleteDestination } from "../actions";
 import { Destination } from "../schema";
 
 interface DeleteDestinationDialogProps {
-  destination: Destination;
+  // Only the id and name are used, so a summary row (the grid card) satisfies
+  // this without carrying the whole record.
+  destination: Pick<Destination, "_id" | "name">;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -39,7 +41,7 @@ export function DeleteDestinationDialog({
       } else {
         toast.error(result.message);
       }
-    } catch (error) {
+    } catch {
       toast.error("An unexpected error occurred");
     } finally {
       setIsDeleting(false);

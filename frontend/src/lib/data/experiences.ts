@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { supabaseAdmin } from "../supabase/admin";
-import { rowToDoc, docToRow, paginate, pageRange, UUID_RE } from "../supabase/mapping";
+import { rowToDoc, rowsToDocs, docToRow, paginate, pageRange, UUID_RE, type Row } from "../supabase/mapping";
 import { Experience } from "@/app/admin/experiences/schema";
 
 const TABLE = "experiences";
@@ -41,17 +41,28 @@ const loadRefMaps = cache(async () => {
     };
 });
 
-async function resolveRefs(docs: any[]): Promise<any[]> {
-    if (docs.length === 0) return docs;
+/**
+ * An experience whose category and destination ids have been swapped for the
+ * human-readable titles/slugs the pages render, with the raw ids kept
+ * alongside so forms can still round-trip them.
+ */
+export type ResolvedExperience = Experience & {
+    categoryId?: string;
+    resolvedDestinations: string[];
+    destinationIds: string[];
+};
+
+async function resolveRefs(docs: Experience[]): Promise<ResolvedExperience[]> {
+    if (docs.length === 0) return [];
 
     const { typeById, destById } = await loadRefMaps();
 
     return docs.map((doc) => {
-        const resolved = { ...doc };
+        const resolved = { ...doc } as ResolvedExperience;
 
         if (doc.category && UUID_RE.test(doc.category) && typeById.has(doc.category)) {
             resolved.categoryId = doc.category;
-            resolved.category = typeById.get(doc.category);
+            resolved.category = typeById.get(doc.category) ?? doc.category;
         } else {
             resolved.categoryId = doc.category;
         }
@@ -90,7 +101,7 @@ export async function listExperiences(
     if (error) throw error;
 
     return {
-        items: await resolveRefs((data ?? []).map(rowToDoc)),
+        items: await resolveRefs(rowsToDocs<Experience>(data)),
         ...paginate(count ?? 0, page, pageSize),
     };
 }
@@ -99,7 +110,7 @@ export const getExperienceBySlug = cache(async (slug: string) => {
     const supabase = supabaseAdmin();
     const { data } = await supabase.from(TABLE).select("*").eq("slug", slug).maybeSingle();
     if (!data) return null;
-    const [resolved] = await resolveRefs([rowToDoc(data)]);
+    const [resolved] = await resolveRefs([rowToDoc<Experience>(data) as Experience]);
     return resolved;
 });
 
@@ -108,9 +119,9 @@ export const getExperienceById = cache(async (id: string) => {
         const supabase = supabaseAdmin();
         const { data } = await supabase.from(TABLE).select("*").eq("id", id).maybeSingle();
         if (!data) return null;
-        const [resolved] = await resolveRefs([rowToDoc(data)]);
+        const [resolved] = await resolveRefs([rowToDoc<Experience>(data) as Experience]);
         return resolved;
-    } catch (error) {
+    } catch {
         return null;
     }
 });
@@ -119,7 +130,7 @@ export const getAllExperiences = cache(async () => {
     const supabase = supabaseAdmin();
     const { data, error } = await supabase.from(TABLE).select("*").order("title");
     if (error) throw error;
-    return resolveRefs((data ?? []).map(rowToDoc));
+    return resolveRefs(rowsToDocs<Experience>(data));
 });
 
 export async function createExperience(data: Partial<Experience>) {
@@ -132,7 +143,7 @@ export async function createExperience(data: Partial<Experience>) {
             .single();
         if (error) throw error;
         return inserted.id;
-    } catch (error) {
+    } catch {
         return null;
     }
 }
@@ -170,8 +181,8 @@ export async function getExperiencesByDestination(destinationId?: string, slug?:
     // Filter in Postgres: match the destination_slug column, or the jsonb
     // `destinations` array (holds ids or slugs) via containment. A few indexed
     // queries beat pulling the whole table and filtering in JS.
-    const byId = new Map<string, any>();
-    const collect = (rows: any[] | null) => (rows ?? []).forEach((r) => byId.set(r.id, r));
+    const byId = new Map<string, Row>();
+    const collect = (rows: Row[] | null) => (rows ?? []).forEach((r) => byId.set(String(r.id), r));
 
     if (slug) {
         const { data, error } = await supabase.from(TABLE).select("*").eq("destination_slug", slug);
@@ -188,5 +199,5 @@ export async function getExperiencesByDestination(destinationId?: string, slug?:
         collect(data);
     }
 
-    return resolveRefs([...byId.values()].map(rowToDoc));
+    return resolveRefs(rowsToDocs<Experience>([...byId.values()]));
 }

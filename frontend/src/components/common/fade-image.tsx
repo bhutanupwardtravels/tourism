@@ -8,7 +8,7 @@ import type { ImageProps } from "next/image";
 // Drop-in replacement for next/image that shows a shimmer while loading
 // and fades the real image in once it's ready.
 // Must be used inside a `relative overflow-hidden` container when fill={true}.
-export function FadeImage({ className, onLoad, priority, ...props }: ImageProps) {
+export function FadeImage({ className, onLoad, priority, alt, ...props }: ImageProps) {
   const [loaded, setLoaded] = useState(false);
 
   return (
@@ -24,6 +24,7 @@ export function FadeImage({ className, onLoad, priority, ...props }: ImageProps)
       )}
       <Image
         {...props}
+        alt={alt}
         priority={priority}
         className={cn(
           // Base classes first so caller-provided duration/easing overrides win in twMerge.

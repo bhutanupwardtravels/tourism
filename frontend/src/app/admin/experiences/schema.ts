@@ -1,7 +1,9 @@
 import { z } from "zod";
 
 export const experienceSchema = z.object({
+  // rowToDoc surfaces the uuid under both keys.
   _id: z.string(),
+  id: z.string().optional(),
   slug: z.string(),
   title: z.string(),
   category: z.string(),

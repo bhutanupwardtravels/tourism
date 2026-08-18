@@ -8,7 +8,7 @@ export async function getContactContentAction(): Promise<ContactContent> {
     try {
         const content = await getContactContent();
         return JSON.parse(JSON.stringify(content));
-    } catch (error) {
+    } catch {
         throw new Error("Failed to fetch contact content");
     }
 }
@@ -25,7 +25,7 @@ export async function updateContactContentAction(data: ContactContent) {
         revalidatePath("/", "layout");
 
         return { success: true, message: "Contact details updated successfully" };
-    } catch (error) {
+    } catch {
         return { success: false, message: "Failed to update contact details" };
     }
 }

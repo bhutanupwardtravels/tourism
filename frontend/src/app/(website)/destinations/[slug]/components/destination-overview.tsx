@@ -21,14 +21,14 @@ export function DestinationOverview({
           <Reveal y={0} x={-30} duration={1}
             className="lg:col-span-8">
             <span className="font-mono text-amber-500 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 block">
-              // destination overview
+              {"// destination overview"}
             </span>
             <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter leading-tight mb-8 md:mb-12 uppercase">
               The <span className="italic font-serif normal-case text-amber-600">Soul</span> <br />of {name}
             </h2>
             <div className="relative pl-8 border-l border-black/10">
               <p className="text-lg md:text-xl text-gray-500 leading-relaxed font-light italic">
-                "{description}"
+                &quot;{description}&quot;
               </p>
               <div className="mt-8 font-mono text-[8px] text-gray-400 uppercase tracking-widest">
                 verified information // Bhutan

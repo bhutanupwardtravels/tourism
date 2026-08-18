@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -42,8 +42,8 @@ export function TierForm({ initialData, action, title: pageTitle, maxPercent }: 
         defaultValues: initialData ?? { minPriorTrips: 1, percent: 2 },
     });
 
-    const percent = form.watch("percent");
-    const minPriorTrips = form.watch("minPriorTrips");
+    const percent = useWatch({ control: form.control, name: "percent" });
+    const minPriorTrips = useWatch({ control: form.control, name: "minPriorTrips" });
     const exceedsCap = Number.isFinite(percent) && percent > maxPercent;
 
     const onSubmit = (data: LoyaltyTierInput) => {

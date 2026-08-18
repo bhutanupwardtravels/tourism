@@ -18,6 +18,9 @@ export const userSchema = z.object({
     path: ["confirmPassword"],
 });
 
+/** What the user form holds mid-edit; `role` only gains its default on validate. */
+export type UserInput = z.input<typeof userSchema>;
+
 export type User = {
     id?: string;
     _id?: string;

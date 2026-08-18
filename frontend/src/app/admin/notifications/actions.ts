@@ -12,7 +12,7 @@ export async function getOperatorEmailsAction(): Promise<OperatorEmailsContent> 
     try {
         const content = await getOperatorEmailsContent();
         return JSON.parse(JSON.stringify(content));
-    } catch (error) {
+    } catch {
         throw new Error("Failed to fetch operator emails");
     }
 }
@@ -25,7 +25,7 @@ export async function updateOperatorEmailsAction(data: { emails: string[] }) {
         await updateOperatorEmailsContent(data);
         revalidatePath("/admin/notifications");
         return { success: true, message: "Notification emails updated successfully" };
-    } catch (error) {
+    } catch {
         return { success: false, message: "Failed to update notification emails" };
     }
 }

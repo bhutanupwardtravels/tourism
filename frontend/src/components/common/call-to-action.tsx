@@ -1,9 +1,20 @@
-"use client";
-
 import Link from "next/link";
 import { Reveal } from "@/components/ui/reveal";
+import { getAboutContent } from "@/lib/data/about";
 
-export default function CallToAction() {
+export default async function CallToAction() {
+  // A trust badge is only a signal if the reader can check it. "Verified
+  // partner — Bhutan Tourism Board" with nothing attached is the exact
+  // unfalsifiable claim people have learned to discount, and one claim they
+  // discount drags the credible ones down with it. So the badge renders only
+  // once there is a licence number behind it, and it shows that number.
+  let licenseNumber = "";
+  try {
+    licenseNumber = (await getAboutContent()).credentials.licenseNumber || "";
+  } catch {
+    // The CTA must render even if the about row is unreachable
+  }
+
   return (
     <section className="py-24 bg-white relative overflow-hidden ">
       {/* Background Decorative Waves */}
@@ -54,14 +65,14 @@ export default function CallToAction() {
       <div className="container mx-auto px-6 relative z-10 text-center">
         <Reveal y={20} duration={1}>
           <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block">
-            // start your journey
+            {"// start your journey"}
           </span>
           <h2 className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase text-black">
             Start Your <span className="italic font-serif normal-case text-amber-600">Discovery</span>
           </h2>
           <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-16 leading-relaxed font-light italic">
-            "Let us craft a bespoke itinerary that includes these regional highlights and
-            many more hidden gems within the Kingdom."
+            &quot;Let us craft a bespoke itinerary that includes these regional highlights and
+            many more hidden gems within the Kingdom.&quot;
           </p>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-12">
@@ -73,12 +84,14 @@ export default function CallToAction() {
               <div className="absolute inset-0 translate-y-full group-hover:translate-y-0 bg-amber-500 transition-transform duration-500" />
             </Link>
 
-            <div className="hidden md:flex items-center gap-6">
-              <span className="h-px w-20 bg-black/10" />
-              <span className="font-mono text-[8px] text-gray-400 uppercase tracking-widest leading-none">
-                Verified Partner <br /> Bhutan Tourism Board
-              </span>
-            </div>
+            {licenseNumber && (
+              <div className="hidden md:flex items-center gap-6">
+                <span className="h-px w-20 bg-black/10" />
+                <span className="font-mono text-[8px] text-gray-400 uppercase tracking-widest leading-relaxed">
+                  Licensed by the Tourism <br /> Council of Bhutan &middot; {licenseNumber}
+                </span>
+              </div>
+            )}
           </div>
         </Reveal>
       </div>

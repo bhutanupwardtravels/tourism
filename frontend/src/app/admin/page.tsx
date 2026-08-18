@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { StatCard } from "@/components/admin/stats-card";
 
 export const metadata: Metadata = { title: "Dashboard" };
-import { Users, Package, Calendar, DollarSign, ArrowRight, AlertCircle } from "lucide-react";
+import { Package, Calendar, DollarSign, ArrowRight, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { getDashboardData } from "./actions";

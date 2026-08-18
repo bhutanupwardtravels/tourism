@@ -15,7 +15,7 @@ export function TourBookingCard({ slug, className = "" }: TourBookingCardProps) 
                 <div className="absolute top-0 right-0 w-16 h-16 border-t border-r border-amber-600/20 group-hover:border-amber-600/50 transition-colors" />
 
                 <span className="font-mono text-[8px] md:text-[10px] text-amber-600 uppercase tracking-[0.4em] md:tracking-[0.5em] mb-6 md:mb-8 block font-bold">
-                    // plan this trip
+                    {"// plan this trip"}
                 </span>
 
                 <h3 className="text-3xl lg:text-4xl font-light tracking-tighter text-black mb-8 uppercase italic serif">
@@ -24,7 +24,7 @@ export function TourBookingCard({ slug, className = "" }: TourBookingCardProps) 
 
                 <p className="text-gray-600 font-light leading-relaxed mb-8 text-sm">
                     Tell us your dates and group size and a specialist will tailor this
-                    itinerary to you. You'll get a detailed quote within 24 hours.
+                    itinerary to you. You&apos;ll get a detailed quote within 24 hours.
                 </p>
 
                 <div className="mb-10 space-y-3 text-[13px] leading-relaxed">

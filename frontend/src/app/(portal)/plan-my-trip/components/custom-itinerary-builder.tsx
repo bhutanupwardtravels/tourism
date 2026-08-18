@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Plus, Calendar, Loader2, Sparkles, Check, X, XCircle, Search, Headphones } from "lucide-react";
+import { ArrowRight, Plus, Loader2, Sparkles, Check, X, Search, Headphones } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Destination } from "@/app/(website)/destinations/schema";
@@ -14,7 +14,6 @@ import { Cost } from "../../../admin/settings/schema";
 import { DayItinerary, ItineraryItem } from "@/app/admin/tour-requests/types";
 import { DayBuilder } from "./builder/day-builder";
 import { ExperienceSelector } from "./builder/experience-selector";
-import { TravelSelector } from "./builder/travel-selector";
 import { HotelSelector } from "./builder/hotel-selector";
 import { submitTourRequest, lookupTravellerDiscount, validateCoupon } from "../actions";
 import { Turnstile } from "@/components/turnstile";
@@ -90,7 +89,6 @@ export function CustomItineraryBuilder({
     const [activeDayIndex, setActiveDayIndex] = useState<number | null>(null);
     const [activeDestination, setActiveDestination] = useState<Destination | null>(null);
     const [showExperienceSelector, setShowExperienceSelector] = useState(false);
-    const [showTravelSelector, setShowTravelSelector] = useState(false);
     const [showHotelSelector, setShowHotelSelector] = useState(false);
     const [showDestinationChangeGrid, setShowDestinationChangeGrid] = useState(false);
     const [destinationSearch, setDestinationSearch] = useState("");
@@ -327,7 +325,7 @@ export function CustomItineraryBuilder({
         setShowDestinationChangeGrid(false);
     };
 
-    const addHotelToDay = (dayIndex: number, hotel: any) => {
+    const addHotelToDay = (dayIndex: number, hotel: Hotel) => {
         const newDays = [...days];
 
         // Check if day already has a hotel
@@ -583,7 +581,7 @@ export function CustomItineraryBuilder({
                                     min={minTripDate}
                                     error={errors.arrivalDate}
                                     value={userDetails.arrivalDate}
-                                    onChange={(e: any) => {
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         clearError("arrivalDate");
                                         setUserDetails({ ...userDetails, arrivalDate: e.target.value });
                                     }}
@@ -595,7 +593,7 @@ export function CustomItineraryBuilder({
                                     min={minDepartureDate}
                                     error={errors.departureDate}
                                     value={userDetails.departureDate}
-                                    onChange={(e: any) => {
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         clearError("departureDate");
                                         setUserDetails({ ...userDetails, departureDate: e.target.value });
                                     }}
@@ -632,7 +630,7 @@ export function CustomItineraryBuilder({
                                     min={1}
                                     error={errors.adults}
                                     value={userDetails.adults}
-                                    onChange={(e: any) => {
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         const parsed = parseInt(e.target.value);
                                         clearError("adults");
                                         setUserDetails({ ...userDetails, adults: Number.isNaN(parsed) ? 1 : Math.max(1, parsed) });
@@ -644,7 +642,7 @@ export function CustomItineraryBuilder({
                                     type="number"
                                     min={0}
                                     value={userDetails.children_6_12}
-                                    onChange={(e: any) => {
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         const parsed = parseInt(e.target.value);
                                         setUserDetails({ ...userDetails, children_6_12: Number.isNaN(parsed) ? 0 : Math.max(0, parsed) });
                                     }}
@@ -655,7 +653,7 @@ export function CustomItineraryBuilder({
                                     type="number"
                                     min={0}
                                     value={userDetails.children_under_6}
-                                    onChange={(e: any) => {
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         const parsed = parseInt(e.target.value);
                                         setUserDetails({ ...userDetails, children_under_6: Number.isNaN(parsed) ? 0 : Math.max(0, parsed) });
                                     }}
@@ -685,7 +683,7 @@ export function CustomItineraryBuilder({
                         className="space-y-12"
                     >
                         <div className="text-center space-y-4 mb-12">
-                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-amber-600 font-mono">// step 1 of 2</span>
+                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-amber-600 font-mono">{"// step 1 of 2"}</span>
                             <h3 className="text-4xl font-light uppercase tracking-tight text-black">Where do you <span className="italic normal-case text-amber-600">start</span>?</h3>
                             <p className="text-gray-500 max-w-xl mx-auto font-light">Pick the first place you want to visit. You can add more stops on any day.</p>
                         </div>
@@ -752,7 +750,7 @@ export function CustomItineraryBuilder({
 
                                     <div className="space-y-6">
                                         <div className="flex justify-between items-end border-b border-white/10 pb-6">
-                                            <span className="text-white/60 text-xs uppercase tracking-widest font-mono">// Total</span>
+                                            <span className="text-white/60 text-xs uppercase tracking-widest font-mono">{"// Total"}</span>
                                             <span className="text-4xl font-light tracking-tighter text-amber-500">
                                                 ${discounted.total.toLocaleString()}
                                             </span>
@@ -829,7 +827,7 @@ This estimate covers the Sustainable Development Fee, accommodation and the expe
                                         />
                                     )}
                                     <div>
-                                        <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 font-mono">// currently in</span>
+                                        <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 font-mono">{"// currently in"}</span>
                                         <h4 className="text-2xl font-light uppercase tracking-tight text-black">{activeDestination?.name}</h4>
                                     </div>
                                 </div>
@@ -909,7 +907,7 @@ This estimate covers the Sustainable Development Fee, accommodation and the expe
                                     placeholder="Enter first name"
                                     error={errors.firstName}
                                     value={userDetails.firstName}
-                                    onChange={(e: any) => {
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         clearError("firstName");
                                         setUserDetails({ ...userDetails, firstName: e.target.value });
                                     }}
@@ -921,7 +919,7 @@ This estimate covers the Sustainable Development Fee, accommodation and the expe
                                     placeholder="Enter last name"
                                     error={errors.lastName}
                                     value={userDetails.lastName}
-                                    onChange={(e: any) => {
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         clearError("lastName");
                                         setUserDetails({ ...userDetails, lastName: e.target.value });
                                     }}
@@ -934,7 +932,7 @@ This estimate covers the Sustainable Development Fee, accommodation and the expe
                                     placeholder="name@example.com"
                                     error={errors.email}
                                     value={userDetails.email}
-                                    onChange={(e: any) => {
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         clearError("email");
                                         setUserDetails({ ...userDetails, email: e.target.value });
                                     }}
@@ -967,7 +965,7 @@ This estimate covers the Sustainable Development Fee, accommodation and the expe
                                             autoComplete="tel"
                                             aria-invalid={errors.phone ? true : undefined}
                                             value={userDetails.phone}
-                                            onChange={(e: any) => {
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                 clearError("phone");
                                                 setUserDetails({ ...userDetails, phone: e.target.value });
                                             }}
@@ -1030,7 +1028,7 @@ This estimate covers the Sustainable Development Fee, accommodation and the expe
                                         setStep("BUILDER");
                                         return;
                                     }
-                                    await handleSubmit(new Event("submit") as any);
+                                    await handleSubmit(new Event("submit") as unknown as React.FormEvent);
                                 }}
                                 disabled={isSubmitting}
                                 className="group relative w-full overflow-hidden bg-black py-6 text-white text-[13px] font-bold uppercase tracking-[0.2em] transition-all hover:bg-amber-600 disabled:opacity-60"
@@ -1143,7 +1141,7 @@ This estimate covers the Sustainable Development Fee, accommodation and the expe
                                         </>
                                     )}
                                     <div className="flex justify-between items-end">
-                                        <span className="text-white/60 text-xs uppercase tracking-widest font-mono">// Estimated total</span>
+                                        <span className="text-white/60 text-xs uppercase tracking-widest font-mono">{"// Estimated total"}</span>
                                         <span className="text-3xl font-light tracking-tighter text-amber-500">
                                             ${discounted.total.toLocaleString()}
                                         </span>
@@ -1180,7 +1178,7 @@ This estimate covers the Sustainable Development Fee, accommodation and the expe
                                 <div className="p-6 border-b border-gray-200 flex items-center justify-between bg-white z-10">
                                     <div>
                                         <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-amber-600 block mb-2">
-                                            // add a stop
+                                            {"// add a stop"}
                                         </span>
                                         <h2 className="text-black text-3xl font-light tracking-tight uppercase">Where to next?</h2>
                                     </div>

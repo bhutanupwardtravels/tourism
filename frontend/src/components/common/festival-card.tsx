@@ -58,7 +58,7 @@ export function FestivalCard({ festival, index }: FestivalCardProps) {
 
                         <div className="pl-6 border-l border-black/10">
                             <p className="text-gray-500 text-sm leading-relaxed font-light italic line-clamp-2">
-                                "{festival.description}"
+                                &quot;{festival.description}&quot;
                             </p>
                         </div>
 

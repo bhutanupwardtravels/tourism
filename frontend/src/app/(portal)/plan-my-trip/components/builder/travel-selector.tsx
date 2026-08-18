@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { ArrowRight, MapPin, Clock, ArrowRightLeft, X } from "lucide-react";
+import { useState } from "react";
+import { MapPin, Clock, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { Destination } from "@/app/(website)/destinations/schema";
 import { getTravelTime } from "@/constants/travel-times";
-import { cn } from "@/lib/utils";
 
 interface TravelSelectorProps {
     destinations: Destination[];
@@ -18,18 +17,25 @@ export function TravelSelector({ destinations, onConfirm, onCancel }: TravelSele
     const [to, setTo] = useState("");
     const [duration, setDuration] = useState(0);
 
-    useEffect(() => {
-        if (from && to) {
-            const fromDest = destinations.find(d => d._id === from);
-            const toDest = destinations.find(d => d._id === to);
+    // The estimate is a starting point the traveller can then override in the
+    // input below, so it has to stay real state rather than a derived value.
+    // Re-seeding it during render (React's "adjust state on prop change"
+    // pattern) keeps it in step with the route without an extra render pass.
+    const [seededRoute, setSeededRoute] = useState<string | null>(null);
+    const routeKey = from && to ? `${from}->${to}` : null;
 
-            if (fromDest && toDest) {
-                const cleanFrom = fromDest.name.split(" ")[0];
-                const cleanTo = toDest.name.split(" ")[0];
-                setDuration(getTravelTime(cleanFrom, cleanTo));
-            }
+    if (routeKey && routeKey !== seededRoute) {
+        setSeededRoute(routeKey);
+
+        const fromDest = destinations.find(d => d._id === from);
+        const toDest = destinations.find(d => d._id === to);
+
+        if (fromDest && toDest) {
+            const cleanFrom = fromDest.name.split(" ")[0];
+            const cleanTo = toDest.name.split(" ")[0];
+            setDuration(getTravelTime(cleanFrom, cleanTo));
         }
-    }, [from, to, destinations]);
+    }
 
     const handleSubmit = () => {
         if (from && to) {
@@ -64,7 +70,7 @@ export function TravelSelector({ destinations, onConfirm, onCancel }: TravelSele
                 <div className="p-6 border-b border-gray-200 flex items-center justify-between bg-white z-10">
                     <div>
                         <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-amber-600 block mb-2">
-                            // logistics
+                            {"// logistics"}
                         </span>
                         <h2 className="text-black text-3xl font-light tracking-tight uppercase">Travel Segment</h2>
                     </div>
