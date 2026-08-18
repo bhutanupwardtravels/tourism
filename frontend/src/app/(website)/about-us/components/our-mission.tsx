@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { MissionItem } from "../schema";
+import { Reveal } from "@/components/ui/reveal";
 
 interface OurMissionProps {
   items: MissionItem[];
@@ -42,14 +43,9 @@ export function OurMission({ items, title, subtitle }: OurMissionProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24">
           {items.map((item, index) => (
-            <motion.div
+            <Reveal y={0} scale={0.98} delay={index * 0.2} duration={1}
               key={item.id}
-              initial={{ opacity: 0, scale: 0.98 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1, delay: index * 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="group relative p-12 border border-white/5 bg-white/2 hover:bg-white/5 transition-all duration-700"
-            >
+              className="group relative p-12 border border-white/5 bg-white/2 hover:bg-white/5 transition-all duration-700">
               {/* Corner Accents */}
               <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-amber-500/0 group-hover:border-amber-500/40 transition-all duration-700" />
               <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-amber-500/0 group-hover:border-amber-500/40 transition-all duration-700" />
@@ -73,7 +69,7 @@ export function OurMission({ items, title, subtitle }: OurMissionProps) {
                   <div className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />
                 </div>
               </div>
-            </motion.div>
+            </Reveal>
           ))}
         </div>
       </div>

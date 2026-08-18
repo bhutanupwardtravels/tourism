@@ -12,6 +12,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import * as React from "react";
+import { Reveal } from "@/components/ui/reveal";
 
 interface DestinationCarouselProps {
   destinations: Destination[];
@@ -102,14 +103,9 @@ export function DestinationCarousel({
                 key={dest.slug}
                 className="pl-8 md:basis-1/2 lg:basis-1/2"
               >
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                >
+                <Reveal y={30} delay={index * 0.1} duration={0.8}>
                   <DestinationCard destination={dest as any} index={index} />
-                </motion.div>
+                </Reveal>
               </CarouselItem>
             ))}
           </CarouselContent>

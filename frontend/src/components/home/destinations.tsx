@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/carousel";
 import Link from "next/link";
 import * as React from "react";
+import { Reveal } from "@/components/ui/reveal";
 
 interface DestinationsProps {
     destinations: Destination[];
@@ -61,30 +62,16 @@ export function Destinations({ destinations }: DestinationsProps) {
             <div className="container mx-auto px-6 relative z-10">
                 <div className="flex flex-col md:flex-row items-end justify-between mb-24 gap-8 pb-12">
                     <div>
-                        <motion.span
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block"
-                        >
+                        <Reveal as="span" y={0} x={-20}
+                            className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block">
                             // explore by region
-                        </motion.span>
-                        <motion.h3
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.1 }}
-                            className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase text-black"
-                        >
+                        </Reveal>
+                        <Reveal as="h3" y={20} delay={0.1}
+                            className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase text-black">
                             Featured <span className="italic font-serif normal-case text-amber-600">Destinations</span>
-                        </motion.h3>
+                        </Reveal>
                     </div>
-                    <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.3 }}
-                    >
+                    <Reveal y={0} x={20} delay={0.3}>
                         <Link
                             href="/destinations"
                             className="group flex items-center gap-4 text-[10px] font-mono uppercase tracking-[0.3em] text-gray-500 hover:text-black transition-colors"
@@ -92,7 +79,7 @@ export function Destinations({ destinations }: DestinationsProps) {
                             <span className="h-px w-12 bg-black/20 group-hover:w-20 group-hover:bg-amber-600 transition-all duration-500" />
                             Explore all destinations
                         </Link>
-                    </motion.div>
+                    </Reveal>
                 </div>
 
                 <Carousel
@@ -109,14 +96,9 @@ export function Destinations({ destinations }: DestinationsProps) {
                                 key={destination.slug}
                                 className="pl-8 md:basis-1/2 lg:basis-1/2"
                             >
-                                <motion.div
-                                    initial={{ opacity: 0, y: 30 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: index * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                                >
+                                <Reveal y={30} delay={index * 0.1} duration={0.8}>
                                     <DestinationCard destination={destination} index={index} />
-                                </motion.div>
+                                </Reveal>
                             </CarouselItem>
                         ))}
                     </CarouselContent>

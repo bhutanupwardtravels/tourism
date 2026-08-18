@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { BhutanMap } from "@/components/ui/BhutanMap";
+import { Reveal } from "@/components/ui/reveal";
 
 interface LocationMapProps {
     name: string;
@@ -41,13 +42,10 @@ export function LocationMap({ name, coordinates, title = "Map Location", subtitl
 
             <div className="container mx-auto px-4 md:px-6 relative z-10">
                 <div className="text-center mb-12 md:mb-24">
-                    <motion.span
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        className="block font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4"
-                    >
+                    <Reveal as="span" y={0}
+                        className="block font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4">
                         {subtitle}
-                    </motion.span>
+                    </Reveal>
                     <h2 className="text-4xl sm:text-5xl md:text-7xl font-light text-black tracking-tighter uppercase">
                         {title.split(' ')[0]} <span className="italic font-serif normal-case text-amber-600">{title.split(' ').slice(1).join(' ')}</span>
                     </h2>
@@ -75,12 +73,8 @@ export function LocationMap({ name, coordinates, title = "Map Location", subtitl
                         <div className="absolute bottom-3 right-3 md:bottom-8 md:right-8 w-6 h-6 md:w-12 md:h-12 border-b border-r border-black/20" />
                     </div>
 
-                    <motion.div
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        whileInView={{ scale: 1, opacity: 1 }}
-                        transition={{ type: "spring", stiffness: 260, damping: 20 }}
-                        className="absolute bottom-3 right-3 md:bottom-12 md:right-12 max-w-[calc(100%-1.5rem)] bg-white/80 backdrop-blur-xl px-4 py-3 md:px-8 md:py-4 border border-black/10 z-20"
-                    >
+                    <Reveal y={0} scale={0.8}
+                        className="absolute bottom-3 right-3 md:bottom-12 md:right-12 max-w-[calc(100%-1.5rem)] bg-white/80 backdrop-blur-xl px-4 py-3 md:px-8 md:py-4 border border-black/10 z-20">
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-3">
                                 <div className="w-2 h-2 shrink-0 bg-amber-600 rounded-full animate-ping" />
@@ -91,7 +85,7 @@ export function LocationMap({ name, coordinates, title = "Map Location", subtitl
                                 LOCATION: {coordinates[0].toFixed(4)}°N, {coordinates[1].toFixed(4)}°E
                             </span>
                         </div>
-                    </motion.div>
+                    </Reveal>
 
                     <div className="hidden md:flex absolute left-12 top-1/2 -translate-y-1/2 flex-col gap-12 pointer-events-none">
                         <div className="space-y-1">

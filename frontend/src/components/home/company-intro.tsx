@@ -1,7 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
-
+import { Reveal } from "@/components/ui/reveal";
 export function CompanyIntro() {
   return (
     <section className="py-24 md:py-32 bg-neutral-950 relative overflow-hidden">
@@ -10,13 +9,8 @@ export function CompanyIntro() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(245,158,11,0.03),transparent_70%)]" />
 
       <div className="container mx-auto px-6 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.2 }}
-          className="max-w-5xl mx-auto text-center"
-        >
+        <Reveal y={30} duration={1.2}
+          className="max-w-5xl mx-auto text-center">
           <div className="flex flex-col items-center gap-6 mb-16">
             <span className="font-mono text-amber-500/60 text-xs uppercase tracking-[0.4em] block">
               // The Bhutanese Essence
@@ -44,7 +38,7 @@ export function CompanyIntro() {
             <span className="font-mono text-[8px] uppercase tracking-widest text-neutral-300">Environmental Integrity</span>
             <span className="font-mono text-[8px] uppercase tracking-widest text-neutral-300">Soulful Exploration</span>
           </div>
-        </motion.div>
+        </Reveal>
       </div>
     </section>
   );

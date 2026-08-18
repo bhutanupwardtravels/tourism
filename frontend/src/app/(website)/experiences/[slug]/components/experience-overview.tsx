@@ -1,7 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
-
+import { Reveal } from "@/components/ui/reveal";
 interface ExperienceOverviewProps {
     title: string;
     description: string;
@@ -15,12 +14,7 @@ export function ExperienceOverview({
 }: ExperienceOverviewProps) {
     return (
         <div className="flex flex-col gap-12">
-            <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1 }}
-            >
+            <Reveal y={0} x={-30} duration={1}>
                 <span className="font-mono text-amber-500 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 block">
                     // experience overview
                 </span>
@@ -35,7 +29,7 @@ export function ExperienceOverview({
                         verified information // Kingdom of Bhutan
                     </div>
                 </div>
-            </motion.div>
+            </Reveal>
 
         </div>
     );

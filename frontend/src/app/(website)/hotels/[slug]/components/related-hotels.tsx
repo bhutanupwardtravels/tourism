@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { Hotel } from "@/app/(website)/hotels/schema";
 import { HotelCard } from "@/components/common/hotel-card";

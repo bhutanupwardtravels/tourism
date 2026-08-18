@@ -13,6 +13,7 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel";
 import * as React from "react";
+import { Reveal } from "@/components/ui/reveal";
 
 interface FeaturedItineraryProps {
     itineraries: Tour[];
@@ -63,44 +64,28 @@ export function FeaturedItinerary({ itineraries }: FeaturedItineraryProps) {
                             {/* Content */}
                             <div className="relative z-20 container mx-auto px-6 h-full flex flex-col justify-center">
                                 <div className="max-w-4xl">
-                                    <motion.div
-                                        initial={{ opacity: 0, x: -20 }}
-                                        whileInView={{ opacity: 1, x: 0 }}
-                                        transition={{ duration: 0.8 }}
-                                    >
+                                    <Reveal y={0} x={-20} duration={0.8}>
                                         <span className="font-mono text-amber-500 text-xs uppercase tracking-[0.4em] mb-6 block">
                       // {itinerary.duration} Day Expedition // 0{index + 1}
                                         </span>
-                                    </motion.div>
+                                    </Reveal>
 
-                                    <motion.h2
-                                        initial={{ opacity: 0, y: 30 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 0.8, delay: 0.2 }}
-                                        className="w-full text-3xl sm:text-4xl md:text-6xl font-light tracking-tighter leading-tight mb-8 md:mb-12 uppercase line-clamp-3 md:line-clamp-2"
-                                    >
+                                    <Reveal as="h2" y={30} delay={0.2} duration={0.8}
+                                        className="w-full text-3xl sm:text-4xl md:text-6xl font-light tracking-tighter leading-tight mb-8 md:mb-12 uppercase line-clamp-3 md:line-clamp-2">
                                         {itinerary.title.split(' ').map((word, i) => (
                                             <span key={i} className={i % 2 !== 0 ? "italic font-serif normal-case text-amber-500" : ""}>
                                                 {word}{' '}
                                             </span>
                                         ))}
-                                    </motion.h2>
+                                    </Reveal>
 
-                                    <motion.p
-                                        initial={{ opacity: 0 }}
-                                        whileInView={{ opacity: 1 }}
-                                        transition={{ duration: 0.8, delay: 0.4 }}
-                                        className="text-base text-gray-300 leading-relaxed mb-12 font-light max-w-2xl italic line-clamp-4"
-                                    >
+                                    <Reveal as="p" y={0} delay={0.4} duration={0.8}
+                                        className="text-base text-gray-300 leading-relaxed mb-12 font-light max-w-2xl italic line-clamp-4">
                                         "{itinerary.description}"
-                                    </motion.p>
+                                    </Reveal>
 
-                                    <motion.div
-                                        initial={{ opacity: 0 }}
-                                        whileInView={{ opacity: 1 }}
-                                        transition={{ duration: 0.8, delay: 0.6 }}
-                                        className="flex items-center gap-12"
-                                    >
+                                    <Reveal y={0} delay={0.6} duration={0.8}
+                                        className="flex items-center gap-12">
                                         <Link
                                             href={`/tours/${itinerary.slug}`}
                                             className="group flex items-center gap-6 bg-white text-black px-12 py-5 text-[10px] font-mono text-xs uppercase tracking-[0.2em] hover:bg-amber-500 hover:text-white transition-all duration-500 shadow-2xl relative overflow-hidden"
@@ -117,7 +102,7 @@ export function FeaturedItinerary({ itineraries }: FeaturedItineraryProps) {
                                             </div>
                                             <span className="font-mono text-[8px] text-amber-500/50 uppercase tracking-widest">Featured</span>
                                         </div>
-                                    </motion.div>
+                                    </Reveal>
                                 </div>
                             </div>
                         </CarouselItem>

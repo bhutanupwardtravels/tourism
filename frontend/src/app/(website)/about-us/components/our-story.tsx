@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-
 import { motion } from "framer-motion";
 import { AboutSection } from "../schema";
+import { Reveal } from "@/components/ui/reveal";
 
 interface OurStoryProps {
   story: AboutSection;
@@ -20,13 +20,8 @@ export function OurStory({ story }: OurStoryProps) {
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-start">
           {/* Narrative Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-7"
-          >
+          <Reveal y={0} x={-30} duration={1}
+            className="lg:col-span-7">
             <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.5em] mb-6 block">
               // {story.subtitle || "Our Narrative"}
             </span>
@@ -46,16 +41,11 @@ export function OurStory({ story }: OurStoryProps) {
               <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-amber-600/30" />
               <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-amber-600/30" />
             </div>
-          </motion.div>
+          </Reveal>
 
           {/* Visual Evidence */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-5 relative group"
-          >
+          <Reveal y={0} scale={0.9} duration={1}
+            className="lg:col-span-5 relative group">
             <div className="relative aspect-4/5 overflow-hidden bg-neutral-100">
                             <Image
                   src={story.image || "https://images.unsplash.com/photo-1548013146-72479768bada?w=2940&auto=format&fit=crop"}
@@ -82,7 +72,7 @@ export function OurStory({ story }: OurStoryProps) {
             {/* Corner Brackets */}
             <div className="absolute -top-4 -left-4 w-12 h-12 border-t border-l border-black/10 group-hover:border-amber-600/30 transition-colors" />
             <div className="absolute -bottom-4 -right-4 w-12 h-12 border-b border-r border-black/10 group-hover:border-amber-600/30 transition-colors" />
-          </motion.div>
+          </Reveal>
         </div>
       </div>
     </section>

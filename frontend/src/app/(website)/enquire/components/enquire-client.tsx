@@ -1,9 +1,7 @@
 "use client";
 
 import Image from "next/image";
-
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { ArrowRight, Check } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -16,6 +14,7 @@ import { CountrySelect } from "@/components/common/country-select";
 import { MonthSelect } from "@/components/common/month-select";
 import { OptionSelect } from "@/components/common/option-select";
 import { COUNTRIES } from "@/lib/countries";
+import { Reveal } from "@/components/ui/reveal";
 
 const TRAVELER_OPTIONS = [
     { value: "1", label: "Just me" },
@@ -91,11 +90,7 @@ export default function EnquireClient() {
                     />
                 </div>
 
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="max-w-2xl w-full text-center space-y-12 relative z-10"
-                >
+                <div className="max-w-2xl w-full text-center space-y-12 relative z-10">
                     <div className="w-24 h-24 border border-amber-600/30 rounded-full flex items-center justify-center mx-auto text-amber-600">
                         <Check className="w-10 h-10" />
                     </div>
@@ -120,7 +115,7 @@ A travel specialist will email you within 24 business hours with a suggested iti
                             Back to the site <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
                         </button>
                     </div>
-                </motion.div>
+                </div>
             </div>
         );
     }
@@ -141,12 +136,7 @@ A travel specialist will email you within 24 business hours with a suggested iti
                 </div>
 
                 <div className="container mx-auto px-6 relative z-10 text-center">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                        className="space-y-8"
-                    >
+                    <div className="space-y-8">
                         <span className="font-mono text-amber-500 text-[10px] uppercase tracking-[0.8em] font-bold block mb-4">
                             // tailor your vision
                         </span>
@@ -157,7 +147,7 @@ A travel specialist will email you within 24 business hours with a suggested iti
                         <p className="text-lg md:text-xl text-white/60 font-light italic max-w-2xl mx-auto leading-relaxed">
                             "Tell us the texture of your curiosity. Every journey we plan is a unique weave in the tapestry of the Kingdom of Bhutan."
                         </p>
-                    </motion.div>
+                    </div>
                 </div>
             </section>
 
@@ -198,14 +188,9 @@ Tell us roughly when you want to travel and who's coming. We'll come back with a
 
                     {/* Main Form Form */}
                     <div className="lg:col-span-8">
-                        <motion.form
-                            initial={{ opacity: 0, x: 20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 1 }}
+                        <Reveal as="form" y={0} x={20} duration={1}
                             onSubmit={handleSubmit}
-                            className="space-y-16"
-                        >
+                            className="space-y-16">
                             {/* Personal Name Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12 transform transition-all duration-500">
                                 <FormInput
@@ -371,7 +356,7 @@ Tell us roughly when you want to travel and who's coming. We'll come back with a
                                     By submitting, you agree to our privacy policy.
                                 </span>
                             </div>
-                        </motion.form>
+                        </Reveal>
                     </div>
                 </div>
             </section>

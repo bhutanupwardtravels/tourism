@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ReservationCard } from "@/components/common/reservation-card";
+import { Reveal } from "@/components/ui/reveal";
 
 interface DestinationOverviewProps {
   name: string;
@@ -18,13 +18,8 @@ export function DestinationOverview({
     <section className="pt-40 bg-white text-black relative">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-start">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-            className="lg:col-span-8"
-          >
+          <Reveal y={0} x={-30} duration={1}
+            className="lg:col-span-8">
             <span className="font-mono text-amber-500 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 block">
               // destination overview
             </span>
@@ -39,7 +34,7 @@ export function DestinationOverview({
                 verified information // Bhutan
               </div>
             </div>
-          </motion.div>
+          </Reveal>
 
           {/* Sidebar / Booking Card */}
           <ReservationCard slug={slug} className="lg:col-span-4" />

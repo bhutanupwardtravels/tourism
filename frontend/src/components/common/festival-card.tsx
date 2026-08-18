@@ -1,10 +1,9 @@
 "use client";
 
 import { FadeImage } from "@/components/common/fade-image";
-
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { Calendar } from "lucide-react";
+import { Reveal } from "@/components/ui/reveal";
 
 interface FestivalCardProps {
     festival: {
@@ -20,13 +19,8 @@ export function FestivalCard({ festival, index }: FestivalCardProps) {
     const isEven = index % 2 === 0;
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: index * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className={isEven ? "lg:col-span-7" : "lg:col-span-5 lg:mt-24"}
-        >
+        <Reveal y={30} delay={index * 0.1} duration={0.8}
+            className={isEven ? "lg:col-span-7" : "lg:col-span-5 lg:mt-24"}>
             <Link
                 href={`/experiences/${festival.slug}`}
                 className="group block relative overflow-hidden bg-neutral-100 border border-black/5 p-8 md:p-12 hover:border-amber-600/30 transition-all duration-700"
@@ -78,6 +72,6 @@ export function FestivalCard({ festival, index }: FestivalCardProps) {
                     </div>
                 </div>
             </Link>
-        </motion.div>
+        </Reveal>
     );
 }

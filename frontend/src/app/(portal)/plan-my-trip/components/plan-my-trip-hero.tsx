@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 
 // Rendered both inside PlanMyTripClient and as the Suspense fallback in
 // page.tsx — it doesn't read searchParams, so it always server-renders
@@ -12,11 +11,7 @@ export function PlanMyTripHero() {
     return (
         <section className="relative flex items-center pt-16 pb-24 md:pt-24 md:pb-32">
             <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, ease: "easeOut" }}
-                >
+                <div>
                     <span className="font-mono text-amber-500 text-[10px] font-bold tracking-[0.5em] uppercase block mb-4">
                         // plan your trip
                     </span>
@@ -27,7 +22,7 @@ export function PlanMyTripHero() {
                     <p className="mt-5 text-base md:text-lg text-white/80 font-light max-w-xl leading-relaxed">
 Three ways to start: pick a ready-made itinerary, build your own day by day, or just tell us what you have in mind. Either way a specialist reviews it and comes back with a full price.
                     </p>
-                </motion.div>
+                </div>
             </div>
         </section>
     );

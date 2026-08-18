@@ -1,11 +1,10 @@
 "use client";
 
 import { FadeImage } from "@/components/common/fade-image";
-
-import { motion } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { ExperienceType } from "@/app/admin/experience-types/schema";
+import { Reveal } from "@/components/ui/reveal";
 
 export function ExperienceTypes({ experienceTypes }: { experienceTypes: ExperienceType[] }) {
     // We can still limit it to 3 if we want the same look
@@ -20,51 +19,34 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
 
             <div className="container mx-auto px-6 relative z-10">
                 <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
-                        className="max-w-2xl"
-                    >
+                    <Reveal y={30} duration={0.8}
+                        className="max-w-2xl">
                         <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block">
                 // curate your experience
                         </span>
                         <h2 className="text-5xl md:text-7xl font-light text-black tracking-tighter leading-tight uppercase">
                             Why <span className="italic font-serif normal-case text-amber-600">Bhutan?</span>
                         </h2>
-                    </motion.div>
+                    </Reveal>
 
-                    <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        className="pb-4"
-                    >
+                    <Reveal y={0} x={20} delay={0.2} duration={0.8}
+                        className="pb-4">
                         <Link
                             href="/experiences"
                             className="group inline-flex items-center gap-2 text-[10px] font-mono font-medium tracking-[0.3em] uppercase hover:text-amber-600 transition-all text-gray-400 border-b border-transparent hover:border-amber-600 pb-1"
                         >
                             See all experiences
                         </Link>
-                    </motion.div>
+                    </Reveal>
                 </div>
 
                 <div className="space-y-20">
                     {experienceTypes.map((experience, index) => (
-                        <motion.div
+                        <Reveal y={40} duration={0.8}
                             key={index}
-                            initial={{ opacity: 0, y: 40 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.8 }}
                             className={`flex flex-col md:flex-row gap-8 md:gap-16 items-center ${index % 2 === 1 ? "md:flex-row-reverse" : ""
-                                }`}
-                        >
-                            <div
-                                className="w-full md:w-1/2"
-                            >
+                                }`}>
+                            <div className="w-full md:w-1/2">
                                 <Link href={`/experiences?category=${encodeURIComponent(experience.title)}`} className="block group relative bg-neutral-100 border border-black/10 hover:border-amber-600/50 transition-all duration-700 rounded-xs overflow-hidden">
                                     {/* Image Container with Reveal */}
                                     <div className="aspect-4/3 overflow-hidden relative">
@@ -108,7 +90,7 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
                                     <span className="font-mono text-[10px] uppercase tracking-widest">Explore</span>
                                 </Link>
                             </div>
-                        </motion.div>
+                        </Reveal>
                     ))}
                 </div>
             </div>

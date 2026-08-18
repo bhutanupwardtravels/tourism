@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
+import { Reveal } from "@/components/ui/reveal";
 
 interface VisualGalleryProps {
     images: string[];
@@ -49,36 +49,20 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
         }
     };
 
-    // Transition for the "Growth" animation
-    const entranceTransition = {
-        type: "spring" as const,
-        stiffness: 45,
-        damping: 18,
-        mass: 1
-    };
-
     return (
         <section ref={containerRef} className="py-20 bg-white relative overflow-hidden min-h-screen">
             <div className="container mx-auto px-6 relative z-10 w-full max-w-7xl h-full">
 
                 {/* Restored Header */}
                 <div className="mb-32 text-center">
-                    <motion.span
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ once: true }}
-                        className="font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 block"
-                    >
+                    <Reveal as="span" y={0}
+                        className="font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 block">
                         {subtitle}
-                    </motion.span>
-                    <motion.h2
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase text-black"
-                    >
+                    </Reveal>
+                    <Reveal as="h2" y={20}
+                        className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase text-black">
                         {title.split(' ')[0]} <span className="italic font-serif normal-case text-amber-600">{title.split(' ').slice(1).join(' ')}</span>
-                    </motion.h2>
+                    </Reveal>
                 </div>
 
                 {/* 
@@ -90,166 +74,123 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                 <div className="relative w-full aspect-16/10 md:aspect-video flex items-center justify-center">
 
                     {/* 0. Main Center Hero */}
-                    <motion.div
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        whileInView={{ scale: 1, opacity: 1 }}
-                        viewport={{ once: true, margin: "-10%" }}
-                        transition={{ ...entranceTransition, delay: 0.1 }}
+                    <Reveal y={0} scale={0.8} delay={0.1}
                         className="absolute top-0 left-[22%] w-[56%] h-[53%] z-10 cursor-pointer overflow-hidden "
-                        onClick={() => openLightbox(0)}
-                    >
+                        onClick={() => openLightbox(0)}>
                         <motion.img
                             style={{ y: useTransform(scrollYProgress, [0, 1], [0, -20]) }}
                             src={images[0]}
                             className="w-full h-full object-cover"
                             alt={altFor(0)}
                         />
-                    </motion.div>
+                    </Reveal>
 
                     {/* 1. Left Column - Top */}
                     {images[1] && (
-                        <motion.div
-                            initial={{ scale: 0.7, opacity: 0, x: -20 }}
-                            whileInView={{ scale: 1, opacity: 1, x: 0 }}
-                            viewport={{ once: true, margin: "-10%" }}
-                            transition={{ ...entranceTransition, delay: 0.2 }}
+                        <Reveal y={0} x={-20} scale={0.7} delay={0.2}
                             className="absolute top-[15%] left-0 w-[17%] h-[28%] z-10 cursor-pointer overflow-hidden"
-                            onClick={() => openLightbox(1)}
-                        >
+                            onClick={() => openLightbox(1)}>
                             <motion.img
                                 style={{ y: useTransform(scrollYProgress, [0, 1], [10, -10]) }}
                                 src={images[1]}
                                 className="w-full h-full object-contain"
                                 alt={altFor(1)}
                             />
-                        </motion.div>
+                        </Reveal>
                     )}
 
                     {/* 2. Left Column - Bottom (Portrait) */}
                     {images[2] && (
-                        <motion.div
-                            initial={{ scale: 0.7, opacity: 0, x: -20, y: 20 }}
-                            whileInView={{ scale: 1, opacity: 1, x: 0, y: 0 }}
-                            viewport={{ once: true, margin: "-10%" }}
-                            transition={{ ...entranceTransition, delay: 0.3 }}
+                        <Reveal y={20} x={-20} scale={0.7} delay={0.3}
                             className="absolute top-[48%] left-0 w-[20%] h-[45%] z-10 cursor-pointer overflow-hidden"
-                            onClick={() => openLightbox(2)}
-                        >
+                            onClick={() => openLightbox(2)}>
                             <motion.img
                                 style={{ y: useTransform(scrollYProgress, [0, 1], [30, -30]) }}
                                 src={images[2]}
                                 className="w-full h-full object-contain"
                                 alt={altFor(2)}
                             />
-                        </motion.div>
+                        </Reveal>
                     )}
 
                     {/* 3. Bottom Middle - Left half */}
                     {images[3] && (
-                        <motion.div
-                            initial={{ scale: 0.8, opacity: 0, y: 30 }}
-                            whileInView={{ scale: 1, opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-10%" }}
-                            transition={{ ...entranceTransition, delay: 0.4 }}
+                        <Reveal y={30} scale={0.8} delay={0.4}
                             className="absolute top-[56%] left-[22%] w-[32%] h-[28%] z-10 cursor-pointer overflow-hidden"
-                            onClick={() => openLightbox(3)}
-                        >
+                            onClick={() => openLightbox(3)}>
                             <motion.img
                                 style={{ y: useTransform(scrollYProgress, [0, 1], [0, -40]) }}
                                 src={images[3]}
                                 className="w-full h-full object-cover"
                                 alt={altFor(3)}
                             />
-                        </motion.div>
+                        </Reveal>
                     )}
 
                     {/* 4. Bottom Middle - Right half (Portrait focus) */}
                     {images[4] && (
-                        <motion.div
-                            initial={{ scale: 0.8, opacity: 0, y: 30 }}
-                            whileInView={{ scale: 1, opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-10%" }}
-                            transition={{ ...entranceTransition, delay: 0.5 }}
+                        <Reveal y={30} scale={0.8} delay={0.5}
                             className="absolute top-[56%] left-[56%] w-[22%] h-[42%] z-10 cursor-pointer overflow-hidden"
-                            onClick={() => openLightbox(4)}
-                        >
+                            onClick={() => openLightbox(4)}>
                             <motion.img
                                 style={{ y: useTransform(scrollYProgress, [0, 1], [20, -50]) }}
                                 src={images[4]}
                                 className="w-full h-full object-cover"
                                 alt={altFor(4)}
                             />
-                        </motion.div>
+                        </Reveal>
                     )}
 
                     {/* 5. Right Column - Top */}
                     {images[5] && (
-                        <motion.div
-                            initial={{ scale: 0.7, opacity: 0, x: 20 }}
-                            whileInView={{ scale: 1, opacity: 1, x: 0 }}
-                            viewport={{ once: true, margin: "-10%" }}
-                            transition={{ ...entranceTransition, delay: 0.25 }}
+                        <Reveal y={0} x={20} scale={0.7} delay={0.25}
                             className="absolute top-[5%] right-[2%] w-[16%] h-[22%] z-10 cursor-pointer overflow-hidden"
-                            onClick={() => openLightbox(5)}
-                        >
+                            onClick={() => openLightbox(5)}>
                             <motion.img
                                 style={{ y: useTransform(scrollYProgress, [0, 1], [-10, 10]) }}
                                 src={images[5]}
                                 className="w-full h-full object-cover"
                                 alt={altFor(5)}
                             />
-                        </motion.div>
+                        </Reveal>
                     )}
 
                     {/* 6. Right Column - Middle */}
                     {images[6] && (
-                        <motion.div
-                            initial={{ scale: 0.7, opacity: 0, x: 20 }}
-                            whileInView={{ scale: 1, opacity: 1, x: 0 }}
-                            viewport={{ once: true, margin: "-10%" }}
-                            transition={{ ...entranceTransition, delay: 0.35 }}
+                        <Reveal y={0} x={20} scale={0.7} delay={0.35}
                             className="absolute top-[32%] right-[2%] w-[24%] h-[28%] z-10 cursor-pointer overflow-hidden"
-                            onClick={() => openLightbox(6)}
-                        >
+                            onClick={() => openLightbox(6)}>
                             <motion.img
                                 style={{ y: useTransform(scrollYProgress, [0, 1], [-20, 20]) }}
                                 src={images[6]}
                                 className="w-full h-full object-cover"
                                 alt={altFor(6)}
                             />
-                        </motion.div>
+                        </Reveal>
                     )}
 
                     {/* 7. Right Column - Bottom */}
                     {images[7] && (
-                        <motion.div
-                            initial={{ scale: 0.7, opacity: 0, x: 20, y: 20 }}
-                            whileInView={{ scale: 1, opacity: 1, x: 0, y: 0 }}
-                            viewport={{ once: true, margin: "-10%" }}
-                            transition={{ ...entranceTransition, delay: 0.45 }}
+                        <Reveal y={20} x={20} scale={0.7} delay={0.45}
                             className="absolute top-[65%] right-[2%] w-[22%] h-[18%] z-10 cursor-pointer overflow-hidden"
-                            onClick={() => openLightbox(7)}
-                        >
+                            onClick={() => openLightbox(7)}>
                             <motion.img
                                 style={{ y: useTransform(scrollYProgress, [0, 1], [-30, 30]) }}
                                 src={images[7]}
                                 className="w-full h-full object-contain"
                                 alt={altFor(7)}
                             />
-                        </motion.div>
+                        </Reveal>
                     )}
                 </div>
 
                 {images.length > 8 && (
-                    <motion.button
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
+                    <Reveal as="button" y={0}
                         className="absolute bottom-10 right-10 z-50 flex items-center gap-4 text-white/50 hover:text-white transition-colors"
-                        onClick={() => openLightbox(8)}
-                    >
+                        onClick={() => openLightbox(8)}>
                         <span className="font-mono text-[10px] uppercase tracking-widest">+ {images.length - 8} Moments</span>
                         <Maximize2 className="w-4 h-4" />
-                    </motion.button>
+                    </Reveal>
                 )}
             </div>
 

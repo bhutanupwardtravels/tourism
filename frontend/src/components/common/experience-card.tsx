@@ -1,10 +1,10 @@
 "use client";
 
 import { FadeImage } from "@/components/common/fade-image";
-
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
 import Link from "next/link";
+import { Reveal } from "@/components/ui/reveal";
+
 export interface Experience {
     slug?: string;
     title: string;
@@ -84,12 +84,7 @@ export function ExperienceCard({ experience, index, disableLink, className }: Ex
     );
 
     return (
-        <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-        >
+        <Reveal y={0} scale={0.98} delay={index * 0.1} duration={0.6}>
             {experience.slug && !disableLink ? (
                 <Link href={`/experiences/${experience.slug}`}>
                     {CardContent}
@@ -97,6 +92,6 @@ export function ExperienceCard({ experience, index, disableLink, className }: Ex
             ) : (
                 CardContent
             )}
-        </motion.div>
+        </Reveal>
     );
 }

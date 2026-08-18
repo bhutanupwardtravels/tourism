@@ -2,11 +2,11 @@
 
 import { FadeImage } from "@/components/common/fade-image";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, Calendar, DollarSign, Check } from "lucide-react";
 import { Tour } from "@/app/(website)/tours/schema";
 
+import { Reveal } from "@/components/ui/reveal";
 interface TourCardProps {
     tour: Tour;
     index: number;
@@ -94,43 +94,24 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
         </>
     );
 
-    const containerVariants = {
-        hidden: { opacity: 0, y: 30 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { delay: index * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }
-        }
-    };
-
     if (onClick) {
         return (
-            <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={containerVariants}
-            >
+            <Reveal y={30} delay={index * 0.1} duration={0.8}>
                 <button onClick={onClick} className="group relative block w-full text-left">
                     {CardContent}
                 </button>
-            </motion.div>
+            </Reveal>
         );
     }
 
     return (
-        <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={containerVariants}
-        >
+        <Reveal y={30} delay={index * 0.1} duration={0.8}>
             <Link
                 href={`/tours/${tour.slug}`}
                 className="group relative block"
             >
                 {CardContent}
             </Link>
-        </motion.div>
+        </Reveal>
     );
 }

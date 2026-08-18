@@ -15,12 +15,7 @@ export function AboutHero({ hero }: AboutHeroProps) {
   return (
     <section className="relative h-[72vh] min-h-[520px] w-full overflow-hidden bg-white">
       {/* Background Image with Cinematic Overlays */}
-      <motion.div
-        initial={{ scale: 1.2, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute inset-0 z-0"
-      >
+      <div className="absolute inset-0 z-0">
         {hero.backgroundImage && (
             <Image
                 src={hero.backgroundImage}
@@ -34,7 +29,7 @@ export function AboutHero({ hero }: AboutHeroProps) {
         {/* Cinematic Overlays */}
         <div className="absolute inset-0 bg-linear-to-b from-black/60 via-transparent to-black/80" />
         <div className="absolute inset-0 bg-linear-to-tr from-amber-500/10 via-transparent to-blue-500/10 mix-blend-overlay" />
-      </motion.div>
+      </div>
 
       {/* Animated Light Leak */}
       <motion.div
@@ -49,31 +44,18 @@ export function AboutHero({ hero }: AboutHeroProps) {
       {/* Content */}
       <div className="relative z-20 h-full flex flex-col items-center justify-center text-white px-6 text-center">
         {/* Background Large Text (Color Accent) */}
-        <motion.div
-          initial={{ opacity: 0, x: -100 }}
-          animate={{ opacity: 0.05, x: 0 }}
-          transition={{ duration: 2 }}
-          className="absolute font-bold text-[25vw] uppercase leading-none tracking-tighter select-none pointer-events-none text-amber-500 whitespace-nowrap z-0"
-        >
+        <div className="absolute font-bold text-[25vw] uppercase leading-none tracking-tighter select-none pointer-events-none text-amber-500 whitespace-nowrap z-0">
           {hero.title}
-        </motion.div>
+        </div>
 
         <div className="relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
+          <div>
             <span className="font-mono text-amber-400 text-xs uppercase tracking-[0.6em] mb-8 block drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">
               // {hero.subtitle}
             </span>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.4 }}
-          >
+          <div>
             <h1 className="text-7xl md:text-[10rem] font-light tracking-tighter leading-none mb-8 uppercase drop-shadow-2xl">
               {titleWords.map((word, i) => (
                 <span key={i} className={i % 2 !== 0 ? "italic font-serif normal-case text-amber-500" : "text-white"}>
@@ -81,17 +63,13 @@ export function AboutHero({ hero }: AboutHeroProps) {
                 </span>
               ))}
             </h1>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
+          <div>
             <p className="max-w-2xl text-lg md:text-xl text-gray-200 font-light leading-relaxed font-serif italic mx-auto">
               "{hero.description}"
             </p>
-          </motion.div>
+          </div>
 
           {/* Mission Parameters Indicator */}
           <div className="flex items-center justify-center gap-8 mt-16">
@@ -113,12 +91,7 @@ export function AboutHero({ hero }: AboutHeroProps) {
       </div>
 
       {/* Side Tactical Metadata */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 1 }}
-        className="absolute bottom-12 left-12 flex flex-col items-start gap-4 z-20"
-      >
+      <div className="absolute bottom-12 left-12 flex flex-col items-start gap-4 z-20">
         <div className="font-mono text-[8px] tracking-[0.3em] text-amber-700/60 uppercase space-y-2">
           <p className="flex items-center gap-2">
             <span className="w-1 h-1 bg-amber-600 rounded-full animate-pulse" />
@@ -130,15 +103,10 @@ export function AboutHero({ hero }: AboutHeroProps) {
           </p>
         </div>
         <div className="w-px h-16 bg-linear-to-b from-amber-600/50 to-transparent" />
-      </motion.div>
+      </div>
 
       {/* Bottom Right Action Indicator */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.8, duration: 1 }}
-        className="absolute bottom-12 right-12 flex items-center gap-6 z-20"
-      >
+      <div className="absolute bottom-12 right-12 flex items-center gap-6 z-20">
         <span className="font-mono text-[9px] tracking-[0.4em] uppercase text-gray-500">
           Scroll to <span className="text-amber-600">Explore</span>
         </span>
@@ -150,7 +118,7 @@ export function AboutHero({ hero }: AboutHeroProps) {
             className="w-1 h-1 bg-amber-600 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.8)]"
           />
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

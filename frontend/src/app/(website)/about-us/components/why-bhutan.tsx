@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import {
   Smile,
   Mountain,
@@ -11,6 +10,7 @@ import {
   LucideIcon,
 } from "lucide-react";
 import { WhyBhutanItem } from "../schema";
+import { Reveal } from "@/components/ui/reveal";
 
 interface WhyBhutanProps {
   items: WhyBhutanItem[];
@@ -38,14 +38,10 @@ export function WhyBhutan({ items, title, subtitle }: WhyBhutanProps) {
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-24">
-          <motion.span
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="block font-mono text-amber-600 text-xs uppercase tracking-[0.5em] mb-4"
-          >
+          <Reveal as="span" y={0}
+            className="block font-mono text-amber-600 text-xs uppercase tracking-[0.5em] mb-4">
             // {subtitle || "unique identifiers"}
-          </motion.span>
+          </Reveal>
           <h2 className="text-5xl md:text-7xl font-light tracking-tighter uppercase leading-tight text-black">
             {titleWords.slice(0, -1).join(" ")}{" "}
             <span className="italic font-serif normal-case text-amber-600">
@@ -58,14 +54,9 @@ export function WhyBhutan({ items, title, subtitle }: WhyBhutanProps) {
           {items.map((item, index) => {
             const IconComponent = iconMap[item.icon] || Smile;
             return (
-              <motion.div
+              <Reveal y={30} delay={index * 0.1} duration={1}
                 key={item.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="group p-12 border border-black/5 bg-neutral-50/30 hover:bg-white hover:border-amber-600/30 hover:shadow-2xl transition-all duration-700"
-              >
+                className="group p-12 border border-black/5 bg-neutral-50/30 hover:bg-white hover:border-amber-600/30 hover:shadow-2xl transition-all duration-700">
                 <div className="mb-10 relative">
                   <div className="w-16 h-16 border border-black/10 rounded-sm flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all duration-500">
                     <IconComponent className="w-6 h-6 text-black group-hover:text-white transition-colors delay-100" />
@@ -86,7 +77,7 @@ export function WhyBhutan({ items, title, subtitle }: WhyBhutanProps) {
                   <span className="font-mono text-[8px] uppercase tracking-widest">Active Attribute</span>
                   <div className="w-1 h-1 bg-amber-600 rounded-full animate-pulse" />
                 </div>
-              </motion.div>
+              </Reveal>
             );
           })}
         </div>

@@ -1,7 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
-
+import { Reveal } from "@/components/ui/reveal";
 interface ReservationCardProps {
     slug: string;
     className?: string;
@@ -9,13 +8,8 @@ interface ReservationCardProps {
 
 export function ReservationCard({ className = "" }: ReservationCardProps) {
     return (
-        <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className={`sticky top-32 ${className}`}
-        >
+        <Reveal y={0} scale={0.95} delay={0.2} duration={0.8}
+            className={`sticky top-32 ${className}`}>
             <div className="relative p-10 border border-black/5 bg-white shadow-xs overflow-hidden group">
                 {/* Decorative Corner */}
                 <div className="absolute top-0 right-0 w-16 h-16 border-t border-r border-amber-600/20 group-hover:border-amber-600/50 transition-colors" />
@@ -43,6 +37,6 @@ export function ReservationCard({ className = "" }: ReservationCardProps) {
                     </a>
                 </div>
             </div>
-        </motion.div>
+        </Reveal>
     );
 }

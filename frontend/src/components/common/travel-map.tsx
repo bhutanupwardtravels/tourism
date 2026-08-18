@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { BhutanMap } from "@/components/ui/BhutanMap";
 import { ArrowRight } from "lucide-react";
 

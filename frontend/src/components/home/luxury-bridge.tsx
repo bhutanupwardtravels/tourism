@@ -1,18 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
-
+import { Reveal } from "@/components/ui/reveal";
 export function LuxuryBridge() {
     return (
         <section className="py-40 md:py-80 bg-white relative overflow-hidden">
             <div className="container mx-auto px-6 text-center">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-                    className="max-w-4xl mx-auto"
-                >
+                <Reveal y={20} duration={1.5}
+                    className="max-w-4xl mx-auto">
                     <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.8em] mb-12 block">
             // Palate Cleanser
                     </span>
@@ -25,7 +19,7 @@ export function LuxuryBridge() {
                         <div className="w-1.5 h-1.5 rounded-full border border-amber-600/30" />
                         <div className="w-12 h-px bg-black/5" />
                     </div>
-                </motion.div>
+                </Reveal>
             </div>
 
             {/* Subtle Background Markings */}

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { JsonLd } from "@/components/common/json-ld";
 import { faqPageJsonLd } from "@/lib/structured-data";
 import { cn } from "@/lib/utils";
+import { Reveal } from "@/components/ui/reveal";
 
 interface FaqSectionItem {
     question: string;
@@ -50,38 +51,24 @@ export function FaqSection({ label, title, bgText, items, className }: FaqSectio
 
             <div className="container mx-auto px-6 relative z-10">
                 <div className="mb-24 max-w-4xl">
-                    <motion.span
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block"
-                    >
+                    <Reveal as="span" y={0} x={-20}
+                        className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block">
                         {label}
-                    </motion.span>
-                    <motion.h2
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                        className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase text-black"
-                    >
+                    </Reveal>
+                    <Reveal as="h2" y={20} delay={0.1}
+                        className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase text-black">
                         {leadWords ? `${leadWords} ` : ""}
                         <span className="italic font-serif normal-case text-amber-600">{lastWord}</span>
-                    </motion.h2>
+                    </Reveal>
                 </div>
 
                 <div className="divide-y divide-black/10 border-t border-b border-black/10">
                     {items.map((item, index) => {
                         const isOpen = openIndex === index;
                         return (
-                            <motion.div
+                            <Reveal y={20} delay={Math.min(index * 0.05, 0.4)} duration={0.6}
                                 key={item.question}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: Math.min(index * 0.05, 0.4), duration: 0.6 }}
-                                className="py-6"
-                            >
+                                className="py-6">
                                 <button
                                     type="button"
                                     onClick={() => setOpenIndex(isOpen ? null : index)}
@@ -112,7 +99,7 @@ export function FaqSection({ label, title, bgText, items, className }: FaqSectio
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
-                            </motion.div>
+                            </Reveal>
                         );
                     })}
                 </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { Reveal } from "@/components/ui/reveal";
 
 export default function CallToAction() {
   return (
@@ -57,12 +57,7 @@ export default function CallToAction() {
       </div>
 
       <div className="container mx-auto px-6 relative z-10 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
-        >
+        <Reveal y={20} duration={1}>
           <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block">
             // start your journey
           </span>
@@ -90,7 +85,7 @@ export default function CallToAction() {
               </span>
             </div>
           </div>
-        </motion.div>
+        </Reveal>
       </div>
     </section>
   );

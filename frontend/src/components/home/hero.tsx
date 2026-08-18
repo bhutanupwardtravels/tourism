@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { useReducedMotion } from "framer-motion";
 import Link from "next/link";
 
 interface HeroProps {
@@ -56,21 +56,13 @@ export function Hero({ licenseNumber, foundingYear, reviewCount }: HeroProps) {
 
       {/* Content */}
       <div className="relative z-20 h-full flex flex-col items-center justify-center text-white px-6 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
+        <div>
           <span className="font-mono text-xs md:text-sm font-medium tracking-[0.5em] uppercase text-white/90 mb-8 block drop-shadow-md">
                 // welcome to the kingdom
           </span>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
+        <div>
           <h1>
             <span className="block text-6xl md:text-9xl font-light text-white tracking-tighter mb-4 uppercase drop-shadow-2xl">
               Bhutan
@@ -80,13 +72,9 @@ export function Hero({ licenseNumber, foundingYear, reviewCount }: HeroProps) {
               Sustainable Development Fee included, no fixed departures.
             </span>
           </h1>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
+        <div>
           <div className="flex flex-col md:flex-row items-center gap-4 mt-8">
             <Link
               href="/plan-my-trip"
@@ -112,21 +100,16 @@ export function Hero({ licenseNumber, foundingYear, reviewCount }: HeroProps) {
               ))}
             </ul>
           )}
-        </motion.div>
+        </div>
       </div>
 
       {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1 }}
-        className="absolute bottom-12 left-0 right-0 z-20 flex justify-center"
-      >
+      <div className="absolute bottom-12 left-0 right-0 z-20 flex justify-center">
         <div className="flex flex-col items-center gap-4">
           <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/60">Scroll to Discover</span>
           <div className="w-px h-12 bg-linear-to-b from-white/0 via-white/40 to-white/0" />
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

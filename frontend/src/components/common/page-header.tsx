@@ -38,19 +38,10 @@ export function PageHeader({ label, title, description, bgText }: PageHeaderProp
 
             <div className="container mx-auto px-6 relative z-10">
                 <div className="max-w-4xl">
-                    <motion.span
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block"
-                    >
+                    <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block">
                         {label}
-                    </motion.span>
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="text-7xl md:text-[8rem] lg:text-[10rem] font-light tracking-tighter leading-none mb-10 uppercase"
-                    >
+                    </span>
+                    <h1 className="text-7xl md:text-[8rem] lg:text-[10rem] font-light tracking-tighter leading-none mb-10 uppercase">
                         {title.split(' ').map((word, i, arr) => {
                             const isLast = i === arr.length - 1;
                             return (
@@ -65,15 +56,10 @@ export function PageHeader({ label, title, description, bgText }: PageHeaderProp
                                 </span>
                             );
                         })}
-                    </motion.h1>
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.3 }}
-                        className="text-gray-500 text-lg font-light max-w-xl leading-relaxed italic border-l border-black/10 pl-8"
-                    >
+                    </h1>
+                    <p className="text-gray-500 text-lg font-light max-w-xl leading-relaxed italic border-l border-black/10 pl-8">
                         "{description}"
-                    </motion.p>
+                    </p>
                 </div>
             </div>
         </div>

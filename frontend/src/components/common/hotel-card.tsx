@@ -1,11 +1,10 @@
 "use client";
 
 import { FadeImage } from "@/components/common/fade-image";
-
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { Hotel } from "@/app/admin/hotels/schema";
+import { Reveal } from "@/components/ui/reveal";
 
 interface HotelCardProps {
     hotel: Hotel;
@@ -72,12 +71,7 @@ export function HotelCard({ hotel, index, className, disableLink, onClick }: Hot
     );
 
     return (
-        <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-        >
+        <Reveal y={0} scale={0.98} delay={index * 0.1} duration={0.6}>
             {disableLink || onClick ? (
                 <div onClick={onClick}>
                     {CardContent}
@@ -87,6 +81,6 @@ export function HotelCard({ hotel, index, className, disableLink, onClick }: Hot
                     {CardContent}
                 </Link>
             )}
-        </motion.div>
+        </Reveal>
     );
 }

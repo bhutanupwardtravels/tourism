@@ -162,13 +162,17 @@
 /*
  * Respect the OS "reduce motion" setting (WCAG 2.3.3).
  *
- * The site leans hard on motion — framer-motion entrance transitions on almost
- * every section, plus ~18 infinite loops (marquee headings, pulsing status
- * dots, the hero light-leak). For anyone with vestibular sensitivity that is
- * actively unpleasant, so collapse animation to a near-instant state change
- * rather than removing it outright: framer-motion still fires its lifecycle,
- * elements still land in their final `animate` state, and nothing that relies
- * on an animation completing gets stuck.
+ * The site leans hard on motion — scroll reveals on almost every section, plus
+ * ~18 infinite loops (marquee headings, pulsing status dots, the hero
+ * light-leak). For anyone with vestibular sensitivity that is actively
+ * unpleasant, so collapse animation to a near-instant state change rather than
+ * removing it outright: framer-motion still fires its lifecycle, elements
+ * still land in their final `animate` state, and nothing that relies on an
+ * animation completing gets stuck.
+ *
+ * Scroll reveals are handled separately by `components/ui/reveal.tsx`, which
+ * checks this same media query in JS and skips hiding the element entirely —
+ * it can do that because its resting state is already the visible one.
  */
 @media (prefers-reduced-motion: reduce) {
   *,

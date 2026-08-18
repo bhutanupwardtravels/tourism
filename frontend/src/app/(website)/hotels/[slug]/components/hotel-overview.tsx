@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Coffee, Wifi, Car, Tv, Wind, ShieldCheck } from "lucide-react";
+import { Reveal } from "@/components/ui/reveal";
 
 interface HotelOverviewProps {
     description: string;
@@ -28,12 +28,7 @@ export function HotelOverview({ description, amenities, rooms }: HotelOverviewPr
             <div className="container mx-auto px-6">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-start">
                     <div className="lg:col-span-7">
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.8 }}
-                        >
+                        <Reveal y={30} duration={0.8}>
                             <span className="font-mono text-amber-600 text-[13px] uppercase tracking-[0.4em] mb-4 block font-bold">
                 // sanctuary profile
                             </span>
@@ -49,17 +44,12 @@ export function HotelOverview({ description, amenities, rooms }: HotelOverviewPr
                                     Hospitality Standards Certified // Kingdom of Bhutan
                                 </div>
                             </div>
-                        </motion.div>
+                        </Reveal>
                     </div>
 
                     <div className="lg:col-span-5">
-                        <motion.div
-                            initial={{ opacity: 0, x: 30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            className="p-10 border border-black/5 bg-neutral-50 relative overflow-hidden group"
-                        >
+                        <Reveal y={0} x={30} delay={0.2} duration={0.8}
+                            className="p-10 border border-black/5 bg-neutral-50 relative overflow-hidden group">
                             <h3 className="font-mono text-[13px] font-bold tracking-[0.3em] text-black uppercase mb-12">
                                 Available Amenities
                             </h3>
@@ -84,7 +74,7 @@ export function HotelOverview({ description, amenities, rooms }: HotelOverviewPr
                                     <span className="text-2xl font-light tracking-tighter">{rooms} Suites</span>
                                 </div>
                             )}
-                        </motion.div>
+                        </Reveal>
                     </div>
                 </div>
             </div>

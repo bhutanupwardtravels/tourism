@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Quote, Star } from "lucide-react";
 import * as React from "react";
 import { Testimonial } from "@/app/admin/testimonials/schema";
-
+import { Reveal } from "@/components/ui/reveal";
 import {
   Carousel,
   CarouselApi,
@@ -161,19 +161,14 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-24 max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
+          <Reveal y={30} duration={0.8}>
             <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-6 block">
               // traveler stories
             </span>
             <h2 className="text-5xl md:text-7xl font-light tracking-tighter uppercase leading-tight mb-8 text-black">
               What Our <span className="italic font-serif normal-case text-amber-600">Travelers Say</span>
             </h2>
-          </motion.div>
+          </Reveal>
         </div>
 
         <Carousel
@@ -190,15 +185,10 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                 key={testimonial.id}
                 className="pl-8 md:basis-1/2 lg:basis-1/3"
               >
-                <motion.div
-                  className="h-full"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                >
+                <Reveal y={30} delay={index * 0.1} duration={0.8}
+                  className="h-full">
                   <TestimonialCard testimonial={testimonial} onDialogOpenChange={setIsPaused} />
-                </motion.div>
+                </Reveal>
               </CarouselItem>
             ))}
           </CarouselContent>

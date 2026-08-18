@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ShieldCheck, CalendarDays, UserCheck, PhoneCall, MapPin, Phone } from "lucide-react";
 import type { Credentials, TrustItem } from "../schema";
+import { Reveal } from "@/components/ui/reveal";
 
 interface TrustCredentialsProps {
   credentials: Credentials;
@@ -77,14 +77,10 @@ export function TrustCredentials({ credentials, address, phone, whatsapp }: Trus
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-24">
-          <motion.span
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="block font-mono text-amber-500 text-xs uppercase tracking-[0.5em] mb-6"
-          >
+          <Reveal as="span" y={0}
+            className="block font-mono text-amber-500 text-xs uppercase tracking-[0.5em] mb-6">
             // {credentials.subtitle || "why travel with us"}
-          </motion.span>
+          </Reveal>
           <h2 className="text-5xl md:text-7xl font-light tracking-tighter uppercase leading-tight">
             {titleWords[0]}{" "}
             <span className="italic font-serif normal-case text-amber-500">
@@ -96,14 +92,9 @@ export function TrustCredentials({ credentials, address, phone, whatsapp }: Trus
         {facts.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
             {facts.map((fact) => (
-              <motion.div
+              <Reveal y={30} duration={0.8}
                 key={fact.label}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="flex items-start gap-5 p-8 border border-white/5 bg-white/2 hover:border-amber-500/30 transition-all duration-700"
-              >
+                className="flex items-start gap-5 p-8 border border-white/5 bg-white/2 hover:border-amber-500/30 transition-all duration-700">
                 <fact.icon className="w-6 h-6 text-amber-500 shrink-0 mt-1" />
                 <div>
                   <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/40 mb-2">
@@ -113,7 +104,7 @@ export function TrustCredentials({ credentials, address, phone, whatsapp }: Trus
                     {fact.value}
                   </p>
                 </div>
-              </motion.div>
+              </Reveal>
             ))}
           </div>
         )}
@@ -121,21 +112,16 @@ export function TrustCredentials({ credentials, address, phone, whatsapp }: Trus
         {items.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {items.map((item, index) => (
-              <motion.div
+              <Reveal y={30} delay={index * 0.1} duration={1}
                 key={item.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="p-8 border border-white/5 bg-white/2 hover:border-amber-500/30 transition-all duration-700"
-              >
+                className="p-8 border border-white/5 bg-white/2 hover:border-amber-500/30 transition-all duration-700">
                 <h4 className="text-xl font-light text-white mb-3 uppercase tracking-tight">
                   {item.title}
                 </h4>
                 <p className="text-gray-400 leading-relaxed font-light text-sm">
                   {item.description}
                 </p>
-              </motion.div>
+              </Reveal>
             ))}
           </div>
         )}

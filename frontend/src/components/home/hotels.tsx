@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { Hotel } from "@/app/admin/hotels/schema";
 import { HotelCard } from "@/components/common/hotel-card";
-
 import {
   Carousel,
   CarouselApi,
@@ -14,6 +13,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import * as React from "react";
+import { Reveal } from "@/components/ui/reveal";
 
 interface BestHotelsProps {
   hotels: Hotel[];
@@ -58,34 +58,24 @@ export function BestHotels({ hotels }: BestHotelsProps) {
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-24 max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
+          <Reveal y={30} duration={0.8}>
             <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-6 block">
               // where to stay
             </span>
             <h2 className="text-5xl md:text-7xl font-light tracking-tighter uppercase leading-tight mb-8 text-black">
               Best <span className="italic font-serif normal-case text-amber-600">Hotels</span>
             </h2>
-          </motion.div>
+          </Reveal>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex justify-center"
-          >
+          <Reveal y={20} delay={0.4} duration={0.6}
+            className="flex justify-center">
             <Link
               href="/hotels"
               className="group inline-flex items-center gap-2 text-[10px] font-mono font-medium tracking-[0.3em] uppercase hover:text-amber-600 transition-all text-gray-400 border-b border-transparent hover:border-amber-600 pb-1"
             >
               View All Hotels
             </Link>
-          </motion.div>
+          </Reveal>
         </div>
 
         <Carousel
@@ -102,14 +92,9 @@ export function BestHotels({ hotels }: BestHotelsProps) {
                 key={hotel.id}
                 className="pl-8 md:basis-1/2 lg:basis-1/3"
               >
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                >
+                <Reveal y={30} delay={index * 0.1} duration={0.8}>
                   <HotelCard hotel={hotel} index={index} />
-                </motion.div>
+                </Reveal>
               </CarouselItem>
             ))}
           </CarouselContent>
