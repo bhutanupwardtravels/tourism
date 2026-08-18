@@ -82,27 +82,15 @@ export function LocationMap({ name, coordinates, title = "Map Location", subtitl
                             </div>
                             <div className="h-px w-full bg-black/5 my-1" />
                             <span className="font-mono text-[9px] text-amber-600/60 tracking-wider">
-                                LOCATION: {coordinates[0].toFixed(4)}°N, {coordinates[1].toFixed(4)}°E
+                                {coordinates[0].toFixed(4)}°N, {coordinates[1].toFixed(4)}°E
                             </span>
                         </div>
                     </Reveal>
 
-                    <div className="hidden md:flex absolute left-12 top-1/2 -translate-y-1/2 flex-col gap-12 pointer-events-none">
-                        <div className="space-y-1">
-                            <p className="font-mono text-[8px] text-black/20 uppercase tracking-widest">Information View</p>
-                            <div className="flex gap-1">
-                                {[1, 2, 3, 4, 5].map(i => <div key={i} className="w-1 h-3 bg-black/20 rounded-full" />)}
-                            </div>
-                        </div>
-                        <div className="space-y-1">
-                            <p className="font-mono text-[8px] text-black/20 uppercase tracking-widest">Status</p>
-                            <p className="font-mono text-[10px] text-black/40">CONNECTION ACTIVE</p>
-                        </div>
-                    </div>
                 </div>
 
                 <div className="mt-6 md:mt-12 flex flex-wrap justify-between items-center gap-2 text-gray-500 font-mono text-[9px] tracking-widest uppercase">
-                    <span>Location Data: 100% Verified</span>
+                    <span>Approximate location</span>
                     <span className="animate-pulse">Kingdom of Happiness...</span>
                 </div>
             </div>

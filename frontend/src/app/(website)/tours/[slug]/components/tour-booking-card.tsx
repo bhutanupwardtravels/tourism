@@ -39,7 +39,7 @@ export function TourBookingCard({ slug, className = "" }: TourBookingCardProps) 
                         href={`/plan-my-trip?package=${slug}`}
                         className="group relative flex items-center justify-center gap-6 bg-black py-5 text-white text-[13px] font-bold uppercase tracking-[0.2em] transition-all hover:bg-amber-600 overflow-hidden"
                     >
-                        <span className="relative z-10">Start Planning</span>
+                        <span className="relative z-10">Plan my trip</span>
                         <div className="absolute inset-0 translate-y-full group-hover:translate-y-0 bg-amber-500 transition-transform duration-500" />
                     </a>
                 </div>

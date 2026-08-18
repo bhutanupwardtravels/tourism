@@ -65,7 +65,7 @@ export function FestivalCard({ festival, index }: FestivalCardProps) {
                         <div className="pt-6 flex justify-between items-center border-t border-black/5">
                             <div className="flex items-center gap-4 text-gray-400 group-hover:text-black transition-colors">
                                 <span className="h-px w-8 bg-black/20 group-hover:w-16 group-hover:bg-amber-600/50 transition-all duration-500" />
-                                <span className="font-mono text-[9px] uppercase tracking-widest text-black/40 group-hover:text-black">View Details</span>
+                                <span className="font-mono text-[9px] uppercase tracking-widest text-black/40 group-hover:text-black">View festival</span>
                             </div>
                             <Calendar className="w-4 h-4 text-black/20 group-hover:text-amber-600 transition-colors" />
                         </div>

@@ -71,6 +71,7 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
                         </div>
                         <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-600/10 rounded-xs text-black border border-amber-600/20 shadow-xs whitespace-nowrap">
                             <DollarSign className="w-3.5 h-3.5 text-amber-600" />
+                            <span className="text-gray-500 font-normal">From</span>
                             {formatPrice(tour.price)}
                             <span className="text-gray-500 font-normal">/person</span>
                         </div>

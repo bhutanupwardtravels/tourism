@@ -42,7 +42,7 @@ export function HotelCard({ hotel, index, className, disableLink, onClick }: Hot
             <div className="absolute inset-0 p-8 flex flex-col justify-between z-30">
                 <div className="flex justify-between items-start">
                     <span className="font-mono text-[9px] tracking-widest uppercase bg-white/10 backdrop-blur-md px-3 py-1 border border-white/10 text-white">
-                        REF: {hotel.priceRange}
+                        {hotel.priceRange}
                     </span>
                     <div className="flex gap-1 group-hover:gap-2 transition-all duration-500">
                         {starsArray.map((_, i) => (
@@ -63,7 +63,7 @@ export function HotelCard({ hotel, index, className, disableLink, onClick }: Hot
                     </p>
                     <div className="flex items-center gap-4 text-white/50 group-hover:text-white transition-colors duration-500">
                         <span className="h-px w-8 bg-white/20 group-hover:w-16 group-hover:bg-amber-500 transition-all duration-500" />
-                        <span className="font-mono text-[9px] uppercase tracking-widest">View Accommodation</span>
+                        <span className="font-mono text-[9px] uppercase tracking-widest">View hotel</span>
                     </div>
                 </div>
             </div>

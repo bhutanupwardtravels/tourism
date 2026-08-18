@@ -51,11 +51,6 @@ export default function CallToAction() {
         </svg>
       </div>
 
-      {/* Narrative ID Overlay */}
-      <div className="absolute top-20 right-10 font-mono text-[10px] text-gray-200 uppercase tracking-[0.6em] writing-mode-vertical-rl rotate-180 select-none">
-        PROTOCOL // REQ-2025
-      </div>
-
       <div className="container mx-auto px-6 relative z-10 text-center">
         <Reveal y={20} duration={1}>
           <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block">

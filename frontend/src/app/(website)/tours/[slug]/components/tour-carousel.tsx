@@ -70,7 +70,7 @@ export function TourCarousel({
                     <div className="max-w-2xl">
                         <Reveal as="span" y={0} x={-20}
                             className="font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 block">
-                            // expeditions: next assignments
+                            // more journeys
                         </Reveal>
                         <Reveal as="h2" y={20} delay={0.1}
                             className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase text-black">

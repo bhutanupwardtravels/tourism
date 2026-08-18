@@ -62,7 +62,7 @@ export function Experiences({ experiences }: ExperiencesProps) {
           <div>
             <Reveal as="span" y={0} x={-20}
               className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block">
-              // intel: field reports
+              // curated experiences
             </Reveal>
             <Reveal as="h3" y={20} delay={0.1}
               className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase">
@@ -75,7 +75,7 @@ export function Experiences({ experiences }: ExperiencesProps) {
               className="group flex items-center gap-4 text-[10px] font-mono uppercase tracking-[0.3em] text-gray-500 hover:text-black transition-colors"
             >
               <span className="h-px w-12 bg-black/20 group-hover:w-20 group-hover:bg-amber-600 transition-all duration-500" />
-              Access All Files
+              See all experiences
             </Link>
           </Reveal>
         </div>

@@ -1,9 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, Plane, Users, Activity, Clock } from "lucide-react";
+import * as React from "react";
+import { ArrowRight } from "lucide-react";
 import { Tour } from "@/app/(website)/tours/schema";
+import { TourCard } from "@/components/common/tour-card";
+import { Reveal } from "@/components/ui/reveal";
 import {
     Carousel,
     CarouselApi,
@@ -12,110 +14,102 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel";
-import * as React from "react";
-import { Reveal } from "@/components/ui/reveal";
 
 interface FeaturedItineraryProps {
     itineraries: Tour[];
 }
 
+/**
+ * The first thing under the hero. People arrive asking "is there a trip for me,
+ * and what does it cost" — so this answers both before any philosophy: real
+ * itineraries, real prices, real durations, above the fold on the first scroll.
+ *
+ * Two per row rather than three: a tour card carries a duration, a price, a
+ * per-day rate, a tier badge and a title, and at a third of the container that
+ * stack is dense enough that the titles truncate mid-word. The carousel keeps
+ * the same number of trips reachable without cramming them into one row.
+ */
 export function FeaturedItinerary({ itineraries }: FeaturedItineraryProps) {
     const [api, setApi] = React.useState<CarouselApi>();
+    const [isPaused, setIsPaused] = React.useState(false);
 
+    // Advances on its own like the destinations carousel, but holds still while
+    // the pointer or keyboard focus is inside it — these cards carry prices
+    // people are actively comparing, and moving them mid-read is hostile.
+    //
+    // The document.hidden guard is load-bearing: a background tab still fires
+    // the interval but has layout suspended, so embla advances against
+    // zero-width measurements and the loop offset walks off the end of the
+    // track. Come back to the tab and the row is blank.
     React.useEffect(() => {
-        if (!api) return;
+        if (!api || isPaused) return;
+
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+        if (reduceMotion.matches) return;
 
         const interval = setInterval(() => {
-            api.scrollPrev();
+            if (document.hidden) return;
+            api.scrollNext();
         }, 5000);
-
         return () => clearInterval(interval);
-    }, [api]);
+    }, [api, isPaused]);
 
     if (!itineraries || itineraries.length === 0) return null;
 
     return (
-        <section className="relative h-[85vh] min-h-[700px] w-full overflow-hidden bg-black text-white border-b border-white/5">
-            <Carousel
-                opts={{
-                    align: "start",
-                    loop: true,
-                }}
-                setApi={setApi}
-                className="h-full w-full"
-            >
-                <CarouselContent className="h-[85vh] min-h-[700px] ml-0">
-                    {itineraries.map((itinerary, index) => (
-                        <CarouselItem key={itinerary.slug} className="h-full w-full pl-0 relative">
-                            {/* Background Image with Minimal Overlays */}
-                            <div className="absolute inset-0 z-0">
-                                <motion.img
-                                    initial={{ scale: 1.1 }}
-                                    whileInView={{ scale: 1 }}
-                                    transition={{ duration: 1.5 }}
-                                    src={itinerary.image}
-                                    alt={itinerary.title}
-                                    className="w-full h-full object-cover brightness-75"
-                                />
-                                <div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent z-10" />
-                                <div className="absolute inset-0 bg-linear-to-r from-black/60 via-transparent to-transparent z-10" />
-                            </div>
+        <section className="bg-white border-b border-black/5 py-20 md:py-28">
+            <div className="container mx-auto px-6">
+                <div className="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+                    <Reveal y={20} duration={0.8} className="max-w-2xl">
+                        <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block">
+                            // featured journeys
+                        </span>
+                        <h2 className="text-4xl md:text-6xl font-light text-black tracking-tighter leading-tight uppercase">
+                            Trips You Can <span className="italic font-serif normal-case text-amber-600">Book</span>
+                        </h2>
+                        <p className="mt-4 text-gray-500 font-light leading-relaxed">
+                            Fully guided itineraries with everything priced up front — hotels, guide,
+                            transport and the Sustainable Development Fee included.
+                        </p>
+                    </Reveal>
 
-                            {/* Content */}
-                            <div className="relative z-20 container mx-auto px-6 h-full flex flex-col justify-center">
-                                <div className="max-w-4xl">
-                                    <Reveal y={0} x={-20} duration={0.8}>
-                                        <span className="font-mono text-amber-500 text-xs uppercase tracking-[0.4em] mb-6 block">
-                      // {itinerary.duration} Day Expedition // 0{index + 1}
-                                        </span>
-                                    </Reveal>
-
-                                    <Reveal as="h2" y={30} delay={0.2} duration={0.8}
-                                        className="w-full text-3xl sm:text-4xl md:text-6xl font-light tracking-tighter leading-tight mb-8 md:mb-12 uppercase line-clamp-3 md:line-clamp-2">
-                                        {itinerary.title.split(' ').map((word, i) => (
-                                            <span key={i} className={i % 2 !== 0 ? "italic font-serif normal-case text-amber-500" : ""}>
-                                                {word}{' '}
-                                            </span>
-                                        ))}
-                                    </Reveal>
-
-                                    <Reveal as="p" y={0} delay={0.4} duration={0.8}
-                                        className="text-base text-gray-300 leading-relaxed mb-12 font-light max-w-2xl italic line-clamp-4">
-                                        "{itinerary.description}"
-                                    </Reveal>
-
-                                    <Reveal y={0} delay={0.6} duration={0.8}
-                                        className="flex items-center gap-12">
-                                        <Link
-                                            href={`/tours/${itinerary.slug}`}
-                                            className="group flex items-center gap-6 bg-white text-black px-12 py-5 text-[10px] font-mono text-xs uppercase tracking-[0.2em] hover:bg-amber-500 hover:text-white transition-all duration-500 shadow-2xl relative overflow-hidden"
-                                        >
-                                            <span className="relative z-10 text-xs">Explore Itinerary</span>
-                                            <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform relative z-10" />
-                                        </Link>
-
-                                        <div className="hidden lg:flex items-center gap-4">
-                                            <div className="flex gap-1">
-                                                {[1, 2, 3].map((s) => (
-                                                    <div key={s} className="w-8 h-px bg-amber-500/50" />
-                                                ))}
-                                            </div>
-                                            <span className="font-mono text-[8px] text-amber-500/50 uppercase tracking-widest">Featured</span>
-                                        </div>
-                                    </Reveal>
-                                </div>
-                            </div>
-                        </CarouselItem>
-                    ))}
-                </CarouselContent>
-
-                {/* Carousel Navigation - Simplified */}
-                <div className="absolute bottom-12 right-6 md:right-12 z-30 flex items-center gap-4">
-                    <CarouselPrevious className="static translate-y-0 h-16 w-16 bg-white/10 backdrop-blur-md hover:bg-amber-500 hover:text-white border-white/10 transition-all duration-500" />
-                    <CarouselNext className="static translate-y-0 h-16 w-16 bg-white/10 backdrop-blur-md hover:bg-amber-500 hover:text-white border-white/10 transition-all duration-500" />
+                    <Reveal y={0} x={20} delay={0.2} duration={0.8} className="pb-2">
+                        <Link
+                            href="/tours"
+                            className="group inline-flex items-center gap-3 border border-black/15 px-6 py-3 text-[11px] font-medium uppercase tracking-[0.2em] text-black transition-colors hover:border-amber-600 hover:text-amber-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
+                        >
+                            See all tours
+                            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                        </Link>
+                    </Reveal>
                 </div>
-            </Carousel>
+
+                <Carousel
+                    opts={{ align: "start", loop: true }}
+                    setApi={setApi}
+                    className="w-full"
+                    onMouseEnter={() => setIsPaused(true)}
+                    onMouseLeave={() => setIsPaused(false)}
+                    onFocusCapture={() => setIsPaused(true)}
+                    onBlurCapture={() => setIsPaused(false)}
+                >
+                    <CarouselContent className="-ml-8">
+                        {itineraries.map((tour, index) => (
+                            <CarouselItem key={tour.slug} className="pl-8 md:basis-1/2">
+                                <TourCard tour={tour} index={index} />
+                            </CarouselItem>
+                        ))}
+                    </CarouselContent>
+
+                    {/* Navigation below the track, matching the destinations carousel */}
+                    {itineraries.length > 2 && (
+                        <div className="flex justify-end gap-4 mt-14">
+                            <CarouselPrevious className="static translate-y-0 h-14 w-14 bg-transparent hover:bg-black/5 text-black rounded-none border border-black/10 hover:border-black/30 transition-all" />
+                            <CarouselNext className="static translate-y-0 h-14 w-14 bg-transparent hover:bg-black/5 text-black rounded-none border border-black/10 hover:border-black/30 transition-all" />
+                        </div>
+                    )}
+                </Carousel>
+            </div>
         </section>
     );
 }
-

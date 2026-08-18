@@ -9,13 +9,14 @@ import { cn } from "@/lib/utils";
 
 interface DestinationCardProps {
     destination: Destination;
-    index: number;
+    /** Kept for call-site parity with the other cards; no longer rendered. */
+    index?: number;
     className?: string;
     onClick?: () => void;
     disableLink?: boolean;
 }
 
-export function DestinationCard({ destination, index, className, onClick, disableLink }: DestinationCardProps) {
+export function DestinationCard({ destination, className, onClick, disableLink }: DestinationCardProps) {
     const CardContent = (
         <>
             {/* Image Container */}
@@ -32,7 +33,7 @@ export function DestinationCard({ destination, index, className, onClick, disabl
                 {/* Status Overlay */}
                 <div className="absolute bottom-6 left-6 flex items-center gap-4">
                     <span className="h-px w-8 bg-amber-600/50" />
-                    <span className="font-mono text-[9px] text-amber-600 uppercase tracking-widest font-bold">Explore Now</span>
+                    <span className="font-mono text-[9px] text-amber-600 uppercase tracking-widest font-bold">View destination</span>
                 </div>
             </div>
 
@@ -54,11 +55,6 @@ export function DestinationCard({ destination, index, className, onClick, disabl
             <p className="mt-6 text-gray-500 font-light leading-relaxed line-clamp-2 italic text-base">
                 "{destination.description}"
             </p>
-
-            {/* Vertical Decorative ID */}
-            <div className="absolute top-0 -right-4 font-mono text-[8px] tracking-widest text-gray-300 rotate-90 origin-top-left py-2 border-l border-black/5">
-                DEST-0{index + 1} // BHUTAN
-            </div>
         </>
     );
 

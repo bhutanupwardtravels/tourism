@@ -39,7 +39,7 @@ export default async function Home() {
     testimonials,
     about,
   ] = await Promise.all([
-    getTopPriorityTours(5),
+    getTopPriorityTours(6),
     getBestHotels(6),
     getFeaturedExperiences(6),
     getFeaturedDestinations(6),
@@ -57,9 +57,10 @@ export default async function Home() {
         foundingYear={about?.credentials.foundingYear || undefined}
         reviewCount={testimonials.length}
       />
+      {/* Bookable, priced products first — the philosophy reads after, not before. */}
+      <FeaturedItinerary itineraries={featuredTours} />
       <CompanyIntro />
       <ExperienceTypes experienceTypes={experienceTypes} />
-      <FeaturedItinerary itineraries={featuredTours.slice(0, 5)} />
       <Destinations destinations={featuredDestinations} />
       {/* <LuxuryBridge /> */}
       <Experiences experiences={featuredExperiences} />

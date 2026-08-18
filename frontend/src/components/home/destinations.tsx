@@ -77,7 +77,7 @@ export function Destinations({ destinations }: DestinationsProps) {
                             className="group flex items-center gap-4 text-[10px] font-mono uppercase tracking-[0.3em] text-gray-500 hover:text-black transition-colors"
                         >
                             <span className="h-px w-12 bg-black/20 group-hover:w-20 group-hover:bg-amber-600 transition-all duration-500" />
-                            Explore all destinations
+                            See all destinations
                         </Link>
                     </Reveal>
                 </div>

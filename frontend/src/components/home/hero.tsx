@@ -86,7 +86,7 @@ export function Hero({ licenseNumber, foundingYear, reviewCount }: HeroProps) {
               href="/tours"
               className="bg-white/10 backdrop-blur-md border border-white/20 text-white px-10 py-4 font-mono text-xs uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all duration-500"
             >
-              Browse itineraries
+              See all tours
             </Link>
           </div>
 

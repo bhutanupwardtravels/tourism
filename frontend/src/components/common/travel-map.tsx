@@ -62,7 +62,7 @@ export function TravelMap({ from, to, fromCoordinates, toCoordinates }: TravelMa
 
                     <div className="hidden md:block">
                         <span className="font-mono text-[9px] text-amber-500 border border-amber-500/30 px-2 py-1 bg-amber-500/10 uppercase tracking-widest">
-                            {route ? "Active Route" : "Location Lock"}
+                            {route ? "Route" : "Location"}
                         </span>
                     </div>
                 </div>

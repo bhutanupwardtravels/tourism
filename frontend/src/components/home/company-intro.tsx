@@ -1,43 +1,31 @@
 "use client";
 
 import { Reveal } from "@/components/ui/reveal";
+
+/**
+ * One short band, not a manifesto. The philosophy is the reason people choose
+ * us — but it reads after they've seen the trips, not as a toll on the way to them.
+ */
 export function CompanyIntro() {
   return (
-    <section className="py-24 md:py-32 bg-neutral-950 relative overflow-hidden">
-      {/* Background Decorative Element */}
-      <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-amber-500/20 to-transparent" />
+    <section className="py-16 md:py-20 bg-neutral-950 relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(245,158,11,0.03),transparent_70%)]" />
 
       <div className="container mx-auto px-6 relative z-10">
-        <Reveal y={30} duration={1.2}
-          className="max-w-5xl mx-auto text-center">
-          <div className="flex flex-col items-center gap-6 mb-16">
-            <span className="font-mono text-amber-500/60 text-xs uppercase tracking-[0.4em] block">
-              // The Bhutanese Essence
-            </span>
-            <div className="h-20 w-px bg-linear-to-b from-amber-500/0 via-amber-500/40 to-amber-500/0" />
-          </div>
+        <Reveal y={20} duration={0.8} className="max-w-4xl mx-auto text-center">
+          <span className="font-mono text-amber-500/60 text-xs uppercase tracking-[0.4em] mb-6 block">
+            // the bhutanese essence
+          </span>
 
-          <h2 className="text-5xl md:text-7xl font-light tracking-tighter text-white uppercase mb-16 leading-tight">
+          <h2 className="text-3xl md:text-5xl font-light tracking-tighter text-white uppercase mb-8 leading-tight">
             Crafting <span className="italic font-serif normal-case text-amber-500">Transformative</span> Journeys
           </h2>
 
-          <p className="text-base font-light text-neutral-400 leading-relaxed max-w-4xl mx-auto italic font-serif">
-            "We are dedicated to honoring Bhutan's rich cultural heritage, pristine environment, and the
-            philosophy of Gross National Happiness. Each experience is thoughtfully curated to
-            create meaningful connections between travelers and the Kingdom of the Thunder Dragon."
+          <p className="text-base font-light text-neutral-400 leading-relaxed max-w-2xl mx-auto">
+            Every journey honours Bhutan's heritage and its philosophy of Gross National Happiness —
+            and contributes directly to the Sustainable Development Fee that funds free healthcare,
+            education and conservation for the Kingdom.
           </p>
-
-          <p className="mt-10 text-sm md:text-base font-light text-neutral-500 leading-relaxed max-w-2xl mx-auto">
-            Every journey here contributes directly to Bhutan's Sustainable Development Fee —
-            funding free healthcare and education for its people, and conservation for its land.
-          </p>
-
-          <div className="mt-20 flex justify-center gap-12 opacity-30 select-none pointer-events-none">
-            <span className="font-mono text-[8px] uppercase tracking-widest text-neutral-300">Cultural Preservation</span>
-            <span className="font-mono text-[8px] uppercase tracking-widest text-neutral-300">Environmental Integrity</span>
-            <span className="font-mono text-[8px] uppercase tracking-widest text-neutral-300">Soulful Exploration</span>
-          </div>
         </Reveal>
       </div>
     </section>

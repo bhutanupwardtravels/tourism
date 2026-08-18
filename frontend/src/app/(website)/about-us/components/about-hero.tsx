@@ -79,7 +79,7 @@ export function AboutHero({ hero }: AboutHeroProps) {
               transition={{ delay: 1, duration: 1 }}
               className="h-px bg-linear-to-r from-transparent to-amber-500"
             />
-            <span className="font-mono text-[9px] tracking-[0.4em] uppercase text-gray-400">Identity Protocol Active</span>
+            <span className="font-mono text-[9px] tracking-[0.4em] uppercase text-gray-400">Bhutan Upward Travels</span>
             <motion.span
               initial={{ width: 0 }}
               animate={{ width: 80 }}
@@ -90,16 +90,16 @@ export function AboutHero({ hero }: AboutHeroProps) {
         </div>
       </div>
 
-      {/* Side Tactical Metadata */}
+      {/* Side metadata */}
       <div className="absolute bottom-12 left-12 flex flex-col items-start gap-4 z-20">
         <div className="font-mono text-[8px] tracking-[0.3em] text-amber-700/60 uppercase space-y-2">
           <p className="flex items-center gap-2">
             <span className="w-1 h-1 bg-amber-600 rounded-full animate-pulse" />
-            org: tourism kingdom
+            Kingdom of Bhutan
           </p>
           <p className="flex items-center gap-2">
             <span className="w-1 h-1 bg-amber-600 rounded-full animate-pulse delay-75" />
-            status: verified
+            Local specialists
           </p>
         </div>
         <div className="w-px h-16 bg-linear-to-b from-amber-600/50 to-transparent" />

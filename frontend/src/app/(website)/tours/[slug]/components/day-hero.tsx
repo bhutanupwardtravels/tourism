@@ -45,18 +45,12 @@ export function DayHero({ dayNumber, title, image, tourTitle }: DayHeroProps) {
 
                     <div className="flex items-center gap-4">
                         <span className="font-mono text-[11px] text-white uppercase tracking-widest bg-black/5 px-4 py-1.5 rounded-full font-bold">
-                            Route Sequence Verified
+                            Fully guided day
                         </span>
                     </div>
                 </div>
             </div>
 
-            {/* Decorative ID */}
-            <div className="absolute top-48 right-12 hidden lg:block">
-                <span className="font-mono text-[10px] text-white uppercase tracking-[0.8em] writing-mode-vertical-rl rotate-180 opacity-70 font-bold">
-                    LOG // BHU-DAY-{dayNumber}
-                </span>
-            </div>
         </section>
     );
 }

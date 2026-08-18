@@ -78,15 +78,15 @@ export function OverlayMenu({ isOpen, onClose, contact }: OverlayMenuProps) {
               </button>
             </div>
 
-            <div className="flex-1 flex flex-col lg:flex-row items-start justify-center lg:justify-between pt-10 lg:pt-20 gap-12">
+            <div className="flex-1 flex flex-col lg:flex-row items-start justify-center lg:justify-between pt-6 lg:pt-10 gap-12">
               {/* Main Navigation */}
               <motion.nav
                 variants={containerVariants}
                 initial="hidden"
                 animate="show"
-                className="flex flex-col gap-6"
+                className="flex flex-col gap-4"
               >
-                <motion.div variants={itemVariants} className="mb-10 lg:hidden">
+                <motion.div variants={itemVariants} className="mb-8">
                   <Link
                     href="/plan-my-trip"
                     onClick={onClose}
@@ -102,7 +102,7 @@ export function OverlayMenu({ isOpen, onClose, contact }: OverlayMenuProps) {
                 <motion.div variants={itemVariants}>
                   <Link
                     href="/destinations"
-                    className="text-4xl lg:text-6xl font-light hover:text-gray-300 transition-colors"
+                    className="text-3xl sm:text-4xl lg:text-5xl font-light hover:text-gray-300 transition-colors"
                     onClick={onClose}
                   >
                     Destinations
@@ -111,7 +111,7 @@ export function OverlayMenu({ isOpen, onClose, contact }: OverlayMenuProps) {
                 <motion.div variants={itemVariants}>
                   <Link
                     href="/experiences"
-                    className="text-4xl lg:text-6xl font-light hover:text-gray-300 transition-colors"
+                    className="text-3xl sm:text-4xl lg:text-5xl font-light hover:text-gray-300 transition-colors"
                     onClick={onClose}
                   >
                     Experiences
@@ -120,7 +120,7 @@ export function OverlayMenu({ isOpen, onClose, contact }: OverlayMenuProps) {
                 <motion.div variants={itemVariants}>
                   <Link
                     href="/tours"
-                    className="text-4xl lg:text-6xl font-light hover:text-gray-300 transition-colors"
+                    className="text-3xl sm:text-4xl lg:text-5xl font-light hover:text-gray-300 transition-colors"
                     onClick={onClose}
                   >
                     Tours
@@ -129,7 +129,7 @@ export function OverlayMenu({ isOpen, onClose, contact }: OverlayMenuProps) {
                 <motion.div variants={itemVariants}>
                   <Link
                     href="/hotels"
-                    className="text-4xl lg:text-6xl font-light hover:text-gray-300 transition-colors"
+                    className="text-3xl sm:text-4xl lg:text-5xl font-light hover:text-gray-300 transition-colors"
                     onClick={onClose}
                   >
                     Hotels
@@ -138,7 +138,7 @@ export function OverlayMenu({ isOpen, onClose, contact }: OverlayMenuProps) {
                 <motion.div variants={itemVariants}>
                   <Link
                     href="/about-us"
-                    className="text-4xl lg:text-6xl font-light hover:text-gray-300 transition-colors"
+                    className="text-3xl sm:text-4xl lg:text-5xl font-light hover:text-gray-300 transition-colors"
                     onClick={onClose}
                   >
                     About Us
@@ -147,7 +147,7 @@ export function OverlayMenu({ isOpen, onClose, contact }: OverlayMenuProps) {
                 <motion.div variants={itemVariants}>
                   <Link
                     href="/bhutan-travel-guide"
-                    className="text-4xl lg:text-6xl font-light hover:text-gray-300 transition-colors"
+                    className="text-3xl sm:text-4xl lg:text-5xl font-light hover:text-gray-300 transition-colors"
                     onClick={onClose}
                   >
                     Travel Guide
@@ -156,7 +156,7 @@ export function OverlayMenu({ isOpen, onClose, contact }: OverlayMenuProps) {
                 <motion.div variants={itemVariants}>
                   <Link
                     href="/enquire"
-                    className="text-4xl lg:text-6xl font-light hover:text-gray-300 transition-colors"
+                    className="text-3xl sm:text-4xl lg:text-5xl font-light hover:text-gray-300 transition-colors"
                     onClick={onClose}
                   >
                     Talk to a specialist

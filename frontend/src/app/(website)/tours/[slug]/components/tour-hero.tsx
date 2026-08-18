@@ -142,7 +142,7 @@ export function TourHero({
                         Kingdom of Bhutan
                     </p>
                     <p className="flex items-center gap-2 text-gray-500">
-                        Official Expeditions
+                        Licensed tour operator
                     </p>
                 </div>
                 <div className="w-px h-16 bg-linear-to-b from-amber-600/50 to-transparent" />

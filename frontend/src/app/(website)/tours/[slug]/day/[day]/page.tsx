@@ -66,7 +66,7 @@ export default async function TourDayPage({ params }: PageProps) {
         tourTitle={tour.title}
       />
 
-      {/* Narrative & Protocol Controls */}
+      {/* Day navigation */}
       <div className="container mx-auto px-6 pt-24 md:pt-40">
         {/* Superior Navigation */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-8 pb-24">
@@ -112,12 +112,12 @@ export default async function TourDayPage({ params }: PageProps) {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-start mb-48">
-          {/* Detailed Briefing */}
+          {/* Day narrative */}
           <div className="lg:col-span-8">
             <div className="flex flex-col gap-20">
               <div className="max-w-3xl">
                 <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-6 block">
-                  // daily briefing log: {dayNumber < 10 ? `0${dayNumber}` : dayNumber}
+                  // day {dayNumber < 10 ? `0${dayNumber}` : dayNumber}
                 </span>
                 <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter leading-tight mb-8 md:mb-12 uppercase">
                   The <span className="italic font-serif normal-case text-amber-600">Experience</span> <br />of {dayData.title}
@@ -128,12 +128,12 @@ export default async function TourDayPage({ params }: PageProps) {
                   </p>
                   <div className="mt-10 font-mono text-[10px] text-gray-500 uppercase tracking-widest flex items-center gap-3 font-bold">
                     <ShieldCheck className="w-4 h-4 text-amber-600" />
-                    Verified Logistics // Sequence Authenticated
+                    Guides, transport and stays all arranged
                   </div>
                 </div>
               </div>
 
-              {/* Protocol Details Grid: Itinerary Items */}
+              {/* Itinerary items for the day */}
               {dayData.items && dayData.items.length > 0 && (
                 <div className="space-y-20">
                   <div className="flex items-center gap-4 mb-12">
@@ -228,7 +228,7 @@ export default async function TourDayPage({ params }: PageProps) {
               {(!dayData.items || dayData.items.length === 0) && dayData.activities && dayData.activities.length > 0 && (
                 <div className="bg-white p-16 hover:bg-neutral-50 transition-colors duration-500 group border border-black/5">
                   <h4 className="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.4em] text-amber-600 mb-10 font-bold">
-                    <MapPin className="w-4 h-4" /> [ Strategic Objectives ]
+                    <MapPin className="w-4 h-4" /> What you'll do
                   </h4>
                   <ul className="space-y-8">
                     {dayData.activities.map((activity: string, index: number) => (

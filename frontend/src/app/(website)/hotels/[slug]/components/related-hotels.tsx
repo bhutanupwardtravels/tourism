@@ -53,7 +53,7 @@ export function RelatedHotels({ hotels }: RelatedHotelsProps) {
                         href="/hotels"
                         className="font-mono text-[10px] tracking-[0.4em] uppercase text-black hover:text-amber-600 transition-colors border-b border-black pb-1 mb-12 font-bold"
                     >
-                        View all accommodations
+                        See all hotels
                     </Link>
                 </div>
 

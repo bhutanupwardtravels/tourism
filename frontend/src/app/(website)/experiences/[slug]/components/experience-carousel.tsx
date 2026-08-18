@@ -70,23 +70,13 @@ export function ExperienceCarousel({
           <div className="max-w-2xl">
             <Reveal as="span" y={0} x={-20}
               className="font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 block">
-              // intel: next assignments
+              // more experiences
             </Reveal>
             <Reveal as="h2" y={20} delay={0.1}
               className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase text-black">
               Other <span className="italic font-serif normal-case text-amber-600">Experiences</span>
             </Reveal>
           </div>
-          <Reveal y={0} x={20} delay={0.3}
-            className="hidden md:block pb-4">
-            <div className="flex gap-4">
-              <p className="font-mono text-[10px] text-gray-500 uppercase tracking-widest text-right max-w-[150px]">
-                [ mission: explore further ]
-                <br />
-                [ availability: immediate ]
-              </p>
-            </div>
-          </Reveal>
         </div>
 
         <Carousel

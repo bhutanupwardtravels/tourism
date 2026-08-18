@@ -30,10 +30,10 @@ export function OurPurpose({ purpose }: OurPurposeProps) {
                   className="object-cover transition-all duration-1000 group-hover:scale-105"
               />
 
-              {/* Tactical Overlay */}
+              {/* Caption overlay */}
               <div className="absolute inset-0 border border-black/5" />
               <div className="absolute bottom-8 left-8 bg-white/90 backdrop-blur-md px-6 py-3 border border-black/10">
-                <p className="font-mono text-[8px] text-black tracking-[0.3em] uppercase">Status: Core Philosophy</p>
+                <p className="font-mono text-[8px] text-black tracking-[0.3em] uppercase">Our philosophy</p>
               </div>
 
               {/* Pulse Effect */}

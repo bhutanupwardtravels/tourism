@@ -127,11 +127,6 @@ export default function AdminLoginPage() {
                 }}
             />
 
-            {/* Narrative ID Overlay */}
-            <div className="absolute top-20 right-10 font-mono text-[10px] text-gray-400 uppercase tracking-[0.6em] writing-mode-vertical-rl rotate-180 select-none">
-                PROTOCOL // REQ-2025
-            </div>
-
 
             {/* Main Login Card */}
             <motion.div

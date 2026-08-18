@@ -29,15 +29,11 @@ export function OurMission({ items, title, subtitle }: OurMissionProps) {
         <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8 pb-12 border-b border-white/5">
           <div className="max-w-2xl">
             <span className="font-mono text-amber-500 text-xs uppercase tracking-[0.5em] mb-4 block">
-              // {subtitle || "strategic objectives"}
+              // {subtitle || "what we stand for"}
             </span>
             <h2 className="text-5xl md:text-[6rem] font-light tracking-tighter uppercase leading-none">
               {titleWords[0]} <span className="italic font-serif normal-case text-amber-500">{titleWords.slice(1).join(" ")}</span>
             </h2>
-          </div>
-          <div className="hidden md:block text-right">
-            <p className="font-mono text-[9px] text-white/30 tracking-[0.3em] uppercase">Auth: Kingdom Council</p>
-            <p className="font-mono text-[9px] text-white/30 tracking-[0.3em] uppercase">Ref: PROTOCOL_01</p>
           </div>
         </div>
 
@@ -64,10 +60,6 @@ export function OurMission({ items, title, subtitle }: OurMissionProps) {
                   "{item.description}"
                 </p>
 
-                <div className="pt-8 border-t border-white/5 flex justify-between items-center opacity-40 group-hover:opacity-100 transition-opacity">
-                  <span className="font-mono text-[8px] tracking-[0.3em] uppercase">System Verified</span>
-                  <div className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />
-                </div>
               </div>
             </Reveal>
           ))}

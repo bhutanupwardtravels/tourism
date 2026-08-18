@@ -4,12 +4,12 @@
 // Rendered both inside PlanMyTripClient and as the Suspense fallback in
 // page.tsx — it doesn't read searchParams, so it always server-renders
 // even while PlanMyTripClient (which does) is deferred to the client.
-// Sits directly below the portal top bar as a compact workspace header;
-// the background image is provided by the portal layout, so this is a
-// transparent text block.
+// Deliberately compact: the headline and the three ways to start have to
+// share the first viewport with the header, so this is a text band rather
+// than a full-height hero. The background image comes from the portal layout.
 export function PlanMyTripHero() {
     return (
-        <section className="relative flex items-center pt-16 pb-24 md:pt-24 md:pb-32">
+        <section className="relative flex items-center pt-8 pb-10 md:pt-10 md:pb-12">
             <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6">
                 <div>
                     <span className="font-mono text-amber-500 text-[10px] font-bold tracking-[0.5em] uppercase block mb-4">

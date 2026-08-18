@@ -56,7 +56,7 @@ export function TourActionBar({ slug, title, duration, price }: TourActionBarPro
                     href={`/plan-my-trip?package=${slug}`}
                     className="flex shrink-0 items-center gap-2 bg-amber-600 px-5 py-3 text-[11px] font-bold uppercase tracking-[0.15em] text-white transition-colors hover:bg-amber-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                 >
-                    Start planning
+                    Plan my trip
                     <ArrowRight className="h-4 w-4" />
                 </Link>
             </div>

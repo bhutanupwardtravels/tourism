@@ -10,6 +10,7 @@ import { CustomItineraryBuilder } from "./custom-itinerary-builder";
 import { TourRequestForm } from "./tour-request-form";
 import { PlanMyTripHero } from "./plan-my-trip-hero";
 import { readDraft } from "../draft";
+import { usePortalChrome } from "../../portal-chrome";
 import { Tour } from "@/app/(website)/tours/schema";
 import { Destination } from "@/app/(website)/destinations/schema";
 import { Experience } from "@/app/(website)/experiences/schema";
@@ -57,13 +58,18 @@ export default function PlanMyTripClient({
         }
     }, [searchParams, packages]);
 
+    // The marketing header only gets out of the way once the traveller is
+    // actually building day by day; the choice and enquiry screens keep it,
+    // along with the licence and contact details in the portal footer.
+    usePortalChrome(step === "custom_builder" ? "workspace" : "site");
+
     const handleTourSelect = (tour: Tour) => {
         setSelectedTour(tour);
         setStep("inquiry_form");
     };
 
     return (
-        <div className="pb-32">
+        <div className="pb-20">
             <PlanMyTripHero />
 
             {/* Mode Selection / Interface Area */}
@@ -163,7 +169,7 @@ export default function PlanMyTripClient({
                                     </div>
 
                                     <div className="mt-4 flex items-center gap-6 text-[10px] font-bold uppercase tracking-[0.4em] text-gray-400 group-hover:text-amber-600 transition-all">
-                                        Contact a specialist <ArrowRight className="w-4 h-4 group-hover:translate-x-3 transition-transform duration-500" />
+                                        Talk to a specialist <ArrowRight className="w-4 h-4 group-hover:translate-x-3 transition-transform duration-500" />
                                     </div>
 
                                     <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">

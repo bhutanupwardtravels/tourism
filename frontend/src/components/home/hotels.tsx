@@ -73,7 +73,7 @@ export function BestHotels({ hotels }: BestHotelsProps) {
               href="/hotels"
               className="group inline-flex items-center gap-2 text-[10px] font-mono font-medium tracking-[0.3em] uppercase hover:text-amber-600 transition-all text-gray-400 border-b border-transparent hover:border-amber-600 pb-1"
             >
-              View All Hotels
+              See all hotels
             </Link>
           </Reveal>
         </div>

@@ -1,17 +1,33 @@
-import Link from "next/link";
 import Image from "next/image";
 import NextTopLoader from "nextjs-toploader";
 import { MotionProvider } from "@/components/layout/motion-provider";
+import { PortalChrome } from "./portal-chrome";
+import { getContactContent, type ContactContent } from "@/lib/data/contact";
+import { getAboutContent } from "@/lib/data/about";
 
-// Route group for the trip-planning portal. It deliberately does NOT use the
-// public site's Header/Footer — this is a focused, app-like workspace rather
-// than a marketing page. A single fixed landscape image backs the whole
-// portal (top bar + content) instead of a flat white page.
-export default function PortalLayout({
+// Route group for the trip-planning portal. A single fixed landscape image
+// backs the whole portal (chrome + content) instead of a flat white page.
+// The header is chosen per screen by PortalChrome: the public site header
+// while the traveller is still choosing, a slim app bar once they are
+// building an itinerary day by day.
+export default async function PortalLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let contact: ContactContent | null = null;
+  let licenseNumber: string | undefined;
+  try {
+    const [contactContent, aboutContent] = await Promise.all([
+      getContactContent(),
+      getAboutContent(),
+    ]);
+    contact = contactContent;
+    licenseNumber = aboutContent.credentials.licenseNumber || undefined;
+  } catch {
+    // The planner must render even if the contact/about tables are unreachable
+  }
+
   return (
     <div className="relative min-h-screen flex flex-col text-white">
       {/* Full-portal fixed background image */}
@@ -29,61 +45,10 @@ export default function PortalLayout({
 
       <NextTopLoader color="#d97706" height={2} showSpinner={false} />
 
-      {/* Slim portal top bar (transparent over the image) */}
-      <header className="sticky top-0 z-50 bg-black/20 backdrop-blur-sm">
-        <div className="mx-auto flex h-16 max-w-7xl items-center px-4 sm:px-6">
-          <Link href="/" className="group flex items-center gap-3">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white">
-              <Image
-                src="/images/logo.png"
-                alt="Bhutan Upward Travels logo"
-                width={28}
-                height={28}
-                priority
-                className="h-7 w-7 object-contain"
-              />
-            </span>
-            <span className="flex flex-col leading-none">
-              <span className="text-sm font-bold uppercase tracking-widest text-white">
-                Trip Planner
-              </span>
-              <span className="text-[10px] tracking-[0.3em] text-white/60">
-                Bhutan Upward
-              </span>
-            </span>
-          </Link>
-
-          {/*
-            The planner used to be a dead end — the logo was the only link out.
-            Someone mid-build who wants to re-check a hotel or a destination
-            needs a way across without losing their place.
-          */}
-          <nav className="ml-auto flex items-center gap-6">
-            {[
-              { href: "/tours", label: "Tours" },
-              { href: "/destinations", label: "Destinations" },
-              { href: "/hotels", label: "Hotels" },
-            ].map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="hidden text-xs font-medium uppercase tracking-wider text-white/70 transition-colors hover:text-white sm:inline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
-              >
-                {item.label}
-              </Link>
-            ))}
-            <Link
-              href="/enquire"
-              className="text-xs font-medium uppercase tracking-wider text-amber-500 transition-colors hover:text-amber-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
-            >
-              Talk to us
-            </Link>
-          </nav>
-        </div>
-      </header>
-
       <MotionProvider>
-        <main className="flex-1">{children}</main>
+        <PortalChrome contact={contact} licenseNumber={licenseNumber}>
+          {children}
+        </PortalChrome>
       </MotionProvider>
     </div>
   );
