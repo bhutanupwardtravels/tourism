@@ -3,7 +3,9 @@
 import Image from "next/image";
 
 import { motion } from "framer-motion";
-import { Clock, Tag } from "lucide-react";
+import { Clock, Tag, BedDouble } from "lucide-react";
+import { TierBadge } from "@/components/common/tier-badge";
+import { TIER_META, type TourPricing } from "@/lib/pricing/tour-tier";
 
 interface TourHeroProps {
     title: string;
@@ -11,6 +13,7 @@ interface TourHeroProps {
     category?: string;
     duration?: string;
     price?: number;
+    pricing?: TourPricing;
 }
 
 
@@ -19,7 +22,8 @@ export function TourHero({
     image,
     category = "Tours",
     duration,
-    price
+    price,
+    pricing
 }: TourHeroProps) {
     const formatPrice = (price?: number) => {
         if (price === undefined) return null;
@@ -101,7 +105,28 @@ export function TourHero({
                                     <div className="text-left">
                                         <span className="block font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1">Pricing From</span>
                                         <span className="font-light tracking-widest text-lg md:text-xl uppercase text-white">{formatPrice(price)}</span>
-                                        <span className="block font-mono text-[12px] text-gray-300 tracking-normal mt-1 normal-case">per person · SDF included · group rates available</span>
+                                        <span className="block font-mono text-[12px] text-gray-300 tracking-normal mt-1 normal-case">
+                                            per person{pricing?.perDay ? ` · ${formatPrice(pricing.perDay)} per day` : ""} · SDF included · group rates available
+                                        </span>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+
+                        {/* The accommodation standard is what separates this price from
+                            a shorter trip's — say so here rather than leaving it to be
+                            reverse-engineered from the itinerary. */}
+                        {pricing?.tier && (
+                            <>
+                                <div className="h-16 w-px bg-white/10 hidden md:block" />
+                                <div className="flex items-center gap-6 group">
+                                    <div className="w-14 h-14 rounded-full border border-white/10 bg-white/5 flex items-center justify-center transition-all duration-500 group-hover:border-amber-500/60">
+                                        <BedDouble className="w-6 h-6 text-amber-500" />
+                                    </div>
+                                    <div className="text-left">
+                                        <span className="block font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1">Comfort Tier</span>
+                                        <TierBadge tier={pricing.tier} signatureStay={pricing.signatureStay} variant="dark" />
+                                        <span className="block font-mono text-[12px] text-gray-300 tracking-normal mt-1 normal-case">{TIER_META[pricing.tier].summary}</span>
                                     </div>
                                 </div>
                             </>

@@ -7,6 +7,7 @@ import { ArrowUpRight, Calendar, DollarSign, Check } from "lucide-react";
 import { Tour } from "@/app/(website)/tours/schema";
 
 import { Reveal } from "@/components/ui/reveal";
+import { TierBadge } from "@/components/common/tier-badge";
 interface TourCardProps {
     tour: Tour;
     index: number;
@@ -16,6 +17,7 @@ interface TourCardProps {
 
 export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
     const categoryTitle = tour.category || "Expedition";
+    const pricing = tour.pricing;
 
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('en-US', {
@@ -62,7 +64,7 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
             {/* Metadata */}
             <div className="flex justify-between items-start">
                 <div className="flex-1">
-                    <div className="flex items-center justify-between gap-6 mb-4 text-[13px] text-gray-600 font-medium">
+                    <div className="flex items-center justify-between gap-6 mb-3 text-[13px] text-gray-600 font-medium">
                         <div className="flex items-center gap-2">
                             <Calendar className="w-3.5 h-3.5 text-amber-600/60" />
                             {tour.duration}
@@ -70,8 +72,17 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
                         <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-600/10 rounded-xs text-black border border-amber-600/20 shadow-xs whitespace-nowrap">
                             <DollarSign className="w-3.5 h-3.5 text-amber-600" />
                             {formatPrice(tour.price)}
-                            <span className="text-gray-500 font-normal">/person · SDF incl.</span>
+                            <span className="text-gray-500 font-normal">/person</span>
                         </div>
+                    </div>
+
+                    {/* Length x comfort tier = price. Spelling out the per-day rate lets
+                        the eye compare a 4-day break with a 15-day expedition directly. */}
+                    <div className="flex items-center justify-between gap-4 mb-4 min-h-[26px]">
+                        <TierBadge tier={pricing?.tier} signatureStay={pricing?.signatureStay} />
+                        <span className="text-[11px] text-gray-500 whitespace-nowrap">
+                            {pricing?.perDay ? `${formatPrice(pricing.perDay)} / day · ` : ""}SDF incl.
+                        </span>
                     </div>
 
                     <h3 className="text-3xl md:text-4xl font-light tracking-tighter text-black group-hover:italic transition-all duration-500 line-clamp-2 uppercase">

@@ -4,12 +4,7 @@ import { useMemo, useState } from "react";
 import { Tour } from "../schema";
 import { TourCard } from "@/components/common/tour-card";
 import { cn } from "@/lib/utils";
-
-/** Duration is stored as free text ("12 Days / 11 Nights"); the leading number is the trip length. */
-function tripDays(tour: Tour): number {
-    const match = tour.duration?.match(/\d+/);
-    return match ? parseInt(match[0], 10) : 0;
-}
+import { TIER_META, TIER_ORDER, tripDays, type TourTier } from "@/lib/pricing/tour-tier";
 
 /** Recommended order uses the operator's own priority/featured flags. */
 const SORTS = [
@@ -18,7 +13,13 @@ const SORTS = [
     { id: "longest", label: "Longest first" },
     { id: "price-asc", label: "Price: low to high" },
     { id: "price-desc", label: "Price: high to low" },
+    { id: "per-day-asc", label: "Cost per day: low to high" },
 ];
+
+/** Per-day rate is what makes trips of different lengths comparable at all. */
+function perDay(tour: Tour): number {
+    return tour.pricing?.perDay ?? Number.POSITIVE_INFINITY;
+}
 
 const LENGTH_BANDS = [
     { id: "short", label: "Up to 7 days", test: (d: number) => d > 0 && d <= 7 },
@@ -37,6 +38,7 @@ interface ToursGridProps {
  */
 export function ToursGrid({ tours }: ToursGridProps) {
     const [band, setBand] = useState<string | null>(null);
+    const [tier, setTier] = useState<TourTier | null>(null);
     const [category, setCategory] = useState<string | null>(null);
     const [sort, setSort] = useState<string>("recommended");
 
@@ -45,10 +47,17 @@ export function ToursGrid({ tours }: ToursGridProps) {
         [tours]
     );
 
+    // Only offer tiers that something on the page actually sits in.
+    const tiers = useMemo(
+        () => TIER_ORDER.filter((t) => tours.some((tour) => tour.pricing?.tier === t)),
+        [tours]
+    );
+
     const visible = useMemo(() => {
         const filtered = tours.filter((tour) => {
             const activeBand = LENGTH_BANDS.find((b) => b.id === band);
             if (activeBand && !activeBand.test(tripDays(tour))) return false;
+            if (tier && tour.pricing?.tier !== tier) return false;
             if (category && tour.category !== category) return false;
             return true;
         });
@@ -63,15 +72,23 @@ export function ToursGrid({ tours }: ToursGridProps) {
                     return a.price - b.price;
                 case "price-desc":
                     return b.price - a.price;
+                case "per-day-asc":
+                    return perDay(a) - perDay(b);
                 default:
                     // Featured first, then the admin-set priority.
                     if (!!a.featured !== !!b.featured) return a.featured ? -1 : 1;
                     return (b.priority ?? 0) - (a.priority ?? 0);
             }
         });
-    }, [tours, band, category, sort]);
+    }, [tours, band, tier, category, sort]);
 
-    const hasFilters = band !== null || category !== null;
+    const hasFilters = band !== null || tier !== null || category !== null;
+
+    const clearFilters = () => {
+        setBand(null);
+        setTier(null);
+        setCategory(null);
+    };
 
     const chip = (active: boolean) =>
         cn(
@@ -100,6 +117,27 @@ export function ToursGrid({ tours }: ToursGridProps) {
                             {b.label}
                         </button>
                     ))}
+
+                    {tiers.length > 1 && (
+                        <>
+                            <span className="mx-2 hidden h-5 w-px bg-black/10 md:block" />
+                            <span className="mr-2 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400">
+                                Comfort
+                            </span>
+                            {tiers.map((t) => (
+                                <button
+                                    key={t}
+                                    type="button"
+                                    title={TIER_META[t].summary}
+                                    aria-pressed={tier === t}
+                                    onClick={() => setTier(tier === t ? null : t)}
+                                    className={chip(tier === t)}
+                                >
+                                    {TIER_META[t].label}
+                                </button>
+                            ))}
+                        </>
+                    )}
 
                     {categories.length > 1 && (
                         <>
@@ -141,10 +179,7 @@ export function ToursGrid({ tours }: ToursGridProps) {
                     {hasFilters && (
                         <button
                             type="button"
-                            onClick={() => {
-                                setBand(null);
-                                setCategory(null);
-                            }}
+                            onClick={clearFilters}
                             className="text-[11px] font-bold uppercase tracking-[0.2em] text-amber-600 hover:text-black transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
                         >
                             Clear
@@ -158,10 +193,7 @@ export function ToursGrid({ tours }: ToursGridProps) {
                     No itineraries match those filters.{" "}
                     <button
                         type="button"
-                        onClick={() => {
-                            setBand(null);
-                            setCategory(null);
-                        }}
+                        onClick={clearFilters}
                         className="text-amber-600 underline underline-offset-4 hover:text-black"
                     >
                         Show all {tours.length}

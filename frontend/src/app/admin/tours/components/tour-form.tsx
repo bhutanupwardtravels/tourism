@@ -277,10 +277,20 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
     // ── Price calculation ────────────────────────────────────────────────────
     const calculateTotal = React.useCallback(() => {
         const currentCostIds = watch("selectedCostIds") || [];
+        // The headline price is a per-person figure for one international adult.
+        const nights = Math.max(0, days.length - 1);
         let total = 0;
         currentCostIds.forEach((id: string) => {
             const cost = allCosts.find(c => c.id === id || c._id === id);
-            if (cost) total += cost.type === "daily" ? (Number(cost.price) || 0) * days.length : (Number(cost.price) || 0);
+            if (!cost) return;
+            // A child's SDF and the Indian-national fee schedule belong to a
+            // different traveller — folding them in inflates the adult price.
+            if (cost.isIndianNational || cost.travelerCategory !== "adult") return;
+            // Daily fees (SDF, guide) are billed per night, not per calendar
+            // day: a 4-day / 3-night trip is charged three nights.
+            total += cost.type === "daily"
+                ? (Number(cost.price) || 0) * nights
+                : (Number(cost.price) || 0);
         });
         days.forEach(day => {
             day.items.forEach(item => {
@@ -296,6 +306,20 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
         });
         return total;
     }, [days, watch, hotelOptions, experienceOptions, allCosts]);
+
+    /**
+     * Hotel placements vs nights. A missed or duplicated hotel is invisible in
+     * the builder but lands straight in the headline price — it is what made a
+     * 4-day break cost more than a 5-day one.
+     */
+    const accommodationCheck = React.useMemo(() => {
+        const nights = Math.max(0, days.length - 1);
+        const placed = days.reduce(
+            (sum, day) => sum + (day.items || []).filter((item) => item.hotelId).length,
+            0
+        );
+        return { nights, placed, balanced: placed === nights };
+    }, [days]);
 
     // Sync price when days or cost selection changes
     React.useEffect(() => {
@@ -853,7 +877,21 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
                             className="bg-white border-gray-200 text-black font-medium text-lg"
                         />
                         {watchedSelectedCostIds.length > 0 && (
-                            <p className="text-xs text-amber-600">* Includes {watchedSelectedCostIds.length} global fee(s) × {days.length} day(s)</p>
+                            <p className="text-xs text-amber-600">* Includes {watchedSelectedCostIds.length} global fee(s); daily fees × {accommodationCheck.nights} night(s)</p>
+                        )}
+                        {days.length > 1 && accommodationCheck.placed > accommodationCheck.nights && (
+                            <p className="text-xs text-red-600">
+                                ⚠ {accommodationCheck.placed} hotel nights placed on a {accommodationCheck.nights}-night
+                                itinerary — the price is over-counting accommodation. A hotel on the departure day is the
+                                usual cause. Fix the itinerary, then Re-sync Price.
+                            </p>
+                        )}
+                        {days.length > 1 && accommodationCheck.placed < accommodationCheck.nights && (
+                            <p className="text-xs text-amber-600">
+                                ⚠ {accommodationCheck.placed} hotel nights placed on a {accommodationCheck.nights}-night
+                                itinerary. Camping and trekking nights are expected to be blank — if these are not,
+                                add the missing stays and Re-sync Price.
+                            </p>
                         )}
                         {errors.price && <p className="text-xs text-red-500">{errors.price.message}</p>}
                     </div>

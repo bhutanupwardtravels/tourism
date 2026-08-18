@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { TourPricing } from "@/lib/pricing/tour-tier";
 
 // Experience schema for day activities
 export const experienceSchema = z.object({
@@ -53,6 +54,9 @@ export const tourSchema = z.object({
   category: z.string().optional(),
   highlights: z.array(z.string()).optional(),
   days: z.array(tourDaySchema),
+  // Derived server-side from the itinerary's hotel rates (lib/pricing/tour-tier),
+  // never stored on the row — so it can't drift from the price it explains.
+  pricing: z.custom<TourPricing>().optional(),
 });
 
 // Export TypeScript types

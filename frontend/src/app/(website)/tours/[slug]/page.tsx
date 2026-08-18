@@ -78,6 +78,7 @@ export default async function TourPage({ params }: PageProps) {
         category={tour.category}
         duration={tour.duration}
         price={tour.price}
+        pricing={tour.pricing}
       />
 
       <div className="container mx-auto px-6 pt-20">
