@@ -8,13 +8,12 @@ import { Reveal } from "@/components/ui/reveal";
 
 interface HotelCardProps {
     hotel: Hotel;
-    index: number;
     className?: string;
     disableLink?: boolean;
     onClick?: () => void;
 }
 
-export function HotelCard({ hotel, index, className, disableLink, onClick }: HotelCardProps) {
+export function HotelCard({ hotel, className, disableLink, onClick }: HotelCardProps) {
     // Handle rating logic (can be string or number)
     const ratingValue = typeof hotel.rating === 'string' ? parseFloat(hotel.rating) : hotel.rating || 5;
     const starsArray = [...Array(Math.floor(ratingValue))].slice(0, 5);
@@ -54,7 +53,7 @@ export function HotelCard({ hotel, index, className, disableLink, onClick }: Hot
             {/* Card UI */}
             <div className="absolute inset-0 p-8 flex flex-col justify-between z-30">
                 <div className="flex justify-between items-start">
-                    <span className="font-mono text-[9px] tracking-widest uppercase bg-white/10 backdrop-blur-md px-3 py-1 border border-white/10 text-white">
+                    <span className="font-mono text-xs tracking-widest uppercase bg-white/10 backdrop-blur-md px-3 py-1 border border-white/10 text-white">
                         {hotel.priceRange}
                         {nightlyRate && <span className="text-amber-400"> &middot; {nightlyRate}</span>}
                     </span>
@@ -66,18 +65,18 @@ export function HotelCard({ hotel, index, className, disableLink, onClick }: Hot
                 </div>
 
                 <div>
-                    <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-amber-500 mb-4 block line-clamp-1">
+                    <span className="font-mono text-xs tracking-[0.3em] uppercase text-amber-500 mb-4 block line-clamp-1">
                         {distinguishingFeature}
                     </span>
-                    <h4 className="text-3xl md:text-4xl font-light tracking-tighter text-white mb-6 group-hover:italic transition-all duration-500 line-clamp-2 uppercase">
+                    <h3 className="text-3xl md:text-4xl font-light tracking-tighter text-white mb-6 group-hover:italic transition-all duration-500 line-clamp-2 uppercase">
                         {hotel.name}
-                    </h4>
+                    </h3>
                     <p className="text-base text-white/60 font-light leading-relaxed line-clamp-2 italic mb-6">
                         &quot;{hotel.description}&quot;
                     </p>
                     <div className="flex items-center gap-4 text-white/50 group-hover:text-white transition-colors duration-500">
                         <span className="h-px w-8 bg-white/20 group-hover:w-16 group-hover:bg-amber-500 transition-all duration-500" />
-                        <span className="font-mono text-[9px] uppercase tracking-widest">View hotel</span>
+                        <span className="font-mono text-xs uppercase tracking-widest">View hotel</span>
                     </div>
                 </div>
             </div>
@@ -85,7 +84,7 @@ export function HotelCard({ hotel, index, className, disableLink, onClick }: Hot
     );
 
     return (
-        <Reveal y={0} scale={0.98} delay={index * 0.1} duration={0.6}>
+        <Reveal y={0} scale={0.98} duration={0.6}>
             {disableLink || onClick ? (
                 <div onClick={onClick}>
                     {CardContent}

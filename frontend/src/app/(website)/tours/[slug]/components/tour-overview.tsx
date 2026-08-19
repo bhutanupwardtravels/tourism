@@ -1,7 +1,28 @@
 "use client";
 
-import { Check, ShieldCheck } from "lucide-react";
+import { Check, ShieldCheck, X } from "lucide-react";
+import Link from "next/link";
 import { Tour } from "../../schema";
+
+/**
+ * What the price covers, as a list rather than a sentence.
+ *
+ * These were previously one run-on paragraph with the single exclusion —
+ * international flights — as a trailing clause. At this price the exclusions
+ * are the part people actually search the page for, and a clause inside a
+ * paragraph is the one place they will not look. Same facts, made scannable.
+ *
+ * Constants rather than schema fields because they hold for every itinerary. If
+ * they ever stop being uniform they belong on the tour record instead.
+ */
+const INCLUDED = [
+    "Licensed private guide",
+    "Private transport throughout",
+    "Entry and monument fees",
+    "Sustainable Development Fee",
+];
+
+const NOT_INCLUDED = ["International flights"];
 
 interface TourOverviewProps {
     tour: Tour;
@@ -22,7 +43,7 @@ export function TourOverview({ tour }: TourOverviewProps) {
                         <p className="text-lg md:text-xl text-gray-500 leading-relaxed font-light italic">
                             &quot;{tour.description}&quot;
                         </p>
-                        <div className="mt-8 font-mono text-[10px] text-gray-500 uppercase tracking-widest flex items-center gap-3 font-bold">
+                        <div className="mt-8 font-mono text-xs text-gray-500 uppercase tracking-widest flex items-center gap-3 font-bold">
                             <ShieldCheck className="w-4 h-4 text-amber-600" />
                             Licensed tour operator, Kingdom of Bhutan
                         </div>
@@ -41,13 +62,49 @@ export function TourOverview({ tour }: TourOverviewProps) {
                                     </li>
                                 ))}
                             </ul>
-                            <p className="mt-8 pt-6 border-t border-black/5 text-[13px] text-gray-500 leading-relaxed">
-                                {tour.days.length} days planned day by day. Includes a licensed private guide,
-                                private transport, entry and monument fees, and the Sustainable Development Fee.
-                                International flights are not included.
+                            <p className="mt-8 pt-6 border-t border-black/5 text-sm text-gray-500 leading-relaxed">
+                                {tour.days.length} days, planned day by day.
                             </p>
                         </div>
                     )}
+
+                    <div className="mt-12 grid grid-cols-1 gap-px border border-black/10 bg-black/10 sm:grid-cols-2">
+                        <div className="bg-white p-8">
+                            <h3 className="mb-6 text-[11px] font-bold uppercase tracking-[0.3em] text-black">
+                                Included in the price
+                            </h3>
+                            <ul className="space-y-4">
+                                {INCLUDED.map((item) => (
+                                    <li key={item} className="flex items-start gap-3 text-[15px] leading-relaxed text-gray-700">
+                                        <Check className="mt-1 h-4 w-4 shrink-0 text-amber-600" aria-hidden="true" />
+                                        <span>{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        <div className="bg-white p-8">
+                            <h3 className="mb-6 text-[11px] font-bold uppercase tracking-[0.3em] text-black">
+                                Not included
+                            </h3>
+                            <ul className="space-y-4">
+                                {NOT_INCLUDED.map((item) => (
+                                    <li key={item} className="flex items-start gap-3 text-[15px] leading-relaxed text-gray-700">
+                                        <X className="mt-1 h-4 w-4 shrink-0 text-gray-400" aria-hidden="true" />
+                                        <span>{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                            {/* Better to name the gap than to let someone assume either way. */}
+                            <p className="mt-6 border-t border-black/5 pt-5 text-[13px] leading-relaxed text-gray-500">
+                                Anything else you are unsure about,{" "}
+                                <Link href="/enquire" className="text-amber-600 underline underline-offset-4 hover:text-black">
+                                    ask before you book
+                                </Link>{" "}
+                                and we will confirm it in writing.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

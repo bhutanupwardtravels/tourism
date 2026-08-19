@@ -21,7 +21,7 @@ export function TourItinerary({ days, slug }: TourItineraryProps) {
                             Day by <span className="italic font-serif normal-case text-amber-600">Day</span>
                         </h2>
                     </div>
-                    <div className="hidden md:block font-mono text-[10px] text-gray-400 uppercase tracking-widest text-right font-bold">
+                    <div className="hidden md:block font-mono text-xs text-gray-400 uppercase tracking-widest text-right font-bold">
                         {days.length} days
                     </div>
                 </div>

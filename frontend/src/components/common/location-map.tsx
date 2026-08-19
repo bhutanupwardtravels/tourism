@@ -43,7 +43,7 @@ export function LocationMap({ name, coordinates, title = "Map Location", subtitl
             <div className="container mx-auto px-4 md:px-6 relative z-10">
                 <div className="text-center mb-12 md:mb-24">
                     <Reveal as="span" y={0}
-                        className="block font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4">
+                        className="block font-mono text-amber-600 text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4">
                         {subtitle}
                     </Reveal>
                     <h2 className="text-4xl sm:text-5xl md:text-7xl font-light text-black tracking-tighter uppercase">
@@ -78,10 +78,10 @@ export function LocationMap({ name, coordinates, title = "Map Location", subtitl
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-3">
                                 <div className="w-2 h-2 shrink-0 bg-amber-600 rounded-full animate-ping" />
-                                <span className="font-mono text-[10px] tracking-widest text-black uppercase truncate">{name}</span>
+                                <span className="font-mono text-xs tracking-widest text-black uppercase truncate">{name}</span>
                             </div>
                             <div className="h-px w-full bg-black/5 my-1" />
-                            <span className="font-mono text-[9px] text-amber-600/60 tracking-wider">
+                            <span className="font-mono text-xs text-amber-600/60 tracking-wider">
                                 {coordinates[0].toFixed(4)}°N, {coordinates[1].toFixed(4)}°E
                             </span>
                         </div>
@@ -89,7 +89,7 @@ export function LocationMap({ name, coordinates, title = "Map Location", subtitl
 
                 </div>
 
-                <div className="mt-6 md:mt-12 flex flex-wrap justify-between items-center gap-2 text-gray-500 font-mono text-[9px] tracking-widest uppercase">
+                <div className="mt-6 md:mt-12 flex flex-wrap justify-between items-center gap-2 text-gray-500 font-mono text-xs tracking-widest uppercase">
                     <span>Approximate location</span>
                     <span className="animate-pulse">Kingdom of Happiness...</span>
                 </div>

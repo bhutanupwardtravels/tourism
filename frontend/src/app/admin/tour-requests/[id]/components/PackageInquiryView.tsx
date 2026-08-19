@@ -48,7 +48,7 @@ export function PackageInquiryView({ tour }: PackageInquiryViewProps) {
             </div>
 
             <div className="max-w-4xl">
-                <TourCard tour={tour} index={0} onClick={() => setShowDetails(!showDetails)} />
+                <TourCard tour={tour} onClick={() => setShowDetails(!showDetails)} />
             </div>
 
             {showDetails && (

@@ -7,7 +7,7 @@ export function LuxuryBridge() {
             <div className="container mx-auto px-6 text-center">
                 <Reveal y={20} duration={1.5}
                     className="max-w-4xl mx-auto">
-                    <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.8em] mb-12 block">
+                    <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.8em] mb-12 block">
             {"// Palate Cleanser"}
                     </span>
                     <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter text-black leading-tight">
@@ -23,7 +23,7 @@ export function LuxuryBridge() {
             </div>
 
             {/* Subtle Background Markings */}
-            <div className="absolute top-0 right-0 p-12 opacity-[0.03] select-none pointer-events-none hidden lg:block">
+            <div aria-hidden className="absolute top-0 right-0 p-12 opacity-[0.03] select-none pointer-events-none hidden lg:block">
                 <span className="font-mono text-6xl font-bold uppercase tracking-tighter text-black">
                     Excellence
                 </span>

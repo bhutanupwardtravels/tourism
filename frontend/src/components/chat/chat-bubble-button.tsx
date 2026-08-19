@@ -15,7 +15,8 @@ export function ChatBubbleButton({ open, onClick }: { open: boolean; onClick: ()
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className={cn(
-                "fixed bottom-6 right-6 z-50 flex size-14 items-center justify-center rounded-full",
+                "fixed right-6 z-50 flex size-14 items-center justify-center rounded-full",
+                "bottom-[calc(1.5rem+var(--mobile-action-bar-h,0px))] transition-[bottom] duration-300",
                 "bg-amber-600 text-white shadow-lg shadow-black/40 hover:bg-amber-500",
                 "outline-none focus-visible:ring-[3px] focus-visible:ring-amber-600/50"
             )}

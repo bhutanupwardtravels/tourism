@@ -34,7 +34,7 @@ export function FaqSection({ label, title, bgText, items, className }: FaqSectio
             <JsonLd data={faqPageJsonLd(items)} />
 
             {/* Decorative Background Text - Seamless Loop */}
-            <div className="absolute top-0 left-0 w-full overflow-hidden opacity-[0.03] select-none pointer-events-none">
+            <div aria-hidden className="absolute top-0 left-0 w-full overflow-hidden opacity-[0.03] select-none pointer-events-none">
                 <motion.div
                     animate={{ x: ["0%", "-50%"] }}
                     transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
@@ -66,7 +66,7 @@ export function FaqSection({ label, title, bgText, items, className }: FaqSectio
                     {items.map((item, index) => {
                         const isOpen = openIndex === index;
                         return (
-                            <Reveal y={20} delay={Math.min(index * 0.05, 0.4)} duration={0.6}
+                            <Reveal y={20} duration={0.3}
                                 key={item.question}
                                 className="py-6">
                                 <button

@@ -54,7 +54,7 @@ export function ExperiencesClient({ initialExperiences }: ExperiencesClientProps
                                     key={category}
                                     onClick={() => handleCategoryChange(category)}
                                     className={`
-                                        px-6 py-2 text-[10px] font-mono uppercase tracking-[0.4em] transition-all relative group
+                                        px-6 py-2 text-xs font-mono uppercase tracking-[0.4em] transition-all relative group
                                         ${activeCategory === category
                                             ? "text-amber-600"
                                             : "text-gray-500 hover:text-black"
@@ -73,11 +73,11 @@ export function ExperiencesClient({ initialExperiences }: ExperiencesClientProps
                         </div>
 
                         <div className="hidden lg:flex items-center gap-4 opacity-40">
-                            <span className="font-mono text-[9px] text-black uppercase tracking-widest leading-none">
+                            <span className="font-mono text-xs text-black uppercase tracking-widest leading-none">
                                 Browse <br /> Categories
                             </span>
                             <div className="h-8 w-px bg-black/10" />
-                            <div className="font-mono text-[9px] text-black uppercase tracking-tighter">
+                            <div className="font-mono text-xs text-black uppercase tracking-tighter">
                                 BHUTAN
                             </div>
                         </div>
@@ -89,15 +89,15 @@ export function ExperiencesClient({ initialExperiences }: ExperiencesClientProps
             <div className="container mx-auto px-6 pt-32">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-12 pl-12 border-l border-black/10">
                     <div className="max-w-xl">
-                        <span className="font-mono text-amber-600/60 text-[10px] uppercase tracking-[0.3em] mb-4 block">
-                        {"// viewing: {activeCategory.toLowerCase()}"}
+                        <span className="font-mono text-amber-600/60 text-xs uppercase tracking-[0.3em] mb-4 block">
+                        {`// viewing: ${activeCategory.toLowerCase()}`}
                         </span>
                         <p className="text-gray-500 font-light italic leading-relaxed text-sm">
                             Explore our curated collection of {activeCategory === "All" ? "Bhutanese experiences" : activeCategory.toLowerCase() + " journeys"}.
                             Discover the soul of the Kingdom through every story.
                         </p>
                     </div>
-                    <div className="font-mono text-[9px] text-gray-400 tracking-[0.4em] uppercase">
+                    <div className="font-mono text-xs text-gray-400 tracking-[0.4em] uppercase">
                         Total {activeCategory === "All" ? "Files" : "Results"}: {filteredExperiences.length.toString().padStart(2, '0')}
                     </div>
                 </div>
@@ -105,7 +105,7 @@ export function ExperiencesClient({ initialExperiences }: ExperiencesClientProps
                 {filteredExperiences.length === 0 ? (
                     <div className="text-center py-32 bg-neutral-100/50 border border-black/5 rounded-sm">
                         <div className="w-12 h-12 border border-black/10 flex items-center justify-center mx-auto mb-8 animate-pulse">
-                            <span className="font-mono text-[10px] text-amber-600">?</span>
+                            <span className="font-mono text-xs text-amber-600">?</span>
                         </div>
                         <p className="font-mono text-xs uppercase tracking-[0.4em] text-gray-400">
                             No journeys found in this category
@@ -113,6 +113,7 @@ export function ExperiencesClient({ initialExperiences }: ExperiencesClientProps
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-32">
+                        <h2 className="sr-only">Experiences</h2>
                         {filteredExperiences.map((exp, index) => (
                             <ExperienceCard key={exp.slug} experience={exp} index={index} />
                         ))}

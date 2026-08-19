@@ -39,7 +39,7 @@ export function HotelOverview({ description, amenities, rooms }: HotelOverviewPr
                                 <p className="text-lg md:text-xl text-gray-500 leading-relaxed font-light italic">
                                     &quot;{description}&quot;
                                 </p>
-                                <div className="mt-8 font-mono text-[10px] text-gray-500 uppercase tracking-widest flex items-center gap-3 font-bold">
+                                <div className="mt-8 font-mono text-xs text-gray-500 uppercase tracking-widest flex items-center gap-3 font-bold">
                                     <ShieldCheck className="w-4 h-4 text-amber-600" />
                                     Hospitality Standards Certified // Kingdom of Bhutan
                                 </div>
@@ -70,7 +70,7 @@ export function HotelOverview({ description, amenities, rooms }: HotelOverviewPr
 
                             {rooms && (
                                 <div className="mt-12 pt-8 border-t border-black/10 flex justify-between items-center">
-                                    <span className="font-mono text-[10px] text-gray-400 uppercase tracking-widest">Available Capacity</span>
+                                    <span className="font-mono text-xs text-gray-400 uppercase tracking-widest">Available Capacity</span>
                                     <span className="text-2xl font-light tracking-tighter">{rooms} Suites</span>
                                 </div>
                             )}

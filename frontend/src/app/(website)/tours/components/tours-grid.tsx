@@ -22,6 +22,15 @@ function perDay(tour: Tour): number {
     return tour.pricing?.perDay ?? Number.POSITIVE_INFINITY;
 }
 
+/**
+ * Below this many itineraries the filter apparatus costs more than it saves: a
+ * dozen chips over seven cards is heavier than the inventory, and any
+ * combination of them can empty a list the visitor could have read end to end.
+ * Sort alone is the better tool at this size. The filters stay in the file and
+ * come back on their own once the catalogue is big enough to need them.
+ */
+const FILTER_THRESHOLD = 12;
+
 const LENGTH_BANDS = [
     { id: "short", label: "Up to 7 days", test: (d: number) => d > 0 && d <= 7 },
     { id: "mid", label: "8-12 days", test: (d: number) => d >= 8 && d <= 12 },
@@ -42,6 +51,30 @@ export function ToursGrid({ tours }: ToursGridProps) {
     const [tier, setTier] = useState<TourTier | null>(null);
     const [category, setCategory] = useState<string | null>(null);
     const [sort, setSort] = useState<string>("recommended");
+
+    const showFilters = tours.length >= FILTER_THRESHOLD;
+
+    /**
+     * The catalogue spans roughly $1,200 to $18,500, and the related-tours rail
+     * can put those two next to each other. Without a stated range every price
+     * is anchored only by whichever card was seen first, so a mid-priced trip
+     * reads as either a bargain or a rip-off depending on arrival order.
+     * Derived from the live inventory rather than written down, so it cannot
+     * drift away from the cards underneath it.
+     */
+    const perDayRange = useMemo(() => {
+        const rates = tours
+            .map((tour) => tour.pricing?.perDay)
+            .filter((rate): rate is number => typeof rate === "number" && Number.isFinite(rate));
+        if (rates.length === 0) return null;
+        const money = (value: number) =>
+            new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+                maximumFractionDigits: 0,
+            }).format(value);
+        return { low: money(Math.min(...rates)), high: money(Math.max(...rates)) };
+    }, [tours]);
 
     const categories = useMemo(
         () => Array.from(new Set(tours.map((tour) => tour.category).filter(Boolean) as string[])).sort(),
@@ -106,9 +139,9 @@ export function ToursGrid({ tours }: ToursGridProps) {
                 {/* Each label + its chips is one flex-wrap unit. Flat wrapping put
                     a stray comfort chip at the head of the next line, directly
                     before the "Theme" label, where it read as a theme. */}
-                <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                <div className={cn("flex flex-wrap items-center gap-x-6 gap-y-3", !showFilters && "hidden")}>
                     <div className="flex flex-wrap items-center gap-2">
-                        <span className="mr-1 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400">
+                        <span className="mr-1 text-xs font-bold uppercase tracking-[0.2em] text-gray-500">
                             Length
                         </span>
                         {LENGTH_BANDS.map((b) => (
@@ -190,12 +223,12 @@ export function ToursGrid({ tours }: ToursGridProps) {
                             aria-hidden="true"
                         />
                     </div>
+                    {/* "7 of 7" is noise when nothing can narrow the list. */}
                     <span aria-live="polite" className="whitespace-nowrap">
                         <strong className="font-semibold text-black">{visible.length}</strong>
-                        {" of "}
-                        {tours.length} itineraries
+                        {showFilters && ` of ${tours.length}`} itineraries
                     </span>
-                    {hasFilters && (
+                    {showFilters && hasFilters && (
                         <button
                             type="button"
                             onClick={clearFilters}
@@ -220,11 +253,25 @@ export function ToursGrid({ tours }: ToursGridProps) {
                     .
                 </p>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12">
-                    {visible.map((tour, index) => (
-                        <TourCard key={tour.slug} tour={tour} index={index} />
-                    ))}
-                </div>
+                <>
+                    {perDayRange && (
+                        <p className="mb-10 max-w-2xl text-sm font-light leading-relaxed text-gray-500">
+                            These itineraries work out at{" "}
+                            <strong className="font-medium text-black">
+                                {perDayRange.low}&ndash;{perDayRange.high}
+                            </strong>{" "}
+                            per person per day, Sustainable Development Fee included. Shorter
+                            trips cost more per day &mdash; the fixed costs of arriving are
+                            spread over fewer of them.
+                        </p>
+                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12">
+                        <h2 className="sr-only">Itineraries</h2>
+                        {visible.map((tour) => (
+                            <TourCard key={tour.slug} tour={tour} />
+                        ))}
+                    </div>
+                </>
             )}
         </>
     );

@@ -22,7 +22,7 @@ export function DestinationFestivals({ festivals }: DestinationFestivalsProps) {
       <div className="container mx-auto px-6 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
           <div className="max-w-2xl">
-            <span className="font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 block">
+            <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 block">
               {"// cultural festivals"}
             </span>
             <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter uppercase leading-tight">

@@ -36,7 +36,7 @@ export function DestinationHotels({ hotels }: DestinationHotelsProps) {
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-32">
           <Reveal as="span" y={0}
-            className="block font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4">
+            className="block font-mono text-amber-600 text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4">
             {"// plan your stay"}
           </Reveal>
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter uppercase text-black leading-tight">
@@ -45,8 +45,8 @@ export function DestinationHotels({ hotels }: DestinationHotelsProps) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-          {displayedHotels.map((hotel, index) => (
-            <HotelCard key={hotel.id} hotel={hotel} index={index} />
+          {displayedHotels.map((hotel) => (
+            <HotelCard key={hotel.id} hotel={hotel} />
           ))}
         </div>
 

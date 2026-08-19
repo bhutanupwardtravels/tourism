@@ -58,7 +58,7 @@ export function DestinationCarousel({
       {/* Soft Vignette */}
       <div className="absolute inset-0 bg-radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.02) 100%) pointer-events-none" />
       {/* Decorative Background Text - Seamless Loop */}
-      <div className="absolute top-0 left-0 w-full overflow-hidden opacity-[0.03] select-none pointer-events-none">
+      <div aria-hidden className="absolute top-0 left-0 w-full overflow-hidden opacity-[0.03] select-none pointer-events-none">
         <motion.div
           animate={{ x: [0, "-50%"] }}
           transition={{
@@ -80,7 +80,7 @@ export function DestinationCarousel({
       <div className="container mx-auto px-6 relative z-10">
         <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div className="max-w-2xl">
-            <span className="font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 block">
+            <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 block">
               {"// explore more"}
             </span>
             <h2 className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase text-black">
@@ -103,7 +103,7 @@ export function DestinationCarousel({
                 key={dest.slug}
                 className="pl-8 md:basis-1/2 lg:basis-1/2"
               >
-                <Reveal y={30} delay={index * 0.1} duration={0.8}>
+                <Reveal y={30} duration={0.8}>
                   <DestinationCard destination={dest} index={index} />
                 </Reveal>
               </CarouselItem>

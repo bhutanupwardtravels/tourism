@@ -10,7 +10,7 @@ interface OurMissionProps {
   subtitle?: string;
 }
 
-export function OurMission({ items, title }: OurMissionProps) {
+export function OurMission({ items, title, subtitle }: OurMissionProps) {
   const titleWords = (title || "Mission Parameters").split(" ");
 
   return (
@@ -29,7 +29,7 @@ export function OurMission({ items, title }: OurMissionProps) {
         <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8 pb-12 border-b border-white/5">
           <div className="max-w-2xl">
             <span className="font-mono text-amber-500 text-xs uppercase tracking-[0.5em] mb-4 block">
-              {"// {subtitle || \"what we stand for\"}"}
+              {`// ${subtitle || "what we stand for"}`}
             </span>
             <h2 className="text-5xl md:text-[6rem] font-light tracking-tighter uppercase leading-none">
               {titleWords[0]} <span className="italic font-serif normal-case text-amber-500">{titleWords.slice(1).join(" ")}</span>
@@ -39,7 +39,7 @@ export function OurMission({ items, title }: OurMissionProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24">
           {items.map((item, index) => (
-            <Reveal y={0} scale={0.98} delay={index * 0.2} duration={1}
+            <Reveal y={0} scale={0.98} duration={1}
               key={item.id}
               className="group relative p-12 border border-white/5 bg-white/2 hover:bg-white/5 transition-all duration-700">
               {/* Corner Accents */}

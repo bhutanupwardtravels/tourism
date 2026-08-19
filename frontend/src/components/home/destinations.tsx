@@ -40,7 +40,7 @@ export function Destinations({ destinations }: DestinationsProps) {
     return (
         <section className="py-24 md:py-40 bg-white relative overflow-hidden">
             {/* Decorative Background Text - Seamless Loop */}
-            <div className="absolute top-0 left-0 w-full overflow-hidden opacity-[0.03] select-none pointer-events-none">
+            <div aria-hidden className="absolute top-0 left-0 w-full overflow-hidden opacity-[0.03] select-none pointer-events-none">
                 <motion.div
                     animate={{ x: [0, "-50%"] }}
                     transition={{
@@ -66,7 +66,7 @@ export function Destinations({ destinations }: DestinationsProps) {
                             className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block">
                             {"// explore by region"}
                         </Reveal>
-                        <Reveal as="h3" y={20} delay={0.1}
+                        <Reveal as="h2" y={20} delay={0.1}
                             className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase text-black">
                             Featured <span className="italic font-serif normal-case text-amber-600">Destinations</span>
                         </Reveal>
@@ -74,7 +74,7 @@ export function Destinations({ destinations }: DestinationsProps) {
                     <Reveal y={0} x={20} delay={0.3}>
                         <Link
                             href="/destinations"
-                            className="group flex items-center gap-4 text-[10px] font-mono uppercase tracking-[0.3em] text-gray-500 hover:text-black transition-colors"
+                            className="group flex items-center gap-4 text-xs font-mono uppercase tracking-[0.3em] text-gray-500 hover:text-black transition-colors"
                         >
                             <span className="h-px w-12 bg-black/20 group-hover:w-20 group-hover:bg-amber-600 transition-all duration-500" />
                             See all destinations
@@ -96,7 +96,7 @@ export function Destinations({ destinations }: DestinationsProps) {
                                 key={destination.slug}
                                 className="pl-8 md:basis-1/2 lg:basis-1/2"
                             >
-                                <Reveal y={30} delay={index * 0.1} duration={0.8}>
+                                <Reveal y={30} duration={0.8}>
                                     <DestinationCard destination={destination} index={index} />
                                 </Reveal>
                             </CarouselItem>

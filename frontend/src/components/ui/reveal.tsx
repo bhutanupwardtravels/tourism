@@ -62,6 +62,30 @@ const useIsomorphicLayoutEffect = typeof window === "undefined" ? useEffect : us
 
 const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
 
+/**
+ * Ceilings, applied to whatever a caller passes.
+ *
+ * A reveal is only ever decoration on content that is already in the HTML, so
+ * its budget is "long enough to read as motion, short enough that a scroller
+ * never meets it". Past roughly 0.4s a fast scroll outruns the animation and
+ * lands on blank space, which reads as "not loaded" — and the response to that
+ * is another scroll or a back-click, not patience. Staggered delays compound
+ * the same problem down a grid: at 0.1s per card the sixth card starts half a
+ * second after the first, so the bottom of the row is empty while the top is
+ * settled.
+ *
+ * Clamped centrally rather than at the ~40 call sites so a future
+ * `duration={1}` cannot quietly reintroduce it.
+ */
+const MAX_DURATION = 0.3;
+const MAX_DELAY = 0.15;
+
+/**
+ * An element taller than this fraction of the viewport is not "an element
+ * animating in" — it *is* the screen. Hiding it means the viewport is blank.
+ */
+const MAX_VIEWPORT_FRACTION = 0.5;
+
 export function Reveal<E extends ElementType = "div">({
     as,
     children,
@@ -70,10 +94,12 @@ export function Reveal<E extends ElementType = "div">({
     x = 0,
     scale,
     delay = 0,
-    duration = 0.7,
+    duration = 0.3,
     style,
     ...rest
 }: RevealProps<E>) {
+    const clampedDuration = Math.min(duration, MAX_DURATION);
+    const clampedDelay = Math.min(delay, MAX_DELAY);
     const Tag = (as ?? "div") as ElementType;
     const ref = useRef<HTMLElement | null>(null);
     // "static" is the SSR state: no inline opacity, no transform, fully visible.
@@ -89,7 +115,12 @@ export function Reveal<E extends ElementType = "div">({
         // Anything already in (or within a screen of) the viewport keeps the
         // state it was server-rendered in. Hiding it now would be a flash, and
         // for above-the-fold content it would delay the largest paint.
-        if (el.getBoundingClientRect().top < window.innerHeight) return;
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight) return;
+
+        // Big blocks stay put: fading a half-screen element in means a
+        // half-screen of nothing while it does so.
+        if (rect.height > window.innerHeight * MAX_VIEWPORT_FRACTION) return;
 
         setPhase("hidden");
 
@@ -115,7 +146,7 @@ export function Reveal<E extends ElementType = "div">({
                       phase === "hidden"
                           ? `translate3d(${x}px, ${y}px, 0)${scale ? ` scale(${scale})` : ""}`
                           : "none",
-                  transition: `opacity ${duration}s ${EASE} ${delay}s, transform ${duration}s ${EASE} ${delay}s`,
+                  transition: `opacity ${clampedDuration}s ${EASE} ${clampedDelay}s, transform ${clampedDuration}s ${EASE} ${clampedDelay}s`,
               };
 
     return (

@@ -34,7 +34,7 @@ export function HotelHero({ name, image, location, rating, priceRange }: HotelHe
             <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-6">
                 <div className="max-w-4xl">
                     <div className="flex items-center justify-center gap-4 mb-8">
-                        <span className="font-mono text-[10px] tracking-[0.4em] uppercase bg-white/20 backdrop-blur-md px-4 py-1.5 border border-white/20">
+                        <span className="font-mono text-xs tracking-[0.4em] uppercase bg-white/20 backdrop-blur-md px-4 py-1.5 border border-white/20">
                             {priceRange} Luxury
                         </span>
                         <div className="flex gap-1">
@@ -69,7 +69,7 @@ export function HotelHero({ name, image, location, rating, priceRange }: HotelHe
 
             {/* Scroll Indicator */}
             <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4">
-                <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-black opacity-40">Discovery</span>
+                <span className="font-mono text-xs uppercase tracking-[0.4em] text-black opacity-40">Discovery</span>
                 <div className="w-px h-12 bg-linear-to-b from-black/40 to-transparent" />
             </div>
         </div>

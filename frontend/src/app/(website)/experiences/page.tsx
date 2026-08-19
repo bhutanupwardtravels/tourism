@@ -46,6 +46,7 @@ export default async function ExperiencesPage() {
           <div className="bg-white min-h-screen pb-40">
             <div className="container mx-auto px-6 pt-32">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-32">
+                <h2 className="sr-only">Experiences</h2>
                 {experiences.map((experience, index) => (
                   <ExperienceCard key={experience.slug} experience={experience} index={index} />
                 ))}

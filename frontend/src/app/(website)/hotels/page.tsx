@@ -46,7 +46,7 @@ export default async function HotelsPage() {
                             &quot;A curated selection of sanctuaries offering authentic Bhutanese hospitality.&quot;
                         </p>
                     </div>
-                    <div className="font-mono text-[10px] text-gray-400 uppercase tracking-widest text-right">
+                    <div className="font-mono text-xs text-gray-400 uppercase tracking-widest text-right">
                         Total Sanctuaries: {hotels.length} {"// BHU-HOTEL-2025"}
                     </div>
                 </div>
@@ -71,14 +71,14 @@ export default async function HotelsPage() {
                                 )}
 
                                 <div className="absolute top-6 right-6 flex flex-col items-end gap-2">
-                                    <span className="bg-black text-white px-3 py-1 font-mono text-[8px] uppercase tracking-[0.4em] z-20">
+                                    <span className="bg-black text-white px-3 py-1 font-mono text-xs uppercase tracking-[0.4em] z-20">
                                         {hotel.priceRange} Luxury
                                     </span>
                                 </div>
 
                                 <div className="absolute bottom-6 left-6 flex items-center gap-4">
                                     <span className="h-px w-10 bg-amber-500" />
-                                    <span className="font-mono text-[10px] text-white uppercase tracking-[0.2em] font-bold drop-shadow-md">
+                                    <span className="font-mono text-xs text-white uppercase tracking-[0.2em] font-bold drop-shadow-md">
                                         Verified Stay // BHU-HOT
                                     </span>
                                 </div>
@@ -98,7 +98,7 @@ export default async function HotelsPage() {
                                             ))}
                                         </div>
                                         <span className="w-1 h-1 bg-black/20 rounded-full" />
-                                        <span className="font-mono text-[10px] text-gray-500 uppercase tracking-widest font-bold">
+                                        <span className="font-mono text-xs text-gray-500 uppercase tracking-widest font-bold">
                                             {hotel.location || "Bhutan"}
                                         </span>
                                     </div>
@@ -118,7 +118,7 @@ export default async function HotelsPage() {
                             </p>
 
                             {/* Decorative ID */}
-                            <div className="absolute top-0 -right-4 font-mono text-[8px] tracking-[0.6em] text-gray-300 rotate-90 origin-top-left py-4 border-l border-black/5 uppercase">
+                            <div className="absolute top-0 -right-4 font-mono text-xs tracking-[0.6em] text-gray-300 rotate-90 origin-top-left py-4 border-l border-black/5 uppercase">
                                 ID // {hotel.id.slice(-6).toUpperCase()}
                             </div>
                         </Link>

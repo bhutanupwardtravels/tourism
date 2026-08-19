@@ -37,7 +37,7 @@ export function BestHotels({ hotels }: BestHotelsProps) {
   return (
     <section className="py-24 md:py-32 bg-white border-t border-black/5 relative overflow-hidden">
       {/* Decorative Background Text - Seamless Loop (Right to Left) */}
-      <div className="absolute top-0 left-0 w-full overflow-hidden opacity-[0.03] select-none pointer-events-none">
+      <div aria-hidden className="absolute top-0 left-0 w-full overflow-hidden opacity-[0.03] select-none pointer-events-none">
         <motion.div
           animate={{ x: ["0%", "-50%"] }}
           transition={{
@@ -71,7 +71,7 @@ export function BestHotels({ hotels }: BestHotelsProps) {
             className="flex justify-center">
             <Link
               href="/hotels"
-              className="group inline-flex items-center gap-2 text-[10px] font-mono font-medium tracking-[0.3em] uppercase hover:text-amber-600 transition-all text-gray-400 border-b border-transparent hover:border-amber-600 pb-1"
+              className="group inline-flex items-center gap-2 text-xs font-mono font-medium tracking-[0.3em] uppercase hover:text-amber-600 transition-all text-gray-400 border-b border-transparent hover:border-amber-600 pb-1"
             >
               See all hotels
             </Link>
@@ -87,13 +87,13 @@ export function BestHotels({ hotels }: BestHotelsProps) {
           className="w-full"
         >
           <CarouselContent className="-ml-8">
-            {hotels.map((hotel, index) => (
+            {hotels.map((hotel) => (
               <CarouselItem
                 key={hotel.id}
                 className="pl-8 md:basis-1/2 lg:basis-1/3"
               >
-                <Reveal y={30} delay={index * 0.1} duration={0.8}>
-                  <HotelCard hotel={hotel} index={index} />
+                <Reveal y={30} duration={0.8}>
+                  <HotelCard hotel={hotel} />
                 </Reveal>
               </CarouselItem>
             ))}

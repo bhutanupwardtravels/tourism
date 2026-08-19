@@ -38,11 +38,19 @@ export async function getPlanMyTripData(): Promise<PlanMyTripData> {
             settingsDb.getAllCosts()
         ]);
 
-        // Filter packages if needed (e.g. only featured or specific category)
-        // For now we return the top 4 featured or general tours as "packages"
-        const packages = (allTours.filter((t) => t.featured).slice(0, 4)) as unknown as Tour[];
-        // Fallback if no featured tours
-        const finalPackages = packages.length > 0 ? packages : (allTours.slice(0, 4) as Tour[]);
+        // Every tour is offered here, featured ones first.
+        //
+        // This list is not just the browse grid — it is also what a
+        // /plan-my-trip?package=<slug> deep link resolves against, and every
+        // tour page links here with its own slug. Truncating to the featured
+        // few silently dropped the selection for the rest: the traveller made
+        // the highest-intent click on the site and landed back on the generic
+        // "three ways to start" chooser, with a 200 and no trace in analytics.
+        const featuredFirst = [
+            ...allTours.filter((t) => t.featured),
+            ...allTours.filter((t) => !t.featured),
+        ];
+        const finalPackages = featuredFirst as unknown as Tour[];
 
         return {
             packages: finalPackages,

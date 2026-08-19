@@ -10,12 +10,11 @@ import { Reveal } from "@/components/ui/reveal";
 import { TierBadge } from "@/components/common/tier-badge";
 interface TourCardProps {
     tour: Tour;
-    index: number;
     onClick?: () => void;
     isSelected?: boolean;
 }
 
-export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
+export function TourCard({ tour, onClick, isSelected }: TourCardProps) {
     const categoryTitle = tour.category || "Expedition";
     const pricing = tour.pricing;
 
@@ -108,7 +107,7 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
 
     if (onClick) {
         return (
-            <Reveal y={30} delay={index * 0.1} duration={0.8}>
+            <Reveal y={30} duration={0.8}>
                 <button onClick={onClick} className="group relative block w-full text-left">
                     {CardContent}
                 </button>
@@ -117,7 +116,7 @@ export function TourCard({ tour, index, onClick, isSelected }: TourCardProps) {
     }
 
     return (
-        <Reveal y={30} delay={index * 0.1} duration={0.8}>
+        <Reveal y={30} duration={0.8}>
             <Link
                 href={`/tours/${tour.slug}`}
                 className="group relative block"

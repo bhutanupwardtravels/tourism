@@ -79,7 +79,7 @@ export function TrustCredentials({ credentials, address, phone, whatsapp }: Trus
         <div className="text-center mb-24">
           <Reveal as="span" y={0}
             className="block font-mono text-amber-500 text-xs uppercase tracking-[0.5em] mb-6">
-            {"// {credentials.subtitle || \"why travel with us\"}"}
+            {`// ${credentials.subtitle || "why travel with us"}`}
           </Reveal>
           <h2 className="text-5xl md:text-7xl font-light tracking-tighter uppercase leading-tight">
             {titleWords[0]}{" "}
@@ -97,7 +97,7 @@ export function TrustCredentials({ credentials, address, phone, whatsapp }: Trus
                 className="flex items-start gap-5 p-8 border border-white/5 bg-white/2 hover:border-amber-500/30 transition-all duration-700">
                 <fact.icon className="w-6 h-6 text-amber-500 shrink-0 mt-1" />
                 <div>
-                  <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/40 mb-2">
+                  <p className="font-mono text-xs uppercase tracking-[0.3em] text-white/40 mb-2">
                     {fact.label}
                   </p>
                   <p className="text-lg font-light text-white/90 leading-snug break-words">
@@ -111,13 +111,13 @@ export function TrustCredentials({ credentials, address, phone, whatsapp }: Trus
 
         {items.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {items.map((item, index) => (
-              <Reveal y={30} delay={index * 0.1} duration={1}
+            {items.map((item) => (
+              <Reveal y={30} duration={1}
                 key={item.id}
                 className="p-8 border border-white/5 bg-white/2 hover:border-amber-500/30 transition-all duration-700">
-                <h4 className="text-xl font-light text-white mb-3 uppercase tracking-tight">
+                <h3 className="text-xl font-light text-white mb-3 uppercase tracking-tight">
                   {item.title}
-                </h4>
+                </h3>
                 <p className="text-gray-400 leading-relaxed font-light text-sm">
                   {item.description}
                 </p>

@@ -74,15 +74,13 @@ export function Hero({ licenseNumber, foundingYear, reviewCount }: HeroProps) {
         </div>
 
         <div>
-          <h1>
-            <span className="block text-6xl md:text-9xl font-light text-white tracking-tighter mb-4 uppercase drop-shadow-2xl">
-              Bhutan
-            </span>
-            <span className="block font-light text-base md:text-xl tracking-wide text-white/90 mb-12 max-w-2xl mx-auto drop-shadow-md">
-              Private guided journeys built with licensed Bhutanese specialists.
-              Sustainable Development Fee included, no fixed departures.
-            </span>
+          <h1 className="block text-6xl md:text-9xl font-light text-white tracking-tighter mb-4 uppercase drop-shadow-2xl">
+            Bhutan
           </h1>
+          <p className="block font-light text-base md:text-xl tracking-wide text-white/90 mb-12 max-w-2xl mx-auto drop-shadow-md">
+            Private guided journeys built with licensed Bhutanese specialists.
+            Sustainable Development Fee included, no fixed departures.
+          </p>
         </div>
 
         <div>
@@ -102,7 +100,7 @@ export function Hero({ licenseNumber, foundingYear, reviewCount }: HeroProps) {
           </div>
 
           {trustPoints.length > 0 && (
-            <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[11px] text-white/70">
+            <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-white/90">
               {trustPoints.map((point) => (
                 <li key={point} className="flex items-center gap-2 drop-shadow-md">
                   <span className="h-1 w-1 rounded-full bg-amber-500" />
@@ -117,7 +115,7 @@ export function Hero({ licenseNumber, foundingYear, reviewCount }: HeroProps) {
       {/* Scroll Indicator */}
       <div className="absolute bottom-12 left-0 right-0 z-20 flex justify-center">
         <div className="flex flex-col items-center gap-4">
-          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/60">Scroll to Discover</span>
+          <span className="font-mono text-xs uppercase tracking-[0.3em] text-white/90 drop-shadow-md">Scroll to Discover</span>
           <div className="w-px h-12 bg-linear-to-b from-white/0 via-white/40 to-white/0" />
         </div>
       </div>

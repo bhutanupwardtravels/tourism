@@ -489,7 +489,7 @@ export function CustomItineraryBuilder({
             {/* Header */}
             <div className="flex justify-between items-end mb-16 border-b border-gray-100 pb-8">
                 <div className="space-y-4">
-                    <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.3em] font-bold block">
+                    <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.3em] font-bold block">
                         Step {STEP_ORDER.indexOf(step) + 1} of {STEP_ORDER.length} &mdash; {STEP_LABELS[step]}
                     </span>
                     <h2 className="text-4xl md:text-5xl font-light tracking-tighter uppercase leading-none text-black">
@@ -683,7 +683,7 @@ export function CustomItineraryBuilder({
                         className="space-y-12"
                     >
                         <div className="text-center space-y-4 mb-12">
-                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-amber-600 font-mono">{"// step 1 of 2"}</span>
+                            <span className="text-xs font-bold uppercase tracking-[0.4em] text-amber-600 font-mono">{"// step 1 of 2"}</span>
                             <h3 className="text-4xl font-light uppercase tracking-tight text-black">Where do you <span className="italic normal-case text-amber-600">start</span>?</h3>
                             <p className="text-gray-500 max-w-xl mx-auto font-light">Pick the first place you want to visit. You can add more stops on any day.</p>
                         </div>
@@ -827,7 +827,7 @@ This estimate covers the Sustainable Development Fee, accommodation and the expe
                                         />
                                     )}
                                     <div>
-                                        <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 font-mono">{"// currently in"}</span>
+                                        <span className="text-xs font-bold uppercase tracking-widest text-amber-600 font-mono">{"// currently in"}</span>
                                         <h4 className="text-2xl font-light uppercase tracking-tight text-black">{activeDestination?.name}</h4>
                                     </div>
                                 </div>

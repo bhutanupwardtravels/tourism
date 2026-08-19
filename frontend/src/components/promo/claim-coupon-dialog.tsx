@@ -154,7 +154,7 @@ export function ClaimCouponDialog({ campaign, open, onClose, onClaimed }: ClaimC
                         ) : (
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 <div className="space-y-2">
-                                    <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-amber-600 font-mono">
+                                    <span className="text-xs font-bold uppercase tracking-[0.4em] text-amber-600 font-mono">
                                         {"// "}{campaign.discountPercent}% off
                                     </span>
                                     <h3 className="text-3xl font-light uppercase tracking-tight text-black leading-tight">

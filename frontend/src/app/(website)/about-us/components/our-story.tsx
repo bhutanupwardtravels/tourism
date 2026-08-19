@@ -23,7 +23,7 @@ export function OurStory({ story }: OurStoryProps) {
           <Reveal y={0} x={-30} duration={1}
             className="lg:col-span-7">
             <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.5em] mb-6 block">
-              {"// {story.subtitle || \"Our Narrative\"}"}
+              {`// ${story.subtitle || "Our Narrative"}`}
             </span>
 
             <h2 className="text-5xl md:text-7xl font-light tracking-tighter leading-tight mb-12 uppercase text-black">
@@ -58,7 +58,7 @@ export function OurStory({ story }: OurStoryProps) {
               {/* Tactical Overlay */}
               <div className="absolute inset-0 border border-black/5" />
               <div className="absolute top-8 right-8 bg-white/90 backdrop-blur-md px-6 py-3 border border-black/10">
-                <p className="font-mono text-[8px] text-black tracking-[0.3em] uppercase">Documented: 27.5142° N</p>
+                <p className="font-mono text-xs text-black tracking-[0.3em] uppercase">Documented: 27.5142° N</p>
               </div>
 
               {/* Scan Line Effect */}

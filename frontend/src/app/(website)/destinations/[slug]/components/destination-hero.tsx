@@ -10,7 +10,7 @@ interface DestinationHeroProps {
   region: string;
 }
 
-export function DestinationHero({ name, image }: DestinationHeroProps) {
+export function DestinationHero({ name, image, region }: DestinationHeroProps) {
   return (
     <div className="relative flex min-h-[80vh] w-full flex-col items-center justify-center overflow-hidden bg-white px-6 pb-28 pt-36 md:pt-44">
       {/* Background Image with Color */}
@@ -53,8 +53,8 @@ export function DestinationHero({ name, image }: DestinationHeroProps) {
       </div>
 
       <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center text-center text-white">
-          <span className="font-mono text-amber-400 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] mb-6 md:mb-8 block drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">
-            {"// exploring: {region}"}
+          <span className="font-mono text-amber-400 text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] mb-6 md:mb-8 block drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">
+            {`// exploring: ${region}`}
           </span>
           <h1 className="mb-10 text-balance text-[clamp(2.5rem,8vw,6.5rem)] font-light uppercase leading-[0.95] tracking-tighter text-white drop-shadow-2xl">
             {name.split(' ').map((word, i) => (
@@ -70,7 +70,7 @@ export function DestinationHero({ name, image }: DestinationHeroProps) {
               transition={{ delay: 1, duration: 1 }}
               className="hidden sm:block h-px bg-linear-to-r from-transparent to-amber-500"
             />
-            <span className="font-mono text-[10px] tracking-[0.4em] uppercase text-gray-200 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">Mission Parameters Verified</span>
+            <span className="font-mono text-xs tracking-[0.4em] uppercase text-gray-200 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">Mission Parameters Verified</span>
             <motion.span
               initial={{ width: 0 }}
               animate={{ width: 80 }}
@@ -81,7 +81,7 @@ export function DestinationHero({ name, image }: DestinationHeroProps) {
       </div>
 
       <div className="absolute bottom-12 left-12 z-10 hidden flex-col items-start gap-4 xl:flex">
-        <div className="font-mono text-[9px] tracking-[0.3em] text-amber-200/80 uppercase space-y-2 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
+        <div className="font-mono text-xs tracking-[0.3em] text-amber-200/80 uppercase space-y-2 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
           <p className="flex items-center gap-2">
             <span className="w-1 h-1 bg-amber-500 rounded-full animate-pulse" />
             lat: 27.5142° n
@@ -95,7 +95,7 @@ export function DestinationHero({ name, image }: DestinationHeroProps) {
       </div>
 
       <div className="absolute bottom-12 right-12 z-10 hidden items-center gap-6 xl:flex">
-        <span className="font-mono text-[10px] tracking-[0.4em] uppercase text-gray-200 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
+        <span className="font-mono text-xs tracking-[0.4em] uppercase text-gray-200 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
           Plan Your <span className="text-amber-400">Journey</span>
         </span>
         <div className="w-14 h-14 rounded-full border border-amber-500/30 flex items-center justify-center relative">

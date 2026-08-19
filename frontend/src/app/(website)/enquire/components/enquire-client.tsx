@@ -140,7 +140,7 @@ export default function EnquireClient() {
 
                 <div className="container mx-auto px-6 relative z-10 text-center">
                     <div className="space-y-8">
-                        <span className="font-mono text-amber-500 text-[10px] uppercase tracking-[0.8em] font-bold block mb-4">
+                        <span className="font-mono text-amber-500 text-xs uppercase tracking-[0.8em] font-bold block mb-4">
                             {"// tailor your vision"}
                         </span>
                         <h1 className="text-6xl md:text-9xl font-light tracking-tighter text-white uppercase leading-none">
@@ -160,7 +160,7 @@ export default function EnquireClient() {
                     {/* Lateral Label Section */}
                     <div className="lg:col-span-4 space-y-12">
                         <div className="space-y-6">
-                            <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.5em] font-bold block">
+                            <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.5em] font-bold block">
                                 {"// enquiry details"}
                             </span>
                             <h2 className="text-4xl font-light tracking-tighter uppercase leading-tight text-black">
@@ -173,16 +173,16 @@ Tell us roughly when you want to travel and who&apos;s coming. We&apos;ll come b
 
                         <div className="pt-12 border-t border-black/5 space-y-8">
                             <div className="flex items-start gap-6 group">
-                                <span className="font-mono text-[10px] text-amber-600 pt-1 font-bold">[01]</span>
+                                <span className="font-mono text-xs text-amber-600 pt-1 font-bold">[01]</span>
                                 <div>
-                                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-black mb-1">Response Time</h4>
+                                    <h3 className="text-[10px] font-bold uppercase tracking-widest text-black mb-1">Response Time</h3>
                                     <p className="text-xs text-black font-medium">Within 24 business hours</p>
                                 </div>
                             </div>
                             <div className="flex items-start gap-6 group">
-                                <span className="font-mono text-[10px] text-amber-600 pt-1 font-bold">[02]</span>
+                                <span className="font-mono text-xs text-amber-600 pt-1 font-bold">[02]</span>
                                 <div>
-                                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-black mb-1">Tailored Planning</h4>
+                                    <h3 className="text-[10px] font-bold uppercase tracking-widest text-black mb-1">Tailored Planning</h3>
                                     <p className="text-xs text-black font-medium">Bespoke itineraries, zero templates</p>
                                 </div>
                             </div>
@@ -354,7 +354,7 @@ Tell us roughly when you want to travel and who&apos;s coming. We&apos;ll come b
                             </div>
 
                             <div className="text-center">
-                                <span className="font-mono text-[9px] text-gray-400 uppercase tracking-widest leading-loose">
+                                <span className="font-mono text-xs text-gray-400 uppercase tracking-widest leading-loose">
                                     A specialist replies within 24 business hours. <br />
                                     By submitting, you agree to our privacy policy.
                                 </span>

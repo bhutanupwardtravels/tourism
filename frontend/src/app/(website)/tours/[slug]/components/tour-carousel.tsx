@@ -46,7 +46,7 @@ export function TourCarousel({
     return (
         <section className="py-40 bg-white text-black relative overflow-hidden">
             {/* Decorative Background Text - Seamless Loop (Right to Left) */}
-            <div className="absolute top-0 left-0 w-full overflow-hidden opacity-[0.03] select-none pointer-events-none">
+            <div aria-hidden className="absolute top-0 left-0 w-full overflow-hidden opacity-[0.03] select-none pointer-events-none">
                 <motion.div
                     animate={{ x: ["0%", "-50%"] }}
                     transition={{
@@ -69,7 +69,7 @@ export function TourCarousel({
                 <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
                     <div className="max-w-2xl">
                         <Reveal as="span" y={0} x={-20}
-                            className="font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 block">
+                            className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 block">
                             {"// more journeys"}
                         </Reveal>
                         <Reveal as="h2" y={20} delay={0.1}
@@ -88,15 +88,14 @@ export function TourCarousel({
                     className="w-full"
                 >
                     <CarouselContent className="-ml-8">
-                        {otherTours.map((tour, index) => (
+                        {otherTours.map((tour) => (
                             <CarouselItem
                                 key={tour.slug}
                                 className="pl-8 md:basis-1/2"
                             >
-                                <Reveal y={30} delay={index * 0.1} duration={0.8}>
+                                <Reveal y={30} duration={0.8}>
                                     <TourCard
                                         tour={tour}
-                                        index={index}
                                     />
                                 </Reveal>
                             </CarouselItem>

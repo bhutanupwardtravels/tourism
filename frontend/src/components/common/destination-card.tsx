@@ -33,19 +33,19 @@ export function DestinationCard({ destination, className, onClick, disableLink }
                 {/* Status Overlay */}
                 <div className="absolute bottom-6 left-6 flex items-center gap-4">
                     <span className="h-px w-8 bg-amber-600/50" />
-                    <span className="font-mono text-[9px] text-amber-600 uppercase tracking-widest font-bold">View destination</span>
+                    <span className="font-mono text-xs text-amber-600 uppercase tracking-widest font-bold">View destination</span>
                 </div>
             </div>
 
             {/* Metadata */}
             <div className="flex justify-between items-start">
                 <div>
-                    <span className="font-mono text-[10px] text-gray-500 uppercase tracking-widest font-bold">
+                    <span className="font-mono text-xs text-gray-500 uppercase tracking-widest font-bold">
                         {destination.region}
                     </span>
-                    <h2 className="text-3xl md:text-4xl font-light tracking-tighter text-black group-hover:italic transition-all duration-500 line-clamp-2 uppercase">
+                    <h3 className="text-3xl md:text-4xl font-light tracking-tighter text-black group-hover:italic transition-all duration-500 line-clamp-2 uppercase">
                         {destination.name}
-                    </h2>
+                    </h3>
                 </div>
                 <div className="w-12 h-12 rounded-full border border-black/10 flex items-center justify-center group-hover:border-amber-500 transition-colors">
                     <ArrowUpRight className="w-5 h-5 text-black transition-transform group-hover:text-amber-500 group-hover:translate-x-1 group-hover:-translate-y-1" />

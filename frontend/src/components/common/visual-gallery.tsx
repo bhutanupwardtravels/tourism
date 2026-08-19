@@ -71,7 +71,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                 {/* Restored Header */}
                 <div className="mb-32 text-center">
                     <Reveal as="span" y={0}
-                        className="font-mono text-amber-600 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 block">
+                        className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 block">
                         {subtitle}
                     </Reveal>
                     <Reveal as="h2" y={20}
@@ -203,7 +203,7 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                     <Reveal as="button" y={0}
                         className="absolute bottom-10 right-10 z-50 flex items-center gap-4 text-white/50 hover:text-white transition-colors"
                         onClick={() => openLightbox(8)}>
-                        <span className="font-mono text-[10px] uppercase tracking-widest">+ {images.length - 8} Moments</span>
+                        <span className="font-mono text-xs uppercase tracking-widest">+ {images.length - 8} Moments</span>
                         <Maximize2 className="w-4 h-4" />
                     </Reveal>
                 )}
@@ -220,11 +220,11 @@ export function VisualGallery({ images, title = "Visual Experience", subtitle = 
                     >
                         <div className="p-8 flex justify-between items-center relative z-10">
                             <div className="flex items-center gap-6">
-                                <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.5em] font-bold">
+                                <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.5em] font-bold">
                                     Gallery Explorer
                                 </span>
                                 <span className="h-px w-10 bg-white/10" />
-                                <span className="font-mono text-[10px] text-white/40 uppercase tracking-widest font-bold">
+                                <span className="font-mono text-xs text-white/40 uppercase tracking-widest font-bold">
                                     Frame {selectedImage + 1} / {images.length}
                                 </span>
                             </div>

@@ -1,9 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+/**
+ * Published on <html> so the other two bottom-anchored elements — the chat
+ * bubble and the promo banner, neither of which knows this bar exists — can
+ * lift themselves clear of it. Without this all three stack in the same corner
+ * on a phone, and the promo banner (nearly full width at this breakpoint, and
+ * at a higher z-index) lands squarely on the only CTA a mobile tour page has.
+ */
+const BAR_HEIGHT_VAR = "--mobile-action-bar-h";
 
 interface TourActionBarProps {
     slug: string;
@@ -19,6 +28,7 @@ interface TourActionBarProps {
  */
 export function TourActionBar({ slug, title, duration, price }: TourActionBarProps) {
     const [visible, setVisible] = useState(false);
+    const barRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const onScroll = () => setVisible(window.scrollY > 600);
@@ -26,6 +36,23 @@ export function TourActionBar({ slug, title, duration, price }: TourActionBarPro
         window.addEventListener("scroll", onScroll, { passive: true });
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
+
+    // The bar is display:none above `lg`, where offsetHeight is 0 — which is
+    // exactly right, since the desktop sidebar owns the CTA there and nothing
+    // needs lifting. Measured rather than hard-coded because the title wraps.
+    useEffect(() => {
+        const root = document.documentElement;
+        const publish = () => {
+            const height = visible ? (barRef.current?.offsetHeight ?? 0) : 0;
+            root.style.setProperty(BAR_HEIGHT_VAR, `${height}px`);
+        };
+        publish();
+        window.addEventListener("resize", publish);
+        return () => {
+            window.removeEventListener("resize", publish);
+            root.style.removeProperty(BAR_HEIGHT_VAR);
+        };
+    }, [visible]);
 
     const formattedPrice =
         price === undefined
@@ -39,6 +66,7 @@ export function TourActionBar({ slug, title, duration, price }: TourActionBarPro
 
     return (
         <div
+            ref={barRef}
             className={cn(
                 "fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-black/95 backdrop-blur-md transition-transform duration-300 lg:hidden",
                 visible ? "translate-y-0" : "translate-y-full"

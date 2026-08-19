@@ -87,7 +87,7 @@ export default async function CallToAction() {
             {licenseNumber && (
               <div className="hidden md:flex items-center gap-6">
                 <span className="h-px w-20 bg-black/10" />
-                <span className="font-mono text-[8px] text-gray-400 uppercase tracking-widest leading-relaxed">
+                <span className="font-mono text-xs text-gray-400 uppercase tracking-widest leading-relaxed">
                   Licensed by the Tourism <br /> Council of Bhutan &middot; {licenseNumber}
                 </span>
               </div>

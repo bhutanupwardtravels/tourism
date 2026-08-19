@@ -54,8 +54,8 @@ export function AboutHero({ hero }: AboutHeroProps) {
       {/* Content */}
       <div className="relative z-20 mx-auto flex w-full max-w-5xl flex-col items-center text-center text-white">
           <div>
-            <span className="font-mono text-amber-400 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] mb-6 md:mb-8 block drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">
-              {"// {hero.subtitle}"}
+            <span className="font-mono text-amber-400 text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] mb-6 md:mb-8 block drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">
+              {`// ${hero.subtitle}`}
             </span>
           </div>
 
@@ -83,7 +83,7 @@ export function AboutHero({ hero }: AboutHeroProps) {
               transition={{ delay: 1, duration: 1 }}
               className="hidden sm:block h-px bg-linear-to-r from-transparent to-amber-500"
             />
-            <span className="font-mono text-[9px] tracking-[0.4em] uppercase text-gray-400">Bhutan Upward Travels</span>
+            <span className="font-mono text-xs tracking-[0.4em] uppercase text-gray-400">Bhutan Upward Travels</span>
             <motion.span
               initial={{ width: 0 }}
               animate={{ width: 80 }}
@@ -95,7 +95,7 @@ export function AboutHero({ hero }: AboutHeroProps) {
 
       {/* Side metadata */}
       <div className="absolute bottom-12 left-12 z-20 hidden flex-col items-start gap-4 xl:flex">
-        <div className="font-mono text-[8px] tracking-[0.3em] text-amber-200/70 uppercase space-y-2">
+        <div className="font-mono text-xs tracking-[0.3em] text-amber-200/70 uppercase space-y-2">
           <p className="flex items-center gap-2">
             <span className="w-1 h-1 bg-amber-500 rounded-full animate-pulse" />
             Kingdom of Bhutan
@@ -110,7 +110,7 @@ export function AboutHero({ hero }: AboutHeroProps) {
 
       {/* Bottom Right Action Indicator */}
       <div className="absolute bottom-12 right-12 z-20 hidden items-center gap-6 xl:flex">
-        <span className="font-mono text-[9px] tracking-[0.4em] uppercase text-gray-300">
+        <span className="font-mono text-xs tracking-[0.4em] uppercase text-gray-300">
           Scroll to <span className="text-amber-400">Explore</span>
         </span>
         <div className="w-12 h-12 rounded-full border border-amber-500/30 flex items-center justify-center relative">

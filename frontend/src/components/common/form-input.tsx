@@ -33,6 +33,17 @@ export function FormInput({
                 className="block text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors"
             >
                 {label}
+                {/* `required` defaults to true here, so before this every field was
+                    mandatory and nothing said so until submission failed. The
+                    asterisk is aria-hidden because the input's own `required`
+                    attribute already carries this to assistive tech. */}
+                {required ? (
+                    <span aria-hidden className="text-amber-600"> *</span>
+                ) : (
+                    <span className="ml-2 font-normal normal-case tracking-normal text-gray-400">
+                        (optional)
+                    </span>
+                )}
             </label>
             <input
                 id={id}

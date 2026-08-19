@@ -46,11 +46,11 @@ export function ExperienceCard({ experience, index, disableLink, className }: Ex
             {/* Card UI */}
             <div className="absolute inset-0 p-8 flex flex-col justify-between z-30 text-white">
                 <div className="flex justify-between items-start">
-                    <span className="font-mono text-[9px] tracking-widest uppercase bg-white/10 backdrop-blur-md px-3 py-1 border border-white/10">
+                    <span className="font-mono text-xs tracking-widest uppercase bg-white/10 backdrop-blur-md px-3 py-1 border border-white/10">
                         ID: {index.toString().padStart(2, '0')}
                     </span>
                     {experience.duration && (
-                        <span className="font-mono text-[9px] tracking-widest uppercase bg-amber-500/20 backdrop-blur-md px-3 py-1 border border-amber-500/20 text-amber-500">
+                        <span className="font-mono text-xs tracking-widest uppercase bg-amber-500/20 backdrop-blur-md px-3 py-1 border border-amber-500/20 text-amber-500">
                             {formatDuration(experience.duration)}
                         </span>
                     )}
@@ -58,24 +58,24 @@ export function ExperienceCard({ experience, index, disableLink, className }: Ex
 
                 <div>
                     {experience.destinationSlug && (
-                        <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/50 mb-2 block">
+                        <span className="font-mono text-xs tracking-[0.3em] uppercase text-white/50 mb-2 block">
                             {experience.destinationSlug}
                         </span>
                     )}
                     {experience.category && (
-                        <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-amber-500 mb-4 block">
+                        <span className="font-mono text-xs tracking-[0.3em] uppercase text-amber-500 mb-4 block">
                             {experience.category}
                         </span>
                     )}
-                    <h4 className="text-3xl md:text-4xl font-light tracking-tighter mb-6 group-hover:italic transition-all duration-500 line-clamp-2 uppercase">
+                    <h3 className="text-3xl md:text-4xl font-light tracking-tighter mb-6 group-hover:italic transition-all duration-500 line-clamp-2 uppercase">
                         {experience.title}
-                    </h4>
+                    </h3>
                     <p className="text-base text-white/60 font-light leading-relaxed line-clamp-2 italic mb-6">
                         &quot;{experience.description}&quot;
                     </p>
                     <div className="flex items-center gap-4 text-white/50 group-hover:text-white transition-colors duration-500">
                         <span className="h-px w-8 bg-white/20 group-hover:w-16 group-hover:bg-amber-500 transition-all duration-500" />
-                        <span className="font-mono text-[9px] uppercase tracking-widest">
+                        <span className="font-mono text-xs uppercase tracking-widest">
                             View experience
                         </span>
                     </div>
@@ -85,7 +85,7 @@ export function ExperienceCard({ experience, index, disableLink, className }: Ex
     );
 
     return (
-        <Reveal y={0} scale={0.98} delay={index * 0.1} duration={0.6}>
+        <Reveal y={0} scale={0.98} duration={0.6}>
             {experience.slug && !disableLink ? (
                 <Link href={`/experiences/${experience.slug}`}>
                     {CardContent}

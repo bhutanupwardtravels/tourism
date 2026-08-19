@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Transition } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Sparkles, Heart, MessageCircle, Clock, User } from "lucide-react";
 import { PackageSelection } from "./package-selection";
 import { CustomItineraryBuilder } from "./custom-itinerary-builder";
 import { TourRequestForm } from "./tour-request-form";
-import { PlanMyTripHero } from "./plan-my-trip-hero";
+import { PlanMyTripHero, type PlanningStep } from "./plan-my-trip-hero";
 import { readDraft } from "../draft";
 import { usePortalChrome } from "../../portal-chrome";
 import { Tour } from "@/app/(website)/tours/schema";
@@ -17,7 +17,23 @@ import { Experience } from "@/app/(website)/experiences/schema";
 import { Hotel } from "../../../admin/hotels/schema";
 import { Cost } from "../../../admin/settings/schema";
 
-type PlanningStep = "mode_selection" | "package_list" | "custom_builder" | "inquiry_form";
+/**
+ * Shared shell for the three post-choice panels.
+ *
+ * Every branch of the swap below has to be a *keyed motion element*. With
+ * mode="wait", AnimatePresence holds the incoming child until the outgoing one
+ * reports its exit finished — and a plain, unkeyed <div> never reports one. The
+ * mode grid then stays mounted at ~0 opacity and the next step never appears,
+ * which dead-ends the primary CTA on a visibly blank page.
+ */
+const PANEL_SHELL = "bg-white text-black shadow-2xl p-6 md:p-16 my-8";
+const PANEL_TRANSITION: Transition = { duration: 0.3, ease: "easeOut" };
+const PANEL_MOTION = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 },
+    transition: PANEL_TRANSITION,
+};
 
 /**
  * The three ways in. Each one carries an effort cue and an audience cue,
@@ -133,12 +149,36 @@ export default function PlanMyTripClient({
         setStep("inquiry_form");
     };
 
+    // Each step replaces the whole panel, and the replacement is usually much
+    // shorter than what it replaced (the package grid is ~3600px, the request
+    // form ~2200px). The browser keeps the old scroll offset, so without this
+    // the traveller's first view of the request form is its bottom edge — a
+    // discount box and a submit button, with every field they have to fill in
+    // off-screen above. Skipped on first paint so a deep link or a resumed
+    // draft does not yank a page that is already at the top.
+    const panelRef = useRef<HTMLElement>(null);
+    const hasRendered = useRef(false);
+
+    useEffect(() => {
+        if (!hasRendered.current) {
+            hasRendered.current = true;
+            return;
+        }
+        const prefersReducedMotion =
+            typeof window !== "undefined" &&
+            window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        panelRef.current?.scrollIntoView({
+            behavior: prefersReducedMotion ? "auto" : "smooth",
+            block: "start",
+        });
+    }, [step]);
+
     return (
         <div className="pb-20">
-            <PlanMyTripHero />
+            <PlanMyTripHero step={step} />
 
             {/* Mode Selection / Interface Area */}
-            <section className="relative px-4 sm:px-6">
+            <section ref={panelRef} className="relative scroll-mt-24 px-4 sm:px-6 lg:scroll-mt-28">
                 <div className="max-w-7xl mx-auto">
                     <AnimatePresence mode="wait">
                         {step === "mode_selection" ? (
@@ -241,16 +281,16 @@ export default function PlanMyTripClient({
                                 })}
                             </motion.div>
                         ) : step === "package_list" ? (
-                            <div className="bg-white text-black shadow-2xl p-6 md:p-16 my-8">
+                            <motion.div key="package-list" {...PANEL_MOTION} className={PANEL_SHELL}>
                                 <PackageSelection
                                     packages={packages}
                                     selectedPackage={selectedTour}
                                     onBack={() => setStep("mode_selection")}
                                     onSelect={handleTourSelect}
                                 />
-                            </div>
+                            </motion.div>
                         ) : step === "custom_builder" ? (
-                            <div className="bg-white text-black shadow-2xl p-6 md:p-16 my-8">
+                            <motion.div key="custom-builder" {...PANEL_MOTION} className={PANEL_SHELL}>
                                 <CustomItineraryBuilder
                                     experiences={experiences}
                                     destinations={destinations}
@@ -259,14 +299,14 @@ export default function PlanMyTripClient({
                                     costs={costs}
                                     onBack={() => setStep("mode_selection")}
                                 />
-                            </div>
+                            </motion.div>
                         ) : step === "inquiry_form" ? (
-                            <div className="bg-white text-black shadow-2xl p-6 md:p-16 my-8">
+                            <motion.div key="inquiry-form" {...PANEL_MOTION} className={PANEL_SHELL}>
                                 <TourRequestForm
                                     selectedTour={selectedTour}
                                     onBack={() => setStep("package_list")}
                                 />
-                            </div>
+                            </motion.div>
                         ) : null}
                     </AnimatePresence>
                 </div>

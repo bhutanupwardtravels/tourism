@@ -13,6 +13,16 @@ const APPEAR_AFTER_MS = 8000;
 // Never interrupt someone who is already converting.
 const SUPPRESSED_PATHS = ["/plan-my-trip", "/enquire"];
 
+/**
+ * Tour *detail* pages (not the /tours index) carry TourActionBar, which is the
+ * only CTA those pages have below `lg`. This banner is nearly full-width at
+ * that breakpoint and sits at a higher z-index, so it landed on top of the
+ * button — arriving 8 seconds in, exactly as the visitor starts reading.
+ * Somebody deep in a single itinerary is already converting; the rule above
+ * applies to them too.
+ */
+const TOUR_DETAIL_RE = /^\/tours\/[^/]+/;
+
 function dismissKey(id: string) {
     return `promo_dismissed_${id}`;
 }
@@ -36,7 +46,9 @@ export function PromoBanner({ campaign }: { campaign: PublicCampaign | null }) {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [claimed, setClaimed] = useState(false);
 
-    const suppressed = SUPPRESSED_PATHS.some((p) => pathname?.startsWith(p));
+    const suppressed =
+        SUPPRESSED_PATHS.some((p) => pathname?.startsWith(p)) ||
+        TOUR_DETAIL_RE.test(pathname ?? "");
 
     // The effect only ever arms the timer; suppression is handled at render
     // time below, so navigating to /plan-my-trip doesn't cost a re-render.
@@ -87,7 +99,7 @@ export function PromoBanner({ campaign }: { campaign: PublicCampaign | null }) {
                         animate={{ opacity: 1, y: 0, x: 0 }}
                         exit={{ opacity: 0, y: 40 }}
                         transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
-                        className="fixed bottom-6 left-6 z-50 w-[calc(100vw-3rem)] max-w-sm bg-black text-white shadow-2xl shadow-black/40"
+                        className="fixed bottom-[calc(1.5rem+var(--mobile-action-bar-h,0px))] left-6 z-50 w-[calc(100vw-3rem)] max-w-sm bg-black text-white shadow-2xl shadow-black/40"
                     >
                         <button
                             type="button"

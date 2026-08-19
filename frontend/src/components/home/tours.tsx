@@ -94,9 +94,9 @@ export function FeaturedItinerary({ itineraries }: FeaturedItineraryProps) {
                     onBlurCapture={() => setIsPaused(false)}
                 >
                     <CarouselContent className="-ml-8">
-                        {itineraries.map((tour, index) => (
+                        {itineraries.map((tour) => (
                             <CarouselItem key={tour.slug} className="pl-8 md:basis-1/2">
-                                <TourCard tour={tour} index={index} />
+                                <TourCard tour={tour} />
                             </CarouselItem>
                         ))}
                     </CarouselContent>

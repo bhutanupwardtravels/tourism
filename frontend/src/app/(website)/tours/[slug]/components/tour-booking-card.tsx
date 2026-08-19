@@ -14,7 +14,7 @@ export function TourBookingCard({ slug, className = "" }: TourBookingCardProps) 
                 {/* Decorative Corner */}
                 <div className="absolute top-0 right-0 w-16 h-16 border-t border-r border-amber-600/20 group-hover:border-amber-600/50 transition-colors" />
 
-                <span className="font-mono text-[8px] md:text-[10px] text-amber-600 uppercase tracking-[0.4em] md:tracking-[0.5em] mb-6 md:mb-8 block font-bold">
+                <span className="font-mono text-xs text-amber-600 uppercase tracking-[0.4em] md:tracking-[0.5em] mb-6 md:mb-8 block font-bold">
                     {"// plan this trip"}
                 </span>
 

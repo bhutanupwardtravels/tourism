@@ -10,7 +10,7 @@ interface DayHeroProps {
     tourTitle: string;
 }
 
-export function DayHero({ title, image }: DayHeroProps) {
+export function DayHero({ dayNumber, title, image, tourTitle }: DayHeroProps) {
     return (
         <section className="h-[70vh] relative overflow-hidden bg-white">
             {/* Background Image with Reveal */}
@@ -34,7 +34,7 @@ export function DayHero({ title, image }: DayHeroProps) {
                 <div className="max-w-5xl">
                     <div className="flex items-center gap-6 mb-8">
                         <span className="font-mono text-amber-600 text-[13px] uppercase tracking-[0.5em] font-bold">
-              {"// day {dayNumber < 10 ? `0${dayNumber}` : dayNumber} : {tourTitle}"}
+              {`// day ${dayNumber < 10 ? `0${dayNumber}` : dayNumber} : ${tourTitle}`}
                         </span>
                         <span className="h-px w-12 bg-black/10" />
                     </div>
@@ -44,7 +44,7 @@ export function DayHero({ title, image }: DayHeroProps) {
                     </h1>
 
                     <div className="flex items-center gap-4">
-                        <span className="font-mono text-[11px] text-white uppercase tracking-widest bg-black/5 px-4 py-1.5 rounded-full font-bold">
+                        <span className="font-mono text-xs text-white uppercase tracking-widest bg-black/5 px-4 py-1.5 rounded-full font-bold">
                             Fully guided day
                         </span>
                     </div>

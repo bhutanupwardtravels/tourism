@@ -19,7 +19,7 @@ export function FestivalCard({ festival, index }: FestivalCardProps) {
     const isEven = index % 2 === 0;
 
     return (
-        <Reveal y={30} delay={index * 0.1} duration={0.8}
+        <Reveal y={30} duration={0.8}
             className={isEven ? "lg:col-span-7" : "lg:col-span-5 lg:mt-24"}>
             <Link
                 href={`/experiences/${festival.slug}`}
@@ -38,7 +38,7 @@ export function FestivalCard({ festival, index }: FestivalCardProps) {
                         )}
 
                         <div className="absolute top-6 left-6">
-                            <span className="bg-white/90 backdrop-blur-md px-3 py-1 font-mono text-[8px] tracking-[0.3em] border border-black/10 uppercase text-black">
+                            <span className="bg-white/90 backdrop-blur-md px-3 py-1 font-mono text-xs tracking-[0.3em] border border-black/10 uppercase text-black">
                                 Experience: {index + 10}
                             </span>
                         </div>
@@ -47,7 +47,7 @@ export function FestivalCard({ festival, index }: FestivalCardProps) {
                     <div className="space-y-6">
                         <div className="flex items-center gap-4">
                             <div className="w-1.5 h-1.5 bg-amber-600 rounded-full animate-pulse" />
-                            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-amber-600">
+                            <span className="font-mono text-xs uppercase tracking-[0.3em] text-amber-600">
                                 Annual Cultural Event
                             </span>
                         </div>
@@ -65,7 +65,7 @@ export function FestivalCard({ festival, index }: FestivalCardProps) {
                         <div className="pt-6 flex justify-between items-center border-t border-black/5">
                             <div className="flex items-center gap-4 text-gray-400 group-hover:text-black transition-colors">
                                 <span className="h-px w-8 bg-black/20 group-hover:w-16 group-hover:bg-amber-600/50 transition-all duration-500" />
-                                <span className="font-mono text-[9px] uppercase tracking-widest text-black/40 group-hover:text-black">View festival</span>
+                                <span className="font-mono text-xs uppercase tracking-widest text-black/40 group-hover:text-black">View festival</span>
                             </div>
                             <Calendar className="w-4 h-4 text-black/20 group-hover:text-amber-600 transition-colors" />
                         </div>

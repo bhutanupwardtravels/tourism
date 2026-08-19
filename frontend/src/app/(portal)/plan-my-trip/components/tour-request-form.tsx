@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -111,7 +112,8 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                         Request <span className="italic font-serif normal-case text-amber-600">Confirmed</span>
                     </h2>
                     <p className="text-black leading-relaxed text-xl font-light italic max-w-lg mx-auto">
-                        &quot;Your request for {selectedTour?.title} has been received. Our team will review your application and respond shortly.&quot;
+                        &quot;Got it. A specialist will email you a tailored plan and the full price for
+                        {selectedTour?.title ? ` ${selectedTour.title}` : " your trip"} within 24 business hours.&quot;
                     </p>
                 </div>
 
@@ -135,7 +137,7 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
         >
             <div className="flex justify-between items-end mb-24 border-b border-black/5 pb-12">
                 <div className="space-y-4">
-                    <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.5em] font-bold block">
+                    <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.5em] font-bold block">
                         {"// finalization"}
                     </span>
                     <h2 className="text-4xl md:text-6xl font-light tracking-tighter uppercase leading-none text-black">
@@ -168,7 +170,7 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
 
                         <div className="absolute inset-0 p-8 flex flex-col justify-between">
                             <div className="flex justify-between items-start">
-                                <span className="inline-block bg-amber-600/90 backdrop-blur-sm px-3 py-1 font-mono text-[8px] font-bold uppercase tracking-widest text-white">
+                                <span className="inline-block bg-amber-600/90 backdrop-blur-sm px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest text-white">
                                     {"// Your itinerary"}
                                 </span>
                             </div>
@@ -359,6 +361,19 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                                 </span>
                                 <div className="absolute inset-0 -translate-x-full group-hover:translate-x-0 bg-amber-500 transition-transform duration-700 ease-in-out" />
                             </button>
+                        </div>
+
+                        {/* Matches the close on /enquire. This is the higher-intent
+                            form of the two, so it should not make the weaker promise. */}
+                        <div className="text-center">
+                            <span className="font-mono text-xs text-gray-400 uppercase tracking-widest leading-loose">
+                                A specialist replies within 24 business hours. <br />
+                                By submitting, you agree to our{" "}
+                                <Link href="/privacy" className="underline hover:text-amber-600">
+                                    privacy policy
+                                </Link>
+                                .
+                            </span>
                         </div>
                     </form>
                 </div>

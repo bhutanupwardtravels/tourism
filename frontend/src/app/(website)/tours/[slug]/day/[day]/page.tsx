@@ -72,38 +72,38 @@ export default async function TourDayPage({ params }: PageProps) {
         <div className="flex flex-col md:flex-row justify-between items-center gap-8 pb-24">
           <Link
             href={`/tours/${slug}`}
-            className="group flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.4em] text-gray-500 hover:text-black transition-all font-bold"
+            className="group flex items-center gap-4 font-mono text-xs uppercase tracking-[0.4em] text-gray-500 hover:text-black transition-all font-bold"
           >
             <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-2" />
             Back to the full itinerary
           </Link>
 
           <div className="flex items-center gap-8">
-            <div className="font-mono text-[10px] text-gray-400 uppercase tracking-widest hidden lg:block font-bold">
+            <div className="font-mono text-xs text-gray-400 uppercase tracking-widest hidden lg:block font-bold">
               Sequence Registry // Kingdom of Bhutan
             </div>
             <div className="flex bg-black/5 p-1 rounded-xs">
               {prevDay ? (
                 <Link
                   href={`/tours/${slug}/day/${prevDay}`}
-                  className="flex items-center gap-2 px-6 py-3 bg-white text-black text-[10px] font-mono border border-black/5 uppercase tracking-widest hover:bg-neutral-50 transition-colors"
+                  className="flex items-center gap-2 px-6 py-3 bg-white text-black text-xs font-mono border border-black/5 uppercase tracking-widest hover:bg-neutral-50 transition-colors"
                 >
                   <ChevronLeft className="w-3 h-3" /> Prev
                 </Link>
               ) : (
-                <div className="px-6 py-3 text-gray-300 text-[10px] font-mono uppercase tracking-widest cursor-not-allowed">
+                <div className="px-6 py-3 text-gray-300 text-xs font-mono uppercase tracking-widest cursor-not-allowed">
                   Start
                 </div>
               )}
               {nextDay ? (
                 <Link
                   href={`/tours/${slug}/day/${nextDay}`}
-                  className="flex items-center gap-2 px-6 py-3 bg-white text-black text-[10px] font-mono border-l-0 border border-black/5 uppercase tracking-widest hover:bg-neutral-50 transition-colors"
+                  className="flex items-center gap-2 px-6 py-3 bg-white text-black text-xs font-mono border-l-0 border border-black/5 uppercase tracking-widest hover:bg-neutral-50 transition-colors"
                 >
                   Next <ChevronRight className="w-3 h-3" />
                 </Link>
               ) : (
-                <div className="px-6 py-3 text-gray-300 text-[10px] font-mono uppercase tracking-widest border-l-0 border border-black/5 cursor-not-allowed">
+                <div className="px-6 py-3 text-gray-300 text-xs font-mono uppercase tracking-widest border-l-0 border border-black/5 cursor-not-allowed">
                   End
                 </div>
               )}
@@ -117,7 +117,7 @@ export default async function TourDayPage({ params }: PageProps) {
             <div className="flex flex-col gap-20">
               <div className="max-w-3xl">
                 <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-6 block">
-                  {"// day {dayNumber < 10 ? `0${dayNumber}` : dayNumber}"}
+                  {`// day ${dayNumber < 10 ? `0${dayNumber}` : dayNumber}`}
                 </span>
                 <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter leading-tight mb-8 md:mb-12 uppercase">
                   The <span className="italic font-serif normal-case text-amber-600">Experience</span> <br />of {dayData.title}
@@ -126,7 +126,7 @@ export default async function TourDayPage({ params }: PageProps) {
                   <p className="text-lg md:text-xl text-gray-500 leading-relaxed font-light italic">
                     &quot;{dayData.description}&quot;
                   </p>
-                  <div className="mt-10 font-mono text-[10px] text-gray-500 uppercase tracking-widest flex items-center gap-3 font-bold">
+                  <div className="mt-10 font-mono text-xs text-gray-500 uppercase tracking-widest flex items-center gap-3 font-bold">
                     <ShieldCheck className="w-4 h-4 text-amber-600" />
                     Guides, transport and stays all arranged
                   </div>
@@ -158,7 +158,7 @@ export default async function TourDayPage({ params }: PageProps) {
                           <div className="absolute left-[19px] top-6 w-[9px] h-[9px] rounded-full border border-amber-600 bg-white z-10 hidden md:block group-hover:bg-amber-600 transition-colors" />
 
                           <div className="md:w-16 pt-5">
-                            <span className="font-mono text-[10px] text-gray-300 font-bold hidden md:block">
+                            <span className="font-mono text-xs text-gray-300 font-bold hidden md:block">
                               [{idx < 9 ? `0${idx + 1}` : idx + 1}]
                             </span>
                           </div>
@@ -170,7 +170,7 @@ export default async function TourDayPage({ params }: PageProps) {
                                   <div className="p-2 bg-blue-50 rounded-full">
                                     <ArrowRightLeft className="w-4 h-4 text-blue-600" />
                                   </div>
-                                  <h4 className="font-mono text-[10px] uppercase tracking-[0.3em] text-blue-600 font-bold">Change Destination</h4>
+                                  <h4 className="font-mono text-xs uppercase tracking-[0.3em] text-blue-600 font-bold">Change Destination</h4>
                                 </div>
 
                                 <TravelMap
@@ -185,13 +185,13 @@ export default async function TourDayPage({ params }: PageProps) {
                                     {item.travel.location && (
                                       <div className="flex items-center gap-2">
                                         <MapPin className="w-3 h-3 text-gray-400" />
-                                        <span className="text-[10px] font-mono text-gray-500 uppercase tracking-wider">{item.travel.location}</span>
+                                        <span className="text-xs font-mono text-gray-500 uppercase tracking-wider">{item.travel.location}</span>
                                       </div>
                                     )}
                                     {item.travel.timing && (
                                       <div className="flex items-center gap-2">
                                         <Clock className="w-3 h-3 text-gray-400" />
-                                        <span className="text-[10px] font-mono text-gray-500 uppercase tracking-wider">{item.travel.timing}</span>
+                                        <span className="text-xs font-mono text-gray-500 uppercase tracking-wider">{item.travel.timing}</span>
                                       </div>
                                     )}
                                   </div>
@@ -200,7 +200,7 @@ export default async function TourDayPage({ params }: PageProps) {
                             ) : item.hotelId ? null : (
                               <div className="space-y-8">
 
-                                <h4 className="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.4em] text-amber-500 font-bold">
+                                <h4 className="flex items-center gap-4 font-mono text-xs uppercase tracking-[0.4em] text-amber-500 font-bold">
                                   <Eye className="w-4 h-4" /> [ Sightseeing ]
                                 </h4>
 
@@ -227,13 +227,13 @@ export default async function TourDayPage({ params }: PageProps) {
               {/* Legacy Activities if no items */}
               {(!dayData.items || dayData.items.length === 0) && dayData.activities && dayData.activities.length > 0 && (
                 <div className="bg-white p-16 hover:bg-neutral-50 transition-colors duration-500 group border border-black/5">
-                  <h4 className="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.4em] text-amber-600 mb-10 font-bold">
+                  <h4 className="flex items-center gap-4 font-mono text-xs uppercase tracking-[0.4em] text-amber-600 mb-10 font-bold">
                     <MapPin className="w-4 h-4" /> What you&apos;ll do
                   </h4>
                   <ul className="space-y-8">
                     {dayData.activities.map((activity: string, index: number) => (
                       <li key={index} className="flex items-start gap-4 group/item">
-                        <span className="font-mono text-[10px] text-gray-300 mt-1">[0{index + 1}]</span>
+                        <span className="font-mono text-xs text-gray-300 mt-1">[0{index + 1}]</span>
                         <p className="text-gray-500 leading-relaxed font-light italic group-hover/item:text-black transition-colors duration-300">
                           {activity}
                         </p>
@@ -246,13 +246,13 @@ export default async function TourDayPage({ params }: PageProps) {
               {/* Base Operations (Hotel) */}
               {(hotel || dayData.accommodation) && (
                 <div className="mt-16 pt-12 border-t border-black/5">
-                  <h4 className="flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.4em] text-amber-500 mb-10 font-bold">
+                  <h4 className="flex items-center gap-4 font-mono text-xs uppercase tracking-[0.4em] text-amber-500 mb-10 font-bold">
                     <BedDouble className="w-4 h-4" /> [ Accomodation for the Night ]
                   </h4>
 
                   {hotel ? (
                     <div className="w-full ">
-                      <HotelCard hotel={hotel} index={0} className="sm:aspect-video" />
+                      <HotelCard hotel={hotel} className="sm:aspect-video" />
                     </div>
                   ) : (
                     <div className="bg-black text-white p-12 rounded-sm relative overflow-hidden group">

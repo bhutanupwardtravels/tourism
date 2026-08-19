@@ -88,8 +88,8 @@ export function ExperienceHero({
             </div>
 
             <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center text-center text-white">
-                    <span className="font-mono text-amber-400 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] mb-6 md:mb-8 block drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">
-                        {"// exploring: {category}"}
+                    <span className="font-mono text-amber-400 text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] mb-6 md:mb-8 block drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">
+                        {`// exploring: ${category}`}
                     </span>
                     <h1 className="mb-10 text-balance text-[clamp(2.25rem,7vw,5.5rem)] font-light uppercase leading-[0.95] tracking-tighter text-white drop-shadow-2xl">
                         {title.split(' ').map((word, i) => (
@@ -116,7 +116,7 @@ export function ExperienceHero({
                                     <Clock className="w-6 h-6 text-amber-500" />
                                 </div>
                                 <div className="text-left">
-                                    <span className="block font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1">Duration</span>
+                                    <span className="block font-mono text-xs text-gray-400 uppercase tracking-widest mb-1">Duration</span>
                                     <span className="font-light tracking-widest text-lg md:text-xl uppercase text-white">{formatDuration(duration)}</span>
                                 </div>
                             </div>
@@ -134,7 +134,7 @@ export function ExperienceHero({
                                     </div>
                                     <div className="text-left">
                                         <span className={`
-                                            block font-mono text-[10px] uppercase tracking-widest mb-1
+                                            block font-mono text-xs uppercase tracking-widest mb-1
                                             ${category?.toLowerCase() === 'festival' ? 'text-amber-500' : 'text-gray-400'}
                                         `}>Event Dates</span>
                                         <span className={`
@@ -157,7 +157,7 @@ export function ExperienceHero({
                                     <Mountain className="w-6 h-6 text-amber-500" />
                                 </div>
                                 <div className="text-left">
-                                    <span className="block font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1">Intensity</span>
+                                    <span className="block font-mono text-xs text-gray-400 uppercase tracking-widest mb-1">Intensity</span>
                                     <span className="font-light tracking-widest text-lg md:text-xl uppercase text-white">{difficulty}</span>
                                 </div>
                             </div>
@@ -167,7 +167,7 @@ export function ExperienceHero({
             </div>
 
             <div className="absolute bottom-12 left-12 z-10 hidden flex-col items-start gap-4 2xl:flex">
-                <div className="font-mono text-[9px] tracking-[0.3em] text-amber-200/80 uppercase space-y-2 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
+                <div className="font-mono text-xs tracking-[0.3em] text-amber-200/80 uppercase space-y-2 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
                     <p className="flex items-center gap-2">
                         <span className="w-1 h-1 bg-amber-500 rounded-full animate-pulse" />
                         Kingdom of Bhutan

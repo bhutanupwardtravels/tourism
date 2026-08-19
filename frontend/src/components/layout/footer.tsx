@@ -83,9 +83,9 @@ export function Footer({ contact }: FooterProps) {
           </div>
 
           <div>
-            <h4 className="text-sm font-bold uppercase tracking-widest mb-6 text-gray-500">
+            <h2 className="text-sm font-bold uppercase tracking-widest mb-6 text-gray-500">
               Explore
-            </h4>
+            </h2>
             <ul className="space-y-4 text-sm">
               <li>
                 <Link href="/destinations" className="hover:text-gray-300 transition-colors">
@@ -121,9 +121,9 @@ export function Footer({ contact }: FooterProps) {
           </div>
 
           <div>
-            <h4 className="text-sm font-bold uppercase tracking-widest mb-6 text-gray-500">
+            <h2 className="text-sm font-bold uppercase tracking-widest mb-6 text-gray-500">
               Support
-            </h4>
+            </h2>
             <ul className="space-y-4 text-sm">
               <li>
                 <Link href="/enquire" className="hover:text-gray-300 transition-colors">
@@ -150,12 +150,12 @@ export function Footer({ contact }: FooterProps) {
 
           <div className="space-y-8">
             <div>
-              <h4 className="text-sm font-bold uppercase tracking-widest mb-6 text-gray-500">
+              <span className="block text-sm font-bold uppercase tracking-widest mb-6 text-gray-500">
                 Begin Discovery
-              </h4>
-              <h3 className="text-3xl font-light tracking-tighter text-white uppercase italic serif leading-tight">
+              </span>
+              <h2 className="text-3xl font-light tracking-tighter text-white uppercase italic serif leading-tight">
                 Plan Your <span className="font-serif text-amber-500">Adventure</span>
-              </h3>
+              </h2>
             </div>
 
             <Link

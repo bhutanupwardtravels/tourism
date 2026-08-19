@@ -36,7 +36,7 @@ export function Experiences({ experiences }: ExperiencesProps) {
   return (
     <section className="py-40 bg-white text-black relative overflow-hidden">
       {/* Decorative Background Text - Seamless Loop (Right to Left) */}
-      <div className="absolute top-0 left-0 w-full overflow-hidden opacity-[0.03] select-none pointer-events-none">
+      <div aria-hidden className="absolute top-0 left-0 w-full overflow-hidden opacity-[0.03] select-none pointer-events-none">
         <motion.div
           animate={{ x: ["0%", "-50%"] }}
           transition={{
@@ -62,7 +62,7 @@ export function Experiences({ experiences }: ExperiencesProps) {
               className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] mb-4 block">
               {"// curated experiences"}
             </Reveal>
-            <Reveal as="h3" y={20} delay={0.1}
+            <Reveal as="h2" y={20} delay={0.1}
               className="text-5xl md:text-7xl font-light tracking-tighter leading-tight uppercase">
               Curated <span className="italic font-serif normal-case text-amber-600">Experiences</span>
             </Reveal>
@@ -70,7 +70,7 @@ export function Experiences({ experiences }: ExperiencesProps) {
           <Reveal y={0} x={20} delay={0.3}>
             <Link
               href="/experiences"
-              className="group flex items-center gap-4 text-[10px] font-mono uppercase tracking-[0.3em] text-gray-500 hover:text-black transition-colors"
+              className="group flex items-center gap-4 text-xs font-mono uppercase tracking-[0.3em] text-gray-500 hover:text-black transition-colors"
             >
               <span className="h-px w-12 bg-black/20 group-hover:w-20 group-hover:bg-amber-600 transition-all duration-500" />
               See all experiences
@@ -92,7 +92,7 @@ export function Experiences({ experiences }: ExperiencesProps) {
                 key={index}
                 className="pl-8 md:basis-1/2 lg:basis-1/3"
               >
-                <Reveal y={30} delay={index * 0.1} duration={0.8}>
+                <Reveal y={30} duration={0.8}>
                   <ExperienceCard experience={exp} index={index} />
                 </Reveal>
               </CarouselItem>

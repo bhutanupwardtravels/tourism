@@ -51,7 +51,7 @@ export function RelatedHotels({ hotels }: RelatedHotelsProps) {
                     </div>
                     <Link
                         href="/hotels"
-                        className="font-mono text-[10px] tracking-[0.4em] uppercase text-black hover:text-amber-600 transition-colors border-b border-black pb-1 mb-12 font-bold"
+                        className="font-mono text-xs tracking-[0.4em] uppercase text-black hover:text-amber-600 transition-colors border-b border-black pb-1 mb-12 font-bold"
                     >
                         See all hotels
                     </Link>
@@ -66,12 +66,12 @@ export function RelatedHotels({ hotels }: RelatedHotelsProps) {
                     className="w-full"
                 >
                     <CarouselContent className="-ml-8">
-                        {displayedHotels.map((hotel, index) => (
+                        {displayedHotels.map((hotel) => (
                             <CarouselItem
                                 key={hotel.id}
                                 className="pl-8 md:basis-1/2 lg:basis-1/3"
                             >
-                                <HotelCard hotel={hotel} index={index} />
+                                <HotelCard hotel={hotel} />
                             </CarouselItem>
                         ))}
                     </CarouselContent>

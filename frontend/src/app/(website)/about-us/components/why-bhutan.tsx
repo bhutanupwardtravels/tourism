@@ -27,7 +27,7 @@ const iconMap: Record<string, LucideIcon> = {
   key: Key,
 };
 
-export function WhyBhutan({ items, title }: WhyBhutanProps) {
+export function WhyBhutan({ items, title, subtitle }: WhyBhutanProps) {
   const titleWords = (title || "The Kingdom of Happiness").split(" ");
 
   return (
@@ -40,7 +40,7 @@ export function WhyBhutan({ items, title }: WhyBhutanProps) {
         <div className="text-center mb-24">
           <Reveal as="span" y={0}
             className="block font-mono text-amber-600 text-xs uppercase tracking-[0.5em] mb-4">
-            {"// {subtitle || \"unique identifiers\"}"}
+            {`// ${subtitle || "unique identifiers"}`}
           </Reveal>
           <h2 className="text-5xl md:text-7xl font-light tracking-tighter uppercase leading-tight text-black">
             {titleWords.slice(0, -1).join(" ")}{" "}
@@ -54,7 +54,7 @@ export function WhyBhutan({ items, title }: WhyBhutanProps) {
           {items.map((item, index) => {
             const IconComponent = iconMap[item.icon] || Smile;
             return (
-              <Reveal y={30} delay={index * 0.1} duration={1}
+              <Reveal y={30} duration={1}
                 key={item.id}
                 className="group p-12 border border-black/5 bg-neutral-50/30 hover:bg-white hover:border-amber-600/30 hover:shadow-2xl transition-all duration-700">
                 <div className="mb-10 relative">
@@ -62,19 +62,19 @@ export function WhyBhutan({ items, title }: WhyBhutanProps) {
                     <IconComponent className="w-6 h-6 text-black group-hover:text-white transition-colors delay-100" />
                   </div>
                   {/* Decorative Number */}
-                  <span className="absolute -top-4 -right-4 font-mono text-[10px] text-black/10 group-hover:text-amber-600/20">#{index + 1}</span>
+                  <span className="absolute -top-4 -right-4 font-mono text-xs text-black/10 group-hover:text-amber-600/20">#{index + 1}</span>
                 </div>
 
-                <h4 className="text-2xl font-light text-black mb-6 uppercase tracking-tight group-hover:text-amber-500 transition-colors">
+                <h3 className="text-2xl font-light text-black mb-6 uppercase tracking-tight group-hover:text-amber-500 transition-colors">
                   {item.title}
-                </h4>
+                </h3>
                 <p className="text-gray-500 leading-relaxed font-light text-sm italic group-hover:text-gray-900 transition-colors">
                   &quot;{item.description}&quot;
                 </p>
 
                 {/* Tactical Footer */}
                 <div className="mt-10 pt-6 border-t border-black/5 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-all duration-500">
-                  <span className="font-mono text-[8px] uppercase tracking-widest">Active Attribute</span>
+                  <span className="font-mono text-xs uppercase tracking-widest">Active Attribute</span>
                   <div className="w-1 h-1 bg-amber-600 rounded-full animate-pulse" />
                 </div>
               </Reveal>

@@ -33,7 +33,7 @@ export function TravelMap({ from, to, fromCoordinates, toCoordinates }: TravelMa
                     />
                 ) : (
                     <div className="w-full h-full flex items-center justify-center bg-neutral-200">
-                        <span className="font-mono text-[10px] text-gray-400 uppercase tracking-widest">Map Data Unavailable</span>
+                        <span className="font-mono text-xs text-gray-400 uppercase tracking-widest">Map Data Unavailable</span>
                     </div>
                 )}
             </div>
@@ -51,18 +51,18 @@ export function TravelMap({ from, to, fromCoordinates, toCoordinates }: TravelMa
                 <div className="flex items-center justify-between text-white">
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                         <div>
-                            <span className="text-[9px] font-mono text-white/50 uppercase tracking-widest block mb-1">Origin</span>
+                            <span className="text-xs font-mono text-white/50 uppercase tracking-widest block mb-1">Origin</span>
                             <span className="text-sm font-bold uppercase tracking-wider">{from}</span>
                         </div>
                         <ArrowRight className="w-4 h-4 text-amber-500" />
                         <div>
-                            <span className="text-[9px] font-mono text-white/50 uppercase tracking-widest block mb-1">Destination</span>
+                            <span className="text-xs font-mono text-white/50 uppercase tracking-widest block mb-1">Destination</span>
                             <span className="text-sm font-bold uppercase tracking-wider">{to}</span>
                         </div>
                     </div>
 
                     <div className="hidden md:block">
-                        <span className="font-mono text-[9px] text-amber-500 border border-amber-500/30 px-2 py-1 bg-amber-500/10 uppercase tracking-widest">
+                        <span className="font-mono text-xs text-amber-500 border border-amber-500/30 px-2 py-1 bg-amber-500/10 uppercase tracking-widest">
                             {route ? "Route" : "Location"}
                         </span>
                     </div>

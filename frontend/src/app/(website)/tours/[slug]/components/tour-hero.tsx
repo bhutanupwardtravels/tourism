@@ -77,8 +77,8 @@ export function TourHero({
             </div>
 
             <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center text-center text-white">
-                    <span className="font-mono text-amber-400 text-[10px] md:text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] mb-6 md:mb-8 block drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">
-                        {"// exploring: {category}"}
+                    <span className="font-mono text-amber-400 text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] mb-6 md:mb-8 block drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">
+                        {`// exploring: ${category}`}
                     </span>
                     <h1 className="mb-10 text-balance text-[clamp(2.25rem,6.5vw,5rem)] font-light uppercase leading-[0.95] tracking-tighter text-white drop-shadow-2xl">
                         {title.split(' ').map((word, i) => (
@@ -98,7 +98,7 @@ export function TourHero({
                                     <Clock className="w-6 h-6 text-amber-500" />
                                 </div>
                                 <div className="text-left">
-                                    <span className="block font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1">Duration</span>
+                                    <span className="block font-mono text-xs text-gray-400 uppercase tracking-widest mb-1">Duration</span>
                                     <span className="font-light tracking-widest text-lg md:text-xl uppercase text-white">{duration}</span>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@ export function TourHero({
                                         <Tag className="w-6 h-6 text-amber-500" />
                                     </div>
                                     <div className="text-left">
-                                        <span className="block font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1">Pricing From</span>
+                                        <span className="block font-mono text-xs text-gray-400 uppercase tracking-widest mb-1">Pricing From</span>
                                         <span className="font-light tracking-widest text-lg md:text-xl uppercase text-white">{formatPrice(price)}</span>
                                         <span className="block font-mono text-[12px] text-gray-300 tracking-normal mt-1 normal-case">
                                             per person{pricing?.perDay ? ` · ${formatPrice(pricing.perDay)} per day` : ""} · SDF included · group rates available
@@ -128,7 +128,7 @@ export function TourHero({
                                         <BedDouble className="w-6 h-6 text-amber-500" />
                                     </div>
                                     <div className="text-left">
-                                        <span className="block font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1">Comfort Tier</span>
+                                        <span className="block font-mono text-xs text-gray-400 uppercase tracking-widest mb-1">Comfort Tier</span>
                                         <TierBadge tier={pricing.tier} signatureStay={pricing.signatureStay} variant="dark" />
                                         <span className="block font-mono text-[12px] text-gray-300 tracking-normal mt-1 normal-case">{TIER_META[pricing.tier].summary}</span>
                                     </div>
@@ -138,7 +138,7 @@ export function TourHero({
             </div>
 
             <div className="absolute bottom-12 left-12 z-10 hidden flex-col items-start gap-4 2xl:flex">
-                <div className="font-mono text-[9px] tracking-[0.3em] text-amber-200/80 uppercase space-y-2 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
+                <div className="font-mono text-xs tracking-[0.3em] text-amber-200/80 uppercase space-y-2 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
                     <p className="flex items-center gap-2">
                         <span className="w-1 h-1 bg-amber-500 rounded-full animate-pulse" />
                         Kingdom of Bhutan

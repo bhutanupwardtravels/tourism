@@ -14,7 +14,7 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
     return (
         <section className="py-20 md:py-28 bg-white border-t border-black/5 relative overflow-hidden">
             {/* Background Decorative ID */}
-            <div className="absolute top-0 right-12 font-mono text-[25vw] opacity-[0.03] select-none pointer-events-none font-bold uppercase tracking-tighter">
+            <div aria-hidden className="absolute top-0 right-12 font-mono text-[25vw] opacity-[0.03] select-none pointer-events-none font-bold uppercase tracking-tighter">
                 Explore
             </div>
 
@@ -34,7 +34,7 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
                         className="pb-4">
                         <Link
                             href="/experiences"
-                            className="group inline-flex items-center gap-2 text-[10px] font-mono font-medium tracking-[0.3em] uppercase hover:text-amber-600 transition-all text-gray-400 border-b border-transparent hover:border-amber-600 pb-1"
+                            className="group inline-flex items-center gap-2 text-xs font-mono font-medium tracking-[0.3em] uppercase hover:text-amber-600 transition-all text-gray-400 border-b border-transparent hover:border-amber-600 pb-1"
                         >
                             See all experiences
                         </Link>
@@ -71,7 +71,7 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
                             </div>
 
                             <div className="w-full md:w-1/2">
-                                <span className="font-mono text-amber-600 text-[10px] uppercase tracking-[0.3em] mb-4 block">
+                                <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.3em] mb-4 block">
                             {"// Experience Type"}
                                 </span>
                                 <h3 className="text-4xl md:text-5xl font-light mb-6 text-black tracking-tight leading-tight">
@@ -85,7 +85,7 @@ export function ExperienceTypes({ experienceTypes }: { experienceTypes: Experien
                                     className="group inline-flex items-center gap-4 text-gray-500 hover:text-black transition-colors"
                                 >
                                     <span className="h-px w-12 bg-black/20 group-hover:w-20 group-hover:bg-amber-600 transition-all duration-500" />
-                                    <span className="font-mono text-[10px] uppercase tracking-widest">View experiences</span>
+                                    <span className="font-mono text-xs uppercase tracking-widest">View experiences</span>
                                 </Link>
                             </div>
                         </Reveal>

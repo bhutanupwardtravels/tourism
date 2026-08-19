@@ -103,7 +103,7 @@ function TestimonialCard({
         </p>
         {isClamped && (
           <Dialog onOpenChange={onDialogOpenChange}>
-            <DialogTrigger className="group mt-5 flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.3em] text-amber-600 hover:text-black transition-colors cursor-pointer">
+            <DialogTrigger className="group mt-5 flex items-center gap-4 font-mono text-xs uppercase tracking-[0.3em] text-amber-600 hover:text-black transition-colors cursor-pointer">
               <span className="h-px w-8 bg-amber-600/40 group-hover:w-14 group-hover:bg-black transition-all duration-500" />
               Read full story
             </DialogTrigger>
@@ -145,7 +145,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
 
   return (
     <section className="py-24 md:py-32 bg-neutral-50 border-t border-black/5 relative overflow-hidden">
-      <div className="absolute top-0 left-0 w-full overflow-hidden opacity-[0.03] select-none pointer-events-none">
+      <div aria-hidden className="absolute top-0 left-0 w-full overflow-hidden opacity-[0.03] select-none pointer-events-none">
         <motion.div
           animate={{ x: ["0%", "-50%"] }}
           transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
@@ -181,12 +181,12 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
           className="w-full"
         >
           <CarouselContent className="-ml-8 items-stretch">
-            {testimonials.map((testimonial, index) => (
+            {testimonials.map((testimonial) => (
               <CarouselItem
                 key={testimonial.id}
                 className="pl-8 md:basis-1/2 lg:basis-1/3"
               >
-                <Reveal y={30} delay={index * 0.1} duration={0.8}
+                <Reveal y={30} duration={0.8}
                   className="h-full">
                   <TestimonialCard testimonial={testimonial} onDialogOpenChange={setIsPaused} />
                 </Reveal>

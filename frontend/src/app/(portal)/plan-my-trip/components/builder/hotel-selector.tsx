@@ -69,7 +69,7 @@ export function HotelSelector({ hotels, onSelect, onClose }: HotelSelectorProps)
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {filtered.map((hotel, idx) => (
                             <div key={hotel._id || idx} className="relative group cursor-pointer" onClick={() => onSelect(hotel)}>
-                                <HotelCard hotel={hotel} index={idx} disableLink />
+                                <HotelCard hotel={hotel} disableLink />
                                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-40 pointer-events-none">
                                     <span className="bg-white text-black px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform">
                                         <Check className="w-4 h-4" /> select hotel

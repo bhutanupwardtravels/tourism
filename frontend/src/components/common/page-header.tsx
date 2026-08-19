@@ -29,6 +29,7 @@ export function PageHeader({ label, title, description, bgText, compact }: PageH
             {/* Large Background Decorative Text */}
             {bgText && (
                 <motion.div
+                    aria-hidden
                     animate={{ x: ['-5%', '5%'] }}
                     transition={{
                         duration: 30,
