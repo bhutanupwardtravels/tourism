@@ -1,10 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Experience } from "@/app/admin/experiences/schema";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 import { ExperienceCard } from "@/components/common/experience-card";
+import { filterChip } from "@/components/common/filter-chip";
 
 interface ExperiencesClientProps {
     initialExperiences: Experience[];
@@ -30,11 +30,21 @@ export function ExperiencesClient({ initialExperiences }: ExperiencesClientProps
         router.push(`${pathname}?${params.toString()}`, { scroll: false });
     };
 
-    // Get unique categories from experiences
+    // Counts travel with the label: "Cultural Immersion" is 35 of 91 and the
+    // smaller categories are a handful, which is worth knowing before a click
+    // rather than after one.
+    const countByCategory = initialExperiences.reduce<Record<string, number>>((acc, exp) => {
+        acc[exp.category] = (acc[exp.category] ?? 0) + 1;
+        return acc;
+    }, {});
+
     const categories = [
         "All",
         ...Array.from(new Set(initialExperiences.map((exp) => exp.category))),
     ];
+
+    const countFor = (category: string) =>
+        category === "All" ? initialExperiences.length : countByCategory[category] ?? 0;
 
     // Filter experiences by category
     const filteredExperiences =
@@ -47,40 +57,27 @@ export function ExperiencesClient({ initialExperiences }: ExperiencesClientProps
             {/* Minimalist Filter Console */}
             <div className="border-t border-b border-black/5 sticky top-20 bg-white/95 backdrop-blur-xl z-30">
                 <div className="container mx-auto px-6 py-6">
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-                        <div className="flex flex-wrap gap-4 md:gap-8 justify-center md:justify-start">
-                            {categories.map((category) => (
-                                <button
-                                    key={category}
-                                    onClick={() => handleCategoryChange(category)}
-                                    className={`
-                                        px-6 py-2 text-xs font-mono uppercase tracking-[0.4em] transition-all relative group
-                                        ${activeCategory === category
-                                            ? "text-amber-600"
-                                            : "text-gray-500 hover:text-black"
-                                        }
-                                    `}
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-3">
+                        {categories.map((category) => (
+                            <button
+                                key={category}
+                                type="button"
+                                aria-pressed={activeCategory === category}
+                                onClick={() => handleCategoryChange(category)}
+                                className={filterChip(activeCategory === category)}
+                            >
+                                {category}
+                                <span
+                                    className={
+                                        activeCategory === category
+                                            ? "ml-2 text-white/60"
+                                            : "ml-2 text-gray-400"
+                                    }
                                 >
-                                    <span className="relative z-10">{category}</span>
-                                    {activeCategory === category && (
-                                        <motion.div
-                                            layoutId="activeTab"
-                                            className="absolute inset-0 bg-black/5 border-l border-r border-amber-600/50"
-                                        />
-                                    )}
-                                </button>
-                            ))}
-                        </div>
-
-                        <div className="hidden lg:flex items-center gap-4 opacity-40">
-                            <span className="font-mono text-xs text-black uppercase tracking-widest leading-none">
-                                Browse <br /> Categories
-                            </span>
-                            <div className="h-8 w-px bg-black/10" />
-                            <div className="font-mono text-xs text-black uppercase tracking-tighter">
-                                BHUTAN
-                            </div>
-                        </div>
+                                    {countFor(category)}
+                                </span>
+                            </button>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -97,8 +94,9 @@ export function ExperiencesClient({ initialExperiences }: ExperiencesClientProps
                             Discover the soul of the Kingdom through every story.
                         </p>
                     </div>
-                    <div className="font-mono text-xs text-gray-400 tracking-[0.4em] uppercase">
-                        Total {activeCategory === "All" ? "Files" : "Results"}: {filteredExperiences.length.toString().padStart(2, '0')}
+                    <div className="whitespace-nowrap text-[13px] text-gray-500">
+                        <strong className="font-semibold text-black">{filteredExperiences.length}</strong>
+                        {filteredExperiences.length === 1 ? " experience" : " experiences"}
                     </div>
                 </div>
 

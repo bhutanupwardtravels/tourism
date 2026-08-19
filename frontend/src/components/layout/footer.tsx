@@ -36,10 +36,10 @@ export function Footer({ contact }: FooterProps) {
                 />
               </span>
               <span className="flex flex-col">
-                <span className="text-2xl font-bold tracking-widest uppercase">
+                <span className="text-[14px] font-bold uppercase tracking-[0.18em] whitespace-nowrap">
                   Bhutan Upward
                 </span>
-                <span className="block text-[10px] tracking-[0.3em] text-gray-400">
+                <span className="block text-[9px] tracking-[0.3em] text-gray-400">
                   Travels
                 </span>
               </span>

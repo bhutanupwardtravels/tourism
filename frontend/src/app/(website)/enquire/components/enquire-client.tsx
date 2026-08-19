@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { useState } from "react";
 import { ArrowRight, Check } from "lucide-react";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+import { SUBMIT_BUTTON, SUBMIT_SWEEP } from "@/components/common/submit-button";
 import { Turnstile } from "@/components/turnstile";
 import { DiscountNotice } from "@/components/promo/discount-notice";
 import { submitTourRequest } from "@/app/(portal)/plan-my-trip/actions";
@@ -125,31 +126,74 @@ export default function EnquireClient() {
 
     return (
         <div className="min-h-screen bg-white selection:bg-amber-100">
-            {/* Immersive Hero Header */}
-            <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0">
-                                        <Image
+            {/* Hero — shares the shell used by /about-us, /tours/[slug] and the
+                destination and experience detail pages. */}
+            <section className="relative flex min-h-[80vh] w-full flex-col items-center justify-center overflow-hidden bg-white px-6 pb-28 pt-36 md:pt-44">
+                <div className="absolute inset-0 z-0">
+                    <Image
                         src="/images/cinematic/enquire-hero.png"
-                        alt="Bhutan Luxury Planning"
+                        alt=""
                         fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        sizes="100vw"
+                        priority
                         className="object-cover"
                     />
-                    <div className="absolute inset-0 bg-black/70 backdrop-blur-[1px]" />
+                    {/* Cinematic Overlays */}
+                    <div className="absolute inset-0 bg-linear-to-b from-black/80 via-transparent to-white via-90%" />
+                    <div className="absolute inset-0 bg-linear-to-tr from-amber-500/5 via-transparent to-blue-500/5 mix-blend-overlay" />
+                    {/* Flat scrim: the vertical gradient goes fully transparent through
+                        the middle of the hero, which is exactly where the headline sits. */}
+                    <div className="absolute inset-0 bg-black/25" />
                 </div>
 
-                <div className="container mx-auto px-6 relative z-10 text-center">
-                    <div className="space-y-8">
-                        <span className="font-mono text-amber-500 text-xs uppercase tracking-[0.8em] font-bold block mb-4">
-                            {"// tailor your vision"}
+                {/* Animated Light Leak */}
+                <motion.div
+                    animate={{
+                        opacity: [0.3, 0.5, 0.3],
+                        scale: [1, 1.1, 1],
+                    }}
+                    transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute -top-[20%] -right-[10%] w-[60%] h-[60%] bg-amber-500/20 blur-[120px] rounded-full mix-blend-screen"
+                />
+
+                {/* Background Large Text — decorative tint only. */}
+                <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 select-none text-center text-[16vw] font-bold uppercase leading-none tracking-tighter text-amber-500/15 whitespace-nowrap"
+                >
+                    Enquire
+                </div>
+
+                <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center text-center text-white">
+                    <span className="font-mono text-amber-400 text-xs uppercase tracking-[0.4em] md:tracking-[0.6em] mb-6 md:mb-8 block drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">
+                        {"// tailor your vision"}
+                    </span>
+
+                    <h1 className="mb-8 text-balance text-[clamp(2.5rem,8vw,6.5rem)] font-light uppercase leading-[0.95] tracking-tighter text-white drop-shadow-2xl">
+                        Begin Your{" "}
+                        <span className="italic font-serif normal-case text-amber-500">Odyssey</span>
+                    </h1>
+
+                    <p className="max-w-2xl text-balance text-base md:text-xl text-gray-200 font-light leading-relaxed font-serif italic mx-auto">
+                        &quot;Tell us the texture of your curiosity. Every journey we plan is a unique weave in the tapestry of the Kingdom of Bhutan.&quot;
+                    </p>
+
+                    <div className="flex items-center justify-center gap-4 md:gap-8 mt-12 md:mt-16">
+                        <motion.span
+                            initial={{ width: 0 }}
+                            animate={{ width: 80 }}
+                            transition={{ delay: 1, duration: 1 }}
+                            className="hidden sm:block h-px bg-linear-to-r from-transparent to-amber-500"
+                        />
+                        <span className="font-mono text-xs tracking-[0.4em] uppercase text-gray-200 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
+                            Replies within 24 hours
                         </span>
-                        <h1 className="text-6xl md:text-9xl font-light tracking-tighter text-white uppercase leading-none">
-                            Begin Your <br />
-                            <span className="italic font-serif normal-case text-amber-600">Odyssey</span>
-                        </h1>
-                        <p className="text-lg md:text-xl text-white/60 font-light italic max-w-2xl mx-auto leading-relaxed">
-                            &quot;Tell us the texture of your curiosity. Every journey we plan is a unique weave in the tapestry of the Kingdom of Bhutan.&quot;
-                        </p>
+                        <motion.span
+                            initial={{ width: 0 }}
+                            animate={{ width: 80 }}
+                            transition={{ delay: 1, duration: 1 }}
+                            className="hidden sm:block h-px bg-linear-to-l from-transparent to-amber-500"
+                        />
                     </div>
                 </div>
             </section>
@@ -340,16 +384,13 @@ Tell us roughly when you want to travel and who&apos;s coming. We&apos;ll come b
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className={cn(
-                                        "group relative w-full overflow-hidden bg-black py-6 text-white text-[13px] font-bold uppercase tracking-[0.2em] transition-all hover:bg-amber-600",
-                                        isSubmitting && "opacity-70 cursor-not-allowed"
-                                    )}
+                                    className={SUBMIT_BUTTON}
                                 >
                                     <span className="relative z-10 flex items-center justify-center gap-6">
                                         {isSubmitting ? "Sending..." : "Send my enquiry"}
                                         {!isSubmitting && <ArrowRight className="w-5 h-5 group-hover:translate-x-3 transition-transform duration-500" />}
                                     </span>
-                                    <div className="absolute inset-0 -translate-x-full group-hover:translate-x-0 bg-amber-500 transition-transform duration-700 ease-in-out" />
+                                    <div aria-hidden className={SUBMIT_SWEEP} />
                                 </button>
                             </div>
 

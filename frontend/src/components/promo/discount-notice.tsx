@@ -153,7 +153,7 @@ export function DiscountNotice({ email, onCouponChange }: DiscountNoticeProps) {
                                 type="button"
                                 onClick={applyCoupon}
                                 disabled={isChecking || !couponInput.trim()}
-                                className="shrink-0 px-5 py-2 text-[10px] font-bold uppercase tracking-widest bg-black text-white hover:bg-amber-600 disabled:opacity-30 disabled:hover:bg-black transition-colors"
+                                className="shrink-0 px-5 py-2 text-[10px] font-bold uppercase tracking-widest bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-30 disabled:hover:bg-emerald-600 transition-colors"
                             >
                                 {isChecking ? <Loader2 className="w-3 h-3 animate-spin" /> : "Apply"}
                             </button>

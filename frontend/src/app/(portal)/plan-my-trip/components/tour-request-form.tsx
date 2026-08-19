@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Check } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { SUBMIT_BUTTON, SUBMIT_SWEEP } from "@/components/common/submit-button";
 import { submitTourRequest } from "../actions";
 import { Tour } from "@/app/(website)/tours/schema";
 import { Turnstile } from "@/components/turnstile";
@@ -350,16 +350,13 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className={cn(
-                                    "group relative w-full overflow-hidden bg-black py-8 text-white text-[10px] font-bold uppercase tracking-[0.5em] transition-all hover:bg-amber-600",
-                                    isSubmitting && "opacity-70 cursor-not-allowed"
-                                )}
+                                className={SUBMIT_BUTTON}
                             >
-                                <span className="text-xs relative z-10 flex items-center justify-center gap-6">
+                                <span className="relative z-10 flex items-center justify-center gap-6">
                                     {isSubmitting ? "Sending..." : "Send my request"}
                                     {!isSubmitting && <ArrowRight className="w-5 h-5 group-hover:translate-x-3 transition-transform duration-500" />}
                                 </span>
-                                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-0 bg-amber-500 transition-transform duration-700 ease-in-out" />
+                                <div aria-hidden className={SUBMIT_SWEEP} />
                             </button>
                         </div>
 

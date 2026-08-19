@@ -6,6 +6,7 @@ import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Plus, Loader2, Sparkles, Check, X, Search, Headphones } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SUBMIT_BUTTON, SUBMIT_SWEEP } from "@/components/common/submit-button";
 import Link from "next/link";
 import { Destination } from "@/app/(website)/destinations/schema";
 import { Experience } from "@/app/(website)/experiences/schema";
@@ -1031,12 +1032,13 @@ This estimate covers the Sustainable Development Fee, accommodation and the expe
                                     await handleSubmit(new Event("submit") as unknown as React.FormEvent);
                                 }}
                                 disabled={isSubmitting}
-                                className="group relative w-full overflow-hidden bg-black py-6 text-white text-[13px] font-bold uppercase tracking-[0.2em] transition-all hover:bg-amber-600 disabled:opacity-60"
+                                className={SUBMIT_BUTTON}
                             >
                                 <span className="relative z-10 flex items-center justify-center gap-6">
                                     {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : "Send to a specialist"}
                                     {!isSubmitting && <ArrowRight className="w-5 h-5 group-hover:translate-x-3 transition-transform duration-500" />}
                                 </span>
+                                <div aria-hidden className={SUBMIT_SWEEP} />
                             </button>
                         </div>
 
@@ -1110,7 +1112,7 @@ This estimate covers the Sustainable Development Fee, accommodation and the expe
                                                     type="button"
                                                     onClick={handleApplyCoupon}
                                                     disabled={isCheckingCoupon || !couponInput.trim()}
-                                                    className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest bg-white/10 hover:bg-amber-600 disabled:opacity-40 disabled:hover:bg-white/10 transition-colors"
+                                                    className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-40 disabled:hover:bg-emerald-600 transition-colors"
                                                 >
                                                     {isCheckingCoupon ? <Loader2 className="w-3 h-3 animate-spin" /> : "Apply"}
                                                 </button>

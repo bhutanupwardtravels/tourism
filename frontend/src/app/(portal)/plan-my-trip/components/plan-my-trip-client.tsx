@@ -261,7 +261,10 @@ export default function PlanMyTripClient({
                                     );
 
                                     const shell = `group relative overflow-hidden transition-all duration-700 p-10 md:p-12 pt-14 md:pt-16 text-left flex flex-col justify-between aspect-4/5 md:aspect-auto ${mode.recommended
-                                        ? "bg-white ring-2 ring-inset ring-amber-600 hover:bg-amber-50/40"
+                                        // Opaque: bg-* replaces the resting bg-white rather than
+                                        // layering over it, so a translucent hover tint let the hero
+                                        // photograph behind the grid read straight through the card.
+                                        ? "bg-white ring-2 ring-inset ring-amber-600 hover:bg-amber-50"
                                         : "bg-white hover:bg-neutral-50"
                                         }`;
 

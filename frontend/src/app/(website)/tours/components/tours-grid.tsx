@@ -5,6 +5,7 @@ import { Tour } from "../schema";
 import { TourCard } from "@/components/common/tour-card";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { filterChip } from "@/components/common/filter-chip";
 import { TIER_META, TIER_ORDER, tripDays, type TourTier } from "@/lib/pricing/tour-tier";
 
 /** Recommended order uses the operator's own priority/featured flags. */
@@ -124,15 +125,6 @@ export function ToursGrid({ tours }: ToursGridProps) {
         setCategory(null);
     };
 
-    const chip = (active: boolean) =>
-        cn(
-            "px-4 py-2 text-[11px] font-medium uppercase tracking-[0.15em] border transition-colors",
-            "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600",
-            active
-                ? "bg-black text-white border-black"
-                : "bg-white text-gray-600 border-black/15 hover:border-black hover:text-black"
-        );
-
     return (
         <>
             <div className="mb-10 flex flex-col gap-4 border-y border-black/5 py-6 md:flex-row md:items-center md:justify-between">
@@ -150,7 +142,7 @@ export function ToursGrid({ tours }: ToursGridProps) {
                                 type="button"
                                 aria-pressed={band === b.id}
                                 onClick={() => setBand(band === b.id ? null : b.id)}
-                                className={chip(band === b.id)}
+                                className={filterChip(band === b.id)}
                             >
                                 {b.label}
                             </button>
@@ -169,7 +161,7 @@ export function ToursGrid({ tours }: ToursGridProps) {
                                     title={TIER_META[t].summary}
                                     aria-pressed={tier === t}
                                     onClick={() => setTier(tier === t ? null : t)}
-                                    className={chip(tier === t)}
+                                    className={filterChip(tier === t)}
                                 >
                                     {TIER_META[t].label}
                                 </button>
@@ -188,7 +180,7 @@ export function ToursGrid({ tours }: ToursGridProps) {
                                     type="button"
                                     aria-pressed={category === c}
                                     onClick={() => setCategory(category === c ? null : c)}
-                                    className={chip(category === c)}
+                                    className={filterChip(category === c)}
                                 >
                                     {c}
                                 </button>
