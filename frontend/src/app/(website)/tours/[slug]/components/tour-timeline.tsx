@@ -88,14 +88,14 @@ export function TourTimeline({ days, slug }: TourTimelineProps) {
                     transition={{ duration: 0.25, ease: "easeOut" }}
                     className="overflow-hidden"
                   >
-                    <div className="grid grid-cols-1 gap-8 pb-10 md:grid-cols-[minmax(0,320px)_1fr] md:pl-22">
+                    <div className="grid grid-cols-1 gap-8 pb-10 md:grid-cols-[minmax(0,320px)_1fr] lg:grid-cols-[minmax(0,480px)_1fr] md:pl-22">
                       {day.image && (
-                        <div className="relative aspect-4/3 overflow-hidden rounded-xs border border-black/5">
+                        <div className="relative aspect-16/9 overflow-hidden rounded-xs border border-black/5">
                           <Image
                             src={day.image}
                             alt={day.title}
                             fill
-                            sizes="(max-width: 768px) 100vw, 320px"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 320px, 480px"
                             className="object-cover"
                           />
                         </div>

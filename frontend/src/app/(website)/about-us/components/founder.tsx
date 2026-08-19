@@ -79,8 +79,8 @@ export function Founder({ founder }: FounderProps) {
             )}
 
             {founder.bio && (
-              <div className="relative pl-12 border-l border-black/10">
-                <p className="text-xl text-gray-500 leading-relaxed font-light italic whitespace-pre-line">
+              <div className="relative pl-8 border-l border-black/10">
+                <p className="text-base md:text-lg text-gray-500 leading-relaxed font-light italic whitespace-pre-line">
                   &quot;{founder.bio}&quot;
                 </p>
                 <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-amber-600/30" />

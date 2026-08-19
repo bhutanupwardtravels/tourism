@@ -5,7 +5,6 @@ import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TourHero } from "@/app/(website)/tours/[slug]/components/tour-hero";
 import { TourOverview } from "@/app/(website)/tours/[slug]/components/tour-overview";
-import { TourBookingCard } from "@/app/(website)/tours/[slug]/components/tour-booking-card";
 import { TourItinerary } from "@/app/(website)/tours/[slug]/components/tour-itenary";
 import { TourCarousel } from "@/app/(website)/tours/[slug]/components/tour-carousel";
 import { Tour as WebsiteTour, TourDay as WebsiteTourDay } from "@/app/(website)/tours/schema";
@@ -51,10 +50,8 @@ export default async function AdminTourViewPage({ params }: PageProps) {
             />
 
             <div className="container mx-auto px-6 py-40">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-start mb-40">
+                <div className="mb-40">
                     <TourOverview tour={displayTour} />
-                    {/* Admin doesn't need to book, but visually we keep the layout consistent */}
-                    <TourBookingCard slug={tour.slug} />
                 </div>
 
                 <TourItinerary days={displayDays} slug={tour.slug} />

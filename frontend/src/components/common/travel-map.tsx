@@ -2,6 +2,7 @@
 
 import { BhutanMap } from "@/components/ui/BhutanMap";
 import { ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface TravelMapProps {
     from: string;
@@ -9,9 +10,16 @@ interface TravelMapProps {
     // Nullable: a leg whose destination has no coordinates stores null.
     fromCoordinates?: [number, number] | null;
     toCoordinates?: [number, number] | null;
+    /**
+     * Sizing for the callsite. A whole-country map is a supporting detail on a
+     * day's itinerary but the subject of a destination page, so the two want
+     * different footprints. Merged with `cn`, so passing an aspect or width
+     * replaces the default rather than fighting it.
+     */
+    className?: string;
 }
 
-export function TravelMap({ from, to, fromCoordinates, toCoordinates }: TravelMapProps) {
+export function TravelMap({ from, to, fromCoordinates, toCoordinates, className }: TravelMapProps) {
     // Only render map if we have at least one set of coordinates, preferably both for the route
     const hasCoordinates = fromCoordinates || toCoordinates;
     const route = fromCoordinates && toCoordinates ? {
@@ -23,7 +31,12 @@ export function TravelMap({ from, to, fromCoordinates, toCoordinates }: TravelMa
     const displayCoordinates = fromCoordinates || toCoordinates || undefined;
 
     return (
-        <div className="relative w-full aspect-4/3 sm:aspect-video bg-neutral-100 border border-black/5 rounded-xs overflow-hidden group">
+        <div
+            className={cn(
+                "relative w-full aspect-4/3 sm:aspect-video bg-neutral-100 border border-black/5 rounded-xs overflow-hidden group",
+                className
+            )}
+        >
             {/* Map Layer */}
             <div className="absolute inset-0 opacity-60 grayscale group-hover:grayscale-0 transition-all duration-1000">
                 {hasCoordinates ? (

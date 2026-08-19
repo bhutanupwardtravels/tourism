@@ -26,12 +26,12 @@ export function OurStory({ story }: OurStoryProps) {
               {`// ${story.subtitle || "Our Narrative"}`}
             </span>
 
-            <h2 className="text-5xl md:text-7xl font-light tracking-tighter leading-tight mb-12 uppercase text-black">
+            <h2 className="text-5xl md:text-7xl font-light tracking-tighter leading-tight mb-8 md:mb-12 uppercase text-black">
               {titleWords[0]} <span className="italic font-serif normal-case text-amber-600">{titleWords.slice(1).join(' ')}</span>
             </h2>
 
-            <div className="relative pl-12 border-l border-black/10">
-              <div className="space-y-8 text-xl text-gray-500 leading-relaxed font-light italic">
+            <div className="relative pl-8 border-l border-black/10">
+              <div className="space-y-8 text-base md:text-lg text-gray-500 leading-relaxed font-light italic">
                 {story.content.map((paragraph, index) => (
                   <p key={index}>&quot;{paragraph}&quot;</p>
                 ))}

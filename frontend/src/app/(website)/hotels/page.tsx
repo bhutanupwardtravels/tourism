@@ -37,21 +37,14 @@ export default async function HotelsPage() {
             <HotelsHeader />
 
             <div className="container mx-auto px-6 pb-40">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-24 border-b border-black/5 pb-12 gap-8">
-                    <div className="max-w-xl">
-                        <h2 className="text-4xl md:text-5xl font-light tracking-tighter uppercase mb-2">
-                            The <span className="italic font-serif text-amber-600 normal-case">Hospitality</span> Collection
-                        </h2>
-                        <p className="text-gray-500 font-light italic">
-                            &quot;A curated selection of sanctuaries offering authentic Bhutanese hospitality.&quot;
-                        </p>
-                    </div>
+                <div className="flex justify-end items-end mb-24 border-b border-black/5 pb-12">
                     <div className="font-mono text-xs text-gray-400 uppercase tracking-widest text-right">
                         Total Sanctuaries: {hotels.length} {"// BHU-HOTEL-2025"}
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-24">
+                    <h2 className="sr-only">Hotels</h2>
                     {hotels.map((hotel) => (
                         <Link
                             key={hotel.id}

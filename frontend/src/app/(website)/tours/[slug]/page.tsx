@@ -5,7 +5,6 @@ import { TourItinerary } from "./components/tour-itenary";
 import { TourOverview } from "./components/tour-overview";
 import { getTourBySlug, getRelatedTours } from "../actions";
 import CallToAction from "@/components/common/call-to-action";
-import { TourBookingCard } from "./components/tour-booking-card";
 import { TourActionBar } from "./components/tour-action-bar";
 import { JsonLd } from "@/components/common/json-ld";
 import { FaqSection } from "@/components/common/faq-section";
@@ -82,12 +81,9 @@ export default async function TourPage({ params }: PageProps) {
       />
 
       <div className="container mx-auto px-6 pt-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          <div className="lg:col-span-8 space-y-16">
-            <TourOverview tour={tour} />
-            <TourItinerary days={tour.days} slug={tour.slug} />
-          </div>
-          <TourBookingCard slug={tour.slug} />
+        <div className="space-y-16">
+          <TourOverview tour={tour} />
+          <TourItinerary days={tour.days} slug={tour.slug} />
         </div>
       </div>
 
@@ -108,7 +104,7 @@ export default async function TourPage({ params }: PageProps) {
 
       {/* Related Tours Section */}
       <TourCarousel tours={relatedTours} currentSlug={slug} />
-      <CallToAction />
+      <CallToAction packageSlug={tour.slug} />
     </div>
   );
 }

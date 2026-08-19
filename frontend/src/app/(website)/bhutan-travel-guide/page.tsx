@@ -26,14 +26,14 @@ export default async function BhutanTravelGuidePage() {
                 ])}
             />
             <PageHeader
-                label="Plan Your Journey"
+                label="// plan your journey"
                 title="Bhutan Travel Guide"
                 description="Practical answers on cost, visas, timing, and what to expect — gathered from years of running tours across the Kingdom of Bhutan."
                 bgText="Guide"
             />
 
-            <div className="container mx-auto px-6 max-w-3xl pb-4">
-                <p className="text-lg leading-relaxed text-black/70">
+            <div className="container mx-auto px-6 pb-4">
+                <p className="max-w-3xl text-lg leading-relaxed text-black/70">
                     Planning a trip to Bhutan is different from most destinations: every
                     international tourist travels with a licensed local operator, pays a
                     government Sustainable Development Fee, and books a guide and visa as

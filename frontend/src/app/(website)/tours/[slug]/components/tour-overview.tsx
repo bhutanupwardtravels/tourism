@@ -32,6 +32,8 @@ export function TourOverview({ tour }: TourOverviewProps) {
     return (
         <div>
             <div className="flex flex-col gap-12">
+                {/* Prose keeps a readable measure of its own; the fact panels
+                    below are card-like and use the full column width. */}
                 <div className="max-w-3xl">
                     <span className="font-mono text-amber-600 text-[13px] uppercase tracking-[0.4em] mb-4 block font-bold">
             {"// overview"}
@@ -48,13 +50,15 @@ export function TourOverview({ tour }: TourOverviewProps) {
                             Licensed tour operator, Kingdom of Bhutan
                         </div>
                     </div>
+                </div>
 
+                <div>
                     {tour.highlights && tour.highlights.length > 0 && (
                         <div className="mt-12 border border-black/10 p-8">
                             <h3 className="text-[11px] font-bold uppercase tracking-[0.3em] text-black mb-6">
                                 At a glance
                             </h3>
-                            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
+                            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-4">
                                 {tour.highlights.map((highlight, index) => (
                                     <li key={index} className="flex items-start gap-3 text-[15px] text-gray-700 leading-relaxed">
                                         <Check className="w-4 h-4 mt-1 shrink-0 text-amber-600" />

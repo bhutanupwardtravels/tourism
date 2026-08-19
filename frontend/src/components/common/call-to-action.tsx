@@ -2,7 +2,16 @@ import Link from "next/link";
 import { Reveal } from "@/components/ui/reveal";
 import { getAboutContent } from "@/lib/data/about";
 
-export default async function CallToAction() {
+interface CallToActionProps {
+  /**
+   * Tour slug to carry into the planner. /plan-my-trip?package=<slug> lands the
+   * traveller on that package pre-selected instead of the mode picker, so pages
+   * that are already about one tour should not throw that context away.
+   */
+  packageSlug?: string;
+}
+
+export default async function CallToAction({ packageSlug }: CallToActionProps = {}) {
   // A trust badge is only a signal if the reader can check it. "Verified
   // partner — Bhutan Tourism Board" with nothing attached is the exact
   // unfalsifiable claim people have learned to discount, and one claim they
@@ -77,7 +86,7 @@ export default async function CallToAction() {
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-12">
             <Link
-              href="/plan-my-trip"
+              href={packageSlug ? `/plan-my-trip?package=${packageSlug}` : "/plan-my-trip"}
               className="group relative inline-flex items-center gap-8 bg-black px-12 py-5 text-white text-[13px] font-bold uppercase tracking-[0.2em] transition-all hover:bg-amber-600 overflow-hidden"
             >
               <span className="relative z-10">Plan my trip</span>
