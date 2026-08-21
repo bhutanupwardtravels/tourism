@@ -1,18 +1,42 @@
 "use client";
 
-import { Experience } from "../../schema";
-import { ExperienceCard } from "@/components/common/experience-card";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import {
+  ExperienceCard,
+  type Experience as ExperienceCardItem,
+} from "@/components/common/experience-card";
 import { useState } from "react";
 
-interface DestinationExperiencesProps {
-  experiences: Experience[];
-  destinationName: string;
+interface LocalExperiencesProps {
+  /** Anything ExperienceCard can render; `priority` orders the grid. */
+  experiences: (ExperienceCardItem & { priority?: number })[];
+  /** The place these experiences sit in — a dzongkhag, or a hotel's valley. */
+  placeName: string;
+  /** Mono eyebrow above the heading. */
+  label?: string;
+  /**
+   * Heading, split so the second half takes the serif accent. Defaults to
+   * "Explore: <place>", which only reads right on a page that *is* that place;
+   * elsewhere the place belongs in the eyebrow and the heading says why these
+   * are here.
+   */
+  title?: string;
+  titleAccent?: string;
 }
 
-export function DestinationExperiences({
+/**
+ * "What is there to do around here", for any page that can name a place: the
+ * destination page uses it for its own dzongkhag, the hotel page for the valley
+ * the property stands in.
+ */
+export function LocalExperiences({
   experiences,
-  destinationName,
-}: DestinationExperiencesProps) {
+  placeName,
+  label = "// local experiences",
+  title = "Explore:",
+  titleAccent = placeName,
+}: LocalExperiencesProps) {
   const [displayCount, setDisplayCount] = useState(6);
 
   if (experiences.length === 0) return null;
@@ -56,14 +80,24 @@ export function DestinationExperiences({
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8 pb-12">
-          <div className="max-w-2xl">
+          {/* Wide enough for a full phrase, not just "Explore: <place>" — the
+              shorter measure broke longer headings after their second word. */}
+          <div className="max-w-4xl">
             <span className="font-mono text-amber-600 text-xs uppercase tracking-[0.4em] md:tracking-[0.5em] mb-4 block">
-              {"// local experiences"}
+              {label}
             </span>
             <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter leading-tight uppercase">
-              Explore: <span className="italic font-serif normal-case text-amber-600">{destinationName}</span>
+              {title} <span className="italic font-serif normal-case text-amber-600">{titleAccent}</span>
             </h2>
           </div>
+
+          <Link
+            href="/experiences"
+            className="group inline-flex shrink-0 items-center gap-3 border border-black/15 px-6 py-3 text-[11px] font-medium uppercase tracking-[0.2em] text-black transition-colors hover:border-amber-600 hover:text-amber-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
+          >
+            See all experiences
+            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">

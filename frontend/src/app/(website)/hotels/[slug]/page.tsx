@@ -1,9 +1,11 @@
 import { getHotelBySlug, getRelatedHotels } from "../actions";
+import { getExperiencesByDestination } from "@/app/(website)/destinations/actions";
 import { notFound } from "next/navigation";
 import { HotelHero } from "./components/hotel-hero";
 import { HotelOverview } from "./components/hotel-overview";
 import { VisualGallery } from "@/components/common/visual-gallery";
 import { LocationMap } from "@/components/common/location-map";
+import { LocalExperiences } from "@/components/common/local-experiences";
 import { RelatedHotels } from "./components/related-hotels";
 import CallToAction from "@/components/common/call-to-action";
 import { JsonLd } from "@/components/common/json-ld";
@@ -42,10 +44,17 @@ export default async function HotelPage({ params }: PageProps) {
         notFound();
     }
 
-    const relatedHotels = await getRelatedHotels(hotel.destination || hotel.destinationSlug || "", hotel.id);
+    // The valley the property stands in, however the row happens to record it.
+    const destinationRef = hotel.destination || hotel.destinationSlug || "";
+    const destinationName = hotel.resolvedDestinationName || hotel.location;
+
+    const [relatedHotels, localExperiences] = await Promise.all([
+        getRelatedHotels(destinationRef, hotel.id),
+        getExperiencesByDestination(hotel.destinationId, hotel.resolvedDestinationSlug || hotel.destinationSlug),
+    ]);
 
     return (
-        <div className="min-h-screen bg-white text-black font-sans">
+        <div className="min-h-screen bg-white text-black">
             <JsonLd data={hotelJsonLd(hotel)} />
             <JsonLd
                 data={breadcrumbJsonLd([
@@ -60,9 +69,12 @@ export default async function HotelPage({ params }: PageProps) {
                 location={hotel.location}
                 rating={hotel.rating}
                 priceRange={hotel.priceRange}
+                rooms={hotel.rooms}
+                price={hotel.price}
             />
 
             <HotelOverview
+                slug={slug}
                 description={hotel.description}
                 amenities={hotel.amenities}
                 rooms={hotel.rooms}
@@ -83,6 +95,18 @@ export default async function HotelPage({ params }: PageProps) {
                     coordinates={hotel.coordinates as [number, number]}
                     title="Sanctuary Location"
                     subtitle="// geographical coordinates"
+                />
+            )}
+
+            {/* What there is to do around the property, before the page moves on
+                to other places to sleep. */}
+            {destinationName && (
+                <LocalExperiences
+                    experiences={localExperiences}
+                    placeName={destinationName}
+                    label={`// around ${destinationName.toLowerCase()}`}
+                    title="Nearby"
+                    titleAccent="experiences"
                 />
             )}
 

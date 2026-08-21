@@ -24,6 +24,10 @@ export const experienceSchema = z.object({
   coordinates: z.tuple([z.number(), z.number()]).nullable().optional(),
   destinationSlug: z.string().optional(),
   gallery: z.array(z.string()).optional(),
+  // Only festivals carry these; they decide which section of the destination
+  // page an entry renders in. See lib/content/festivals.ts.
+  startDate: z.string().nullable().optional(),
+  endDate: z.string().nullable().optional(),
   priority: z.number().optional(),
 });
 

@@ -1,11 +1,12 @@
 import { getTourDay, getAllTours } from "../../../actions";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, MapPin, ChevronLeft, ChevronRight, Clock, ArrowRightLeft, BedDouble, Eye } from "lucide-react";
+import { ArrowLeft, MapPin, Clock, ArrowRightLeft, BedDouble, Eye } from "lucide-react";
 import { DayHero } from "../../components/day-hero";
 import { ExperienceCard } from "@/components/common/experience-card";
 import { HotelCard } from "@/components/common/hotel-card";
 import { TravelMap } from "@/components/common/travel-map";
+import { DayNav } from "../../components/day-nav";
 import { TourCarousel } from "../../components/tour-carousel";
 import CallToAction from "@/components/common/call-to-action";
 import { JsonLd } from "@/components/common/json-ld";
@@ -125,49 +126,21 @@ export default async function TourDayPage({ params }: PageProps) {
         tourTitle={tour.title}
       />
 
-      {/* Day navigation */}
-      <div className="container mx-auto px-6 pt-24 md:pt-40">
-        {/* Superior Navigation */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-8 pb-24">
+      {/* Top padding tracks the tour page's `pt-20`, split either side of the
+          back link, so a day opens on the same rhythm as the itinerary it came
+          from rather than after a screen of empty white. */}
+      <div className="container mx-auto px-6 pt-12 md:pt-16">
+        {/* One way out of a day page, on the left where a back control belongs.
+            Moving between days is handled by the day cards at the foot of the
+            page, where someone actually finishes reading. */}
+        <div className="pb-12">
           <Link
             href={`/tours/${slug}`}
-            className="group flex items-center gap-4 font-mono text-xs uppercase tracking-[0.4em] text-gray-500 hover:text-black transition-all font-bold"
+            className="group inline-flex items-center gap-3 border border-black/15 px-6 py-3 text-[11px] font-medium uppercase tracking-[0.2em] text-black transition-colors hover:border-amber-600 hover:text-amber-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
           >
-            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-2" />
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
             Back to the full itinerary
           </Link>
-
-          <div className="flex items-center gap-8">
-            <div className="font-mono text-xs text-gray-400 uppercase tracking-widest hidden lg:block font-bold">
-              Sequence Registry // Kingdom of Bhutan
-            </div>
-            <div className="flex bg-black/5 p-1 rounded-xs">
-              {prevDay ? (
-                <Link
-                  href={`/tours/${slug}/day/${prevDay}`}
-                  className="flex items-center gap-2 px-6 py-3 bg-white text-black text-xs font-mono border border-black/5 uppercase tracking-widest hover:bg-neutral-50 transition-colors"
-                >
-                  <ChevronLeft className="w-3 h-3" /> Prev
-                </Link>
-              ) : (
-                <div className="px-6 py-3 text-gray-300 text-xs font-mono uppercase tracking-widest cursor-not-allowed">
-                  Start
-                </div>
-              )}
-              {nextDay ? (
-                <Link
-                  href={`/tours/${slug}/day/${nextDay}`}
-                  className="flex items-center gap-2 px-6 py-3 bg-white text-black text-xs font-mono border-l-0 border border-black/5 uppercase tracking-widest hover:bg-neutral-50 transition-colors"
-                >
-                  Next <ChevronRight className="w-3 h-3" />
-                </Link>
-              ) : (
-                <div className="px-6 py-3 text-gray-300 text-xs font-mono uppercase tracking-widest border-l-0 border border-black/5 cursor-not-allowed">
-                  End
-                </div>
-              )}
-            </div>
-          </div>
         </div>
 
         <div className="mb-48">
@@ -334,7 +307,17 @@ export default async function TourDayPage({ params }: PageProps) {
           </div>
         </div>
 
+        {/* Where the day ends: step to the one either side of it. Looked up by
+            day number rather than array position, the same way getTourDay
+            resolves the current one. */}
+        <DayNav
+          slug={slug}
+          prev={tour.days.find((d) => d.day === prevDay)}
+          next={tour.days.find((d) => d.day === nextDay)}
+          fallbackImage={tour.image}
+        />
       </div>
+
       {/* Similar Journeys */}
       <TourCarousel tours={allTours} currentSlug={slug} />
       <CallToAction packageSlug={slug} />

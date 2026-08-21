@@ -2,13 +2,11 @@
 
 import { Reveal } from "@/components/ui/reveal";
 interface ExperienceOverviewProps {
-    title: string;
     description: string;
     highlights?: string[];
 }
 
 export function ExperienceOverview({
-    title,
     description,
 }: ExperienceOverviewProps) {
     return (
@@ -18,7 +16,7 @@ export function ExperienceOverview({
                     {"// experience overview"}
                 </span>
                 <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter leading-tight mb-8 md:mb-12 uppercase">
-                    The <span className="italic font-serif normal-case text-amber-600">Essence</span> <br />of {title}
+                    About this <span className="italic font-serif normal-case text-amber-600">experience</span>
                 </h2>
                 <div className="relative pl-8 border-l border-black/10">
                     <p className="text-lg md:text-xl text-gray-500 leading-relaxed font-light italic">

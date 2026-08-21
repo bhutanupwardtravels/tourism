@@ -200,7 +200,7 @@ export default function EnquireClient() {
 
             {/* Form Section */}
             <section className="py-32 md:py-48 container mx-auto px-6 max-w-5xl">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-24">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 lg:gap-12 xl:gap-24">
                     {/* Lateral Label Section */}
                     <div className="lg:col-span-4 space-y-12">
                         <div className="space-y-6">

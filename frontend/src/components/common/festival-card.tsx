@@ -4,6 +4,7 @@ import { FadeImage } from "@/components/common/fade-image";
 import Link from "next/link";
 import { Calendar } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
+import { formatFestivalDates } from "@/lib/content/festivals";
 
 interface FestivalCardProps {
     festival: {
@@ -11,12 +12,15 @@ interface FestivalCardProps {
         title: string;
         description: string;
         image: string;
+        startDate?: string | null;
+        endDate?: string | null;
     };
     index: number;
 }
 
 export function FestivalCard({ festival, index }: FestivalCardProps) {
     const isEven = index % 2 === 0;
+    const dates = formatFestivalDates(festival.startDate, festival.endDate, "short");
 
     return (
         <Reveal y={30} duration={0.8}
@@ -45,11 +49,19 @@ export function FestivalCard({ festival, index }: FestivalCardProps) {
                     </div>
 
                     <div className="space-y-6">
-                        <div className="flex items-center gap-4">
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                             <div className="w-1.5 h-1.5 bg-amber-600 rounded-full animate-pulse" />
                             <span className="font-mono text-xs uppercase tracking-[0.3em] text-amber-600">
                                 Annual Cultural Event
                             </span>
+                            {dates && (
+                                <>
+                                    <span className="hidden h-3 w-px bg-black/15 sm:block" />
+                                    <span className="font-mono text-xs uppercase tracking-[0.3em] text-black/50">
+                                        {dates}
+                                    </span>
+                                </>
+                            )}
                         </div>
 
                         <h3 className="text-4xl md:text-5xl font-light tracking-tighter group-hover:italic group-hover:text-black transition-all duration-500 uppercase">

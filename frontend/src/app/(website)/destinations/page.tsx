@@ -40,6 +40,14 @@ export default async function DestinationsPage() {
             />
 
             <div className="container mx-auto px-6">
+                {/* Same count row /hotels carries: states the size of the
+                    collection and supplies the gap between header and grid. */}
+                <div className="flex justify-end items-end mb-24 border-b border-black/5 pb-12">
+                    <div className="font-mono text-xs text-gray-400 uppercase tracking-widest text-right">
+                        Total Regions: {destinations.length} {"// BHU-REGION-2025"}
+                    </div>
+                </div>
+
                 <DestinationsGrid destinations={destinations} />
             </div>
         </div>

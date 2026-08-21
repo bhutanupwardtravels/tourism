@@ -153,7 +153,7 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-24">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 lg:gap-12 xl:gap-24">
                 {/* Sidebar Info */}
                 <div className="lg:col-span-4 space-y-12">
                     <div className="relative aspect-4/5 overflow-hidden rounded-xs group">

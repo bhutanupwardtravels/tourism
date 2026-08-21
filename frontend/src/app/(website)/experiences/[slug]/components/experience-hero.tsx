@@ -4,8 +4,8 @@ import Image from "next/image";
 
 import { motion } from "framer-motion";
 import { Clock, Mountain, Calendar } from "lucide-react";
-import { format } from "date-fns";
 import { formatDuration } from "@/lib/utils";
+import { formatFestivalDates } from "@/lib/content/festivals";
 
 interface ExperienceHeroProps {
     title: string;
@@ -26,28 +26,9 @@ export function ExperienceHero({
     startDate,
     endDate
 }: ExperienceHeroProps) {
-    const formatDateRange = (start?: string, end?: string) => {
-        if (!start) return null;
-        try {
-            const sDate = new Date(start);
-            if (!end) return format(sDate, "MMMM dd, yyyy");
-            const eDate = new Date(end);
-
-            if (sDate.getFullYear() === eDate.getFullYear()) {
-                if (sDate.getMonth() === eDate.getMonth()) {
-                    return `${format(sDate, "MMMM dd")} - ${format(eDate, "dd, yyyy")}`;
-                }
-                return `${format(sDate, "MMMM dd")} - ${format(eDate, "MMMM dd, yyyy")}`;
-            }
-            return `${format(sDate, "MMMM dd, yyyy")} - ${format(eDate, "MMMM dd, yyyy")}`;
-        } catch {
-            return null;
-        }
-    };
-
-    const dateRange = formatDateRange(startDate, endDate);
+    const dateRange = formatFestivalDates(startDate, endDate);
     return (
-        <div className="relative flex min-h-[80vh] w-full flex-col items-center justify-center overflow-hidden bg-white px-6 pb-28 pt-36 md:pt-44">
+        <div className="relative flex min-h-[90vh] w-full flex-col items-center justify-center overflow-hidden bg-white px-6 pb-28 pt-36 md:pt-44">
             {/* Background Image with Color Reveal */}
             <div className="absolute inset-0">
                 {image && (

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { DestinationHero } from "@/app/(website)/destinations/[slug]/components/destination-hero";
 import { DestinationOverview } from "@/app/(website)/destinations/[slug]/components/destination-overview";
 import { LocationMap } from "@/components/common/location-map";
-import { DestinationExperiences } from "@/app/(website)/destinations/[slug]/components/destination-experiences";
+import { LocalExperiences } from "@/components/common/local-experiences";
 import { DestinationFestivals } from "@/app/(website)/destinations/[slug]/components/destination-festivals";
 import { DestinationHotels } from "@/app/(website)/destinations/[slug]/components/destination-hotels";
 
@@ -75,9 +75,9 @@ export default async function DestinationViewPage({
       />
 
       {/* Section 3: Experience to try in that dzongkhag */}
-      <DestinationExperiences
+      <LocalExperiences
         experiences={experiences}
-        destinationName={destination.name}
+        placeName={destination.name}
       />
 
       {/* Section 4: Popular Festivals */}

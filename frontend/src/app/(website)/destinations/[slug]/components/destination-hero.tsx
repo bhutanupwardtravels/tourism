@@ -12,7 +12,7 @@ interface DestinationHeroProps {
 
 export function DestinationHero({ name, image, region }: DestinationHeroProps) {
   return (
-    <div className="relative flex min-h-[80vh] w-full flex-col items-center justify-center overflow-hidden bg-white px-6 pb-28 pt-36 md:pt-44">
+    <div className="relative flex min-h-[90vh] w-full flex-col items-center justify-center overflow-hidden bg-white px-6 pb-28 pt-36 md:pt-44">
       {/* Background Image with Color */}
       <div className="absolute inset-0">
         {image && (

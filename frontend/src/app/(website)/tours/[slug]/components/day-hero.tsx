@@ -24,12 +24,10 @@ export function DayHero({ dayNumber, title, image, tourTitle }: DayHeroProps) {
     const head = rest ? lead : leadWords[0];
     const accent = rest || leadWords.slice(1).join(" ");
 
-    // The tour hero shares this shell but carries a stat-tile row that pushes it
-    // past the 80vh floor the other heroes sit on. This page has no equivalent
-    // facts to show, so it raises its own floor to match rather than landing
-    // visibly shorter than the tour page it belongs to.
+    // Same 90vh floor as the tour hero this page hangs off, so stepping from the
+    // tour into a day does not land on a visibly shorter banner.
     return (
-        <div className="relative flex min-h-[84vh] w-full flex-col items-center justify-center overflow-hidden bg-white px-6 pb-28 pt-36 md:pt-44">
+        <div className="relative flex min-h-[90vh] w-full flex-col items-center justify-center overflow-hidden bg-white px-6 pb-28 pt-36 md:pt-44">
             {/* Background Image with Color Reveal */}
             <div className="absolute inset-0">
                 {image && (

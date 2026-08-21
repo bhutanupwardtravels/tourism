@@ -18,7 +18,7 @@ export function OurStory({ story }: OurStoryProps) {
       <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-amber-500/5 blur-[120px] rounded-full -translate-x-1/2 -translate-y-1/2" />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 lg:gap-12 xl:gap-24 items-start">
           {/* Narrative Content */}
           <Reveal y={0} x={-30} duration={1}
             className="lg:col-span-7">

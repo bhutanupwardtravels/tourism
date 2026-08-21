@@ -4,7 +4,8 @@ import CallToAction from "@/components/common/call-to-action";
 import { LocationMap } from "@/components/common/location-map";
 import { ExperienceDetails } from "./components/experience-details";
 import { ExperienceGallery } from "./components/experience-gallery";
-import { getExperienceBySlug, getAllExperiences } from "../actions";
+import { ExperienceStays } from "./components/experience-stays";
+import { getExperienceBySlug, getAllExperiences, getHotelsForExperience } from "../actions";
 import { ExperienceCarousel } from "./components/experience-carousel";
 import { JsonLd } from "@/components/common/json-ld";
 import { experienceJsonLd, breadcrumbJsonLd } from "@/lib/structured-data";
@@ -36,9 +37,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ExperienceDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const [experience, allExperiences] = await Promise.all([
+  const [experience, allExperiences, hotels] = await Promise.all([
     getExperienceBySlug(slug),
-    getAllExperiences()
+    getAllExperiences(),
+    getHotelsForExperience(slug)
   ]);
 
   if (!experience) {
@@ -82,6 +84,9 @@ export default async function ExperienceDetailPage({ params }: PageProps) {
         )}
 
       </div>
+
+      {/* Where to Rest — stays in the experience's destination(s) */}
+      <ExperienceStays hotels={hotels} experienceTitle={experience.title} />
 
       {/* Similar Experiences */}
       <ExperienceCarousel

@@ -83,8 +83,8 @@ export function ExperiencesClient({ initialExperiences }: ExperiencesClientProps
             </div>
 
             {/* Experiences Grid */}
-            <div className="container mx-auto px-6 pt-32">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-12 pl-12 border-l border-black/10">
+            <div className="container mx-auto px-6 pt-16">
+                <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-12 pl-12 border-l border-black/10">
                     <div className="max-w-xl">
                         <span className="font-mono text-amber-600/60 text-xs uppercase tracking-[0.3em] mb-4 block">
                         {`// viewing: ${activeCategory.toLowerCase()}`}

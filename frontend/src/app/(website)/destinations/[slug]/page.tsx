@@ -8,7 +8,7 @@ import { notFound } from "next/navigation";
 import { DestinationHero } from "./components/destination-hero";
 import { DestinationOverview } from "./components/destination-overview";
 import { LocationMap } from "@/components/common/location-map";
-import { DestinationExperiences } from "./components/destination-experiences";
+import { LocalExperiences } from "@/components/common/local-experiences";
 import { DestinationFestivals } from "./components/destination-festivals";
 import { DestinationHotels } from "./components/destination-hotels";
 import { DestinationCarousel } from "./components/destination-carousel";
@@ -19,6 +19,7 @@ import { destinationJsonLd, breadcrumbJsonLd } from "@/lib/structured-data";
 import type { Metadata } from "next";
 import { listSlugs } from "@/lib/data/slugs";
 import { buildMetadata } from "@/lib/site";
+import { splitFestivals } from "@/lib/content/festivals";
 
 export async function generateStaticParams() {
     const slugs = await listSlugs("destinations");
@@ -56,13 +57,10 @@ export default async function DestinationPage({ params }: PageProps) {
   const experiences = await getExperiencesByDestination(destination._id, slug);
   const hotels = await getHotelsByDestination(destination._id, slug);
 
-  // Filter festivals (Case insensitive check on category or title)
-  const festivals = experiences.filter(
-    (exp) =>
-      exp.category.toLowerCase().includes("culture") ||
-      exp.title.toLowerCase().includes("festival") ||
-      exp.slug.includes("festival")
-  );
+  // Dated festivals belong to the festivals section only — listing them as
+  // experiences too showed the same tshechu twice on the page.
+  const { festivals, experiences: nonFestivalExperiences } =
+    splitFestivals(experiences);
 
   return (
     <div className="min-h-screen bg-white text-black">
@@ -95,9 +93,9 @@ export default async function DestinationPage({ params }: PageProps) {
       />
 
       {/* Section 3: Experience to try in that dzongkhag */}
-      <DestinationExperiences
-        experiences={experiences}
-        destinationName={destination.name}
+      <LocalExperiences
+        experiences={nonFestivalExperiences}
+        placeName={destination.name}
       />
 
       {/* Section 4: Popular Festivals */}

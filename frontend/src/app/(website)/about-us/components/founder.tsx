@@ -22,7 +22,7 @@ export function Founder({ founder }: FounderProps) {
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-amber-500/5 blur-[120px] rounded-full translate-x-1/2 translate-y-1/2" />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 lg:gap-12 xl:gap-24 items-center">
           {/* Portrait */}
           <Reveal y={0} scale={0.9} duration={1}
             className="lg:col-span-5 relative group">

@@ -7,7 +7,6 @@ import { ReservationCard } from "@/components/common/reservation-card";
 
 interface ExperienceDetailsProps {
     experience: {
-        title: string;
         description: string;
         slug: string;
         highlights?: string[];
@@ -16,11 +15,10 @@ interface ExperienceDetailsProps {
 
 export function ExperienceDetails({ experience }: ExperienceDetailsProps) {
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 lg:gap-12 xl:gap-24 items-start">
             {/* Essence / Overview Section */}
             <div className="lg:col-span-8">
                 <ExperienceOverview
-                    title={experience.title}
                     description={experience.description}
                     highlights={experience.highlights}
                 />

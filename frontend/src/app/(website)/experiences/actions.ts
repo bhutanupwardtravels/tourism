@@ -2,8 +2,10 @@
 
 import * as db from "@/lib/data/experiences";
 import * as typeDb from "@/lib/data/experience-types";
+import * as hotelDb from "@/lib/data/hotels";
 import { Experience } from "@/app/admin/experiences/schema";
 import { ExperienceType } from "@/app/admin/experience-types/schema";
+import { Hotel } from "@/app/admin/hotels/schema";
 
 export async function getExperienceTypes(): Promise<ExperienceType[]> {
   try {
@@ -80,6 +82,35 @@ export async function getAllExperiences(): Promise<Experience[]> {
     return resolved as Experience[];
   } catch (error) {
     console.error("Error fetching all experiences:", error);
+    return [];
+  }
+}
+
+/**
+ * Places to stay near where an experience happens. The experience links to its
+ * destinations through `destinations` (ids or slugs) plus the legacy
+ * `destinationSlug`, so every reference it carries is handed to the hotel
+ * lookup and matched against whichever column the hotel row uses.
+ */
+export async function getHotelsForExperience(slug: string): Promise<Hotel[]> {
+  try {
+    // Cached alongside the page's own lookup, so this costs no extra query.
+    const experience = await db.getExperienceBySlug(slug);
+    if (!experience) return [];
+
+    const hotels = await hotelDb.getHotelsByDestinationRefs([
+      experience.destinationSlug,
+      ...(experience.destinationIds ?? []),
+      ...(experience.resolvedDestinations ?? []),
+    ]);
+
+    return [...hotels].sort(
+      (a, b) =>
+        (b.priority || 0) - (a.priority || 0) ||
+        (Number(b.rating) || 0) - (Number(a.rating) || 0)
+    ) as Hotel[];
+  } catch (error) {
+    console.error("Error fetching hotels for experience:", error);
     return [];
   }
 }

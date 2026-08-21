@@ -148,16 +148,20 @@ export async function getTopHotels(limit: number = 6) {
     return resolveDestinations(rowsToDocs<Hotel>(data));
 }
 
-export async function getHotelsByDestination(destinationId?: string, slug?: string) {
-    if (!destinationId && !slug) return [];
+/**
+ * Hotels attached to any of the given destination references. A reference is
+ * whatever the caller happens to hold — an id or a slug — because legacy rows
+ * store the link under `destination`, `destination_id` or `destination_slug`.
+ * Filtering happens in Postgres rather than pulling the whole table into JS.
+ */
+export async function getHotelsByDestinationRefs(refs: (string | undefined)[]) {
+    const unique = [...new Set(refs.filter(Boolean) as string[])];
+    if (unique.length === 0) return [];
 
     const supabase = supabaseAdmin();
 
-    // Filter in Postgres against every legacy destination reference column
-    // instead of pulling the whole table and filtering in JS.
-    const refs = [destinationId, slug].filter(Boolean) as string[];
     const orParts: string[] = [];
-    for (const ref of refs) {
+    for (const ref of unique) {
         orParts.push(`destination.eq.${ref}`, `destination_id.eq.${ref}`, `destination_slug.eq.${ref}`);
     }
 
@@ -165,4 +169,8 @@ export async function getHotelsByDestination(destinationId?: string, slug?: stri
     if (error) throw error;
 
     return resolveDestinations(rowsToDocs<Hotel>(data));
+}
+
+export async function getHotelsByDestination(destinationId?: string, slug?: string) {
+    return getHotelsByDestinationRefs([destinationId, slug]);
 }

@@ -43,13 +43,13 @@ export async function getHotelBySlug(slug: string): Promise<Hotel | null> {
 
 export async function getRelatedHotels(destinationIdOrSlug: string | undefined, excludeId: string | undefined, limit: number = 6): Promise<Hotel[]> {
     try {
-        const all = await hotelDb.getAllHotels();
-        return all
-            .filter((h) => {
-                // Check both destination ID and destinationSlug for compatibility
-                const hotelDest = h.destination || h.destinationSlug;
-                return hotelDest === destinationIdOrSlug && h.id !== excludeId;
-            })
+        // Filtered in Postgres against every legacy destination column, the same
+        // path the destination and experience pages use. This previously pulled
+        // the whole hotels table and matched on `destination || destinationSlug`
+        // in JS, which missed rows that only carry `destination_id`.
+        const matches = await hotelDb.getHotelsByDestinationRefs([destinationIdOrSlug]);
+        return matches
+            .filter((h) => h.id !== excludeId)
             .sort((a, b) => (b.priority || 0) - (a.priority || 0))
             .slice(0, limit) as Hotel[];
     } catch (error) {

@@ -42,9 +42,12 @@ export default async function HotelDetailPage({ params }: PageProps) {
         location={hotel.location}
         rating={hotel.rating}
         priceRange={hotel.priceRange}
+        rooms={hotel.rooms}
+        price={hotel.price}
       />
 
       <HotelOverview
+        slug={hotel.slug ?? ""}
         description={hotel.description}
         amenities={hotel.amenities}
         rooms={hotel.rooms}

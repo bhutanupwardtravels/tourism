@@ -52,7 +52,7 @@ export default async function HotelsPage() {
                             className="group relative"
                         >
                             {/* Image Container */}
-                            <div className="relative aspect-4/5 overflow-hidden rounded-sm bg-neutral-100 border border-black/5 mb-8">
+                            <div className="relative aspect-4/5 overflow-hidden rounded-xs bg-neutral-100 border border-black/5 mb-8">
                                 {hotel.image && (
                                     <Image
                                         src={hotel.image}
