@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Cost } from "../schema";
+import { Cost, COST_APPLIES_TO_LABELS, COST_CHARGE_BASIS_LABELS } from "../schema";
+import { costAppliesTo } from "@/lib/pricing/quote";
 import { Button } from "@/components/ui/button";
 import { DollarSign, Users, Globe, Pencil, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -21,7 +22,8 @@ export function CostCard({ cost, isMobile }: CostCardProps) {
     const [isHovered, setIsHovered] = useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-    const isIndian = cost.isIndianNational;
+    const appliesTo = costAppliesTo(cost);
+    const chargeBasis = cost.chargeBasis === "per_group" ? "per_group" : "per_person";
     const isFixed = cost.type === "fixed";
     const costId = cost.id || cost._id || "";
 
@@ -87,10 +89,17 @@ export function CostCard({ cost, isMobile }: CostCardProps) {
                                 </div>
                             </div>
                             <div className="space-y-1">
-                                <div className="text-[10px] text-zinc-400 font-medium uppercase tracking-wider">Origin</div>
+                                <div className="text-[10px] text-zinc-400 font-medium uppercase tracking-wider">Applies to</div>
                                 <div className="flex items-center gap-1.5 text-xs font-medium text-black">
                                     <Globe className="w-3.5 h-3.5 text-zinc-400" />
-                                    <span className="truncate">{isIndian ? "Indian National" : "International"}</span>
+                                    <span className="truncate">{COST_APPLIES_TO_LABELS[appliesTo]}</span>
+                                </div>
+                            </div>
+                            <div className="space-y-1">
+                                <div className="text-[10px] text-zinc-400 font-medium uppercase tracking-wider">Charged</div>
+                                <div className="flex items-center gap-1.5 text-xs font-medium text-black">
+                                    <Users className="w-3.5 h-3.5 text-zinc-400" />
+                                    <span className="truncate">{COST_CHARGE_BASIS_LABELS[chargeBasis]}</span>
                                 </div>
                             </div>
                         </div>

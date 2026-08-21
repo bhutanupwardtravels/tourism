@@ -1,12 +1,14 @@
 import { z } from "zod";
 
+import { phoneSchema } from "@/lib/validation/phone";
+
 /** Validation for the PUBLIC (untrusted) coupon-claim form. */
 export const claimCouponSchema = z.object({
     campaignId: z.string().trim().min(1).max(64),
     firstName: z.string().trim().min(1, "First name is required").max(100),
     lastName: z.string().trim().min(1, "Last name is required").max(100),
     email: z.string().trim().email("Invalid email address").max(254),
-    phone: z.string().trim().min(1, "Phone number is required").max(40),
+    phone: phoneSchema,
     country: z.string().trim().min(1, "Nationality is required").max(5), // ISO2
     // The privacy policy promises marketing email only with explicit consent,
     // and these addresses exist to be contacted months later — so this is

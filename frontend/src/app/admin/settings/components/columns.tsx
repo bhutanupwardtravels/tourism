@@ -1,7 +1,8 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Cost } from "../schema";
+import { Cost, COST_APPLIES_TO_LABELS, COST_CHARGE_BASIS_LABELS } from "../schema";
+import { costAppliesTo } from "@/lib/pricing/quote";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -77,19 +78,40 @@ export const columns: ColumnDef<Cost>[] = [
         },
     },
     {
-        accessorKey: "isIndianNational",
-        header: "Nationality",
+        accessorKey: "chargeBasis",
+        header: "Charged",
         cell: ({ row }) => {
-            const isIndian = row.getValue("isIndianNational") as boolean;
+            const basis = row.original.chargeBasis === "per_group" ? "per_group" : "per_person";
+            return (
+                <Badge variant="outline" className={cn(
+                    "w-fit rounded-none uppercase text-[9px] font-bold tracking-widest px-2 py-0.5",
+                    basis === "per_group"
+                        ? "bg-teal-100 text-teal-800 border-teal-200"
+                        : "bg-zinc-100 text-zinc-700 border-zinc-200"
+                )}>
+                    {COST_CHARGE_BASIS_LABELS[basis]}
+                </Badge>
+            );
+        },
+    },
+    {
+        accessorKey: "appliesTo",
+        header: "Applies to",
+        cell: ({ row }) => {
+            // Falls back to the legacy boolean for rows written before the column existed.
+            const applies = costAppliesTo(row.original);
+            const palette = {
+                everyone: "bg-sky-100 text-sky-800 border-sky-200",
+                indian: "bg-emerald-100 text-emerald-800 border-emerald-200",
+                international: "bg-purple-100 text-purple-800 border-purple-200",
+            } as const;
             return (
                 <div className="flex flex-col gap-1">
                     <Badge variant="outline" className={cn(
                         "w-fit rounded-none uppercase text-[9px] font-bold tracking-widest px-2 py-0.5",
-                        isIndian
-                            ? "bg-emerald-100 text-emerald-800 border-emerald-200"
-                            : "bg-purple-100 text-purple-800 border-purple-200"
+                        palette[applies]
                     )}>
-                        {isIndian ? "Indian National" : "International"}
+                        {COST_APPLIES_TO_LABELS[applies]}
                     </Badge>
                 </div>
             );

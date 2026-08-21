@@ -11,7 +11,7 @@ import { Cost } from "../schema";
 const filterParams: DataTableFilterParam[] = [
     { id: "title" },
     { id: "travelerCategory" },
-    { id: "isIndianNational" },
+    { id: "appliesTo" },
 ];
 
 interface SettingsTableProps {

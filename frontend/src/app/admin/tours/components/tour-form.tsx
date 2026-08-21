@@ -24,6 +24,7 @@ import {
 } from "../actions";
 import { ImageUpload } from "@/components/admin/image-upload";
 import { generateSlug } from "@/utils/slug-generator";
+import { costAppliesTo } from "@/lib/pricing/quote";
 import { Combobox } from "./combobox-wrapper";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { Cost } from "../../settings/schema";
@@ -280,7 +281,7 @@ export function TourForm({ initialData, action, title: pageTitle, allCosts = [] 
             if (!cost) return;
             // A child's SDF and the Indian-national fee schedule belong to a
             // different traveller — folding them in inflates the adult price.
-            if (cost.isIndianNational || cost.travelerCategory !== "adult") return;
+            if (costAppliesTo(cost) === "indian" || cost.travelerCategory !== "adult") return;
             // Daily fees (SDF, guide) are billed per night, not per calendar
             // day: a 4-day / 3-night trip is charged three nights.
             total += cost.type === "daily"

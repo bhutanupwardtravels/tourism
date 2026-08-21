@@ -10,13 +10,16 @@ import { SUBMIT_BUTTON, SUBMIT_SWEEP } from "@/components/common/submit-button";
 import { submitTourRequest } from "../actions";
 import { Tour } from "@/app/(website)/tours/schema";
 import { Turnstile } from "@/components/turnstile";
-import { DiscountNotice } from "@/components/promo/discount-notice";
+import { DiscountNotice, ResolvedFormDiscount } from "@/components/promo/discount-notice";
+import { ReturningTravellerHint } from "@/components/promo/returning-traveller-hint";
 import { FormInput } from "@/components/common/form-input";
-import { CountryCodeSelect } from "@/components/common/country-code-select";
+import { PhoneField, focusPhoneField } from "@/components/common/phone-field";
 import { CountrySelect } from "@/components/common/country-select";
 import { MonthSelect } from "@/components/common/month-select";
 import { OptionSelect } from "@/components/common/option-select";
 import { COUNTRIES } from "@/lib/countries";
+import { applyDiscount } from "@/lib/pricing/quote";
+import { validatePhoneNumber } from "@/lib/validation/phone";
 
 const TRAVELER_OPTIONS = [
     { value: "1", label: "Just me" },
@@ -43,6 +46,7 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
         message: "",
     });
     const [phoneCountry, setPhoneCountry] = useState("");
+    const [phoneError, setPhoneError] = useState("");
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -51,6 +55,20 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
     const [company, setCompany] = useState(""); // honeypot
     // Advisory only: submitTourRequest re-validates the code server-side.
     const [couponCode, setCouponCode] = useState("");
+    // Whichever of loyalty/coupon wins, for the struck-through headline price.
+    const [discount, setDiscount] = useState<ResolvedFormDiscount>({
+        percent: 0,
+        kind: "none",
+        priorTrips: 0,
+        couponCode: "",
+    });
+
+    // The card price is the per-person headline for the package. Showing the
+    // struck-through original next to the discounted figure is the whole point
+    // of resolving the discount this early — advisory, like everything else here.
+    const listPrice = selectedTour?.price ?? 0;
+    const discountedPrice = applyDiscount(listPrice, discount.percent);
+    const showsDiscountedPrice = discount.percent > 0 && listPrice > 0;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setFormState({
@@ -62,6 +80,14 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSubmitError("");
+
+        const phoneProblem = validatePhoneNumber(formState.phone);
+        if (phoneProblem) {
+            setPhoneError(phoneProblem);
+            focusPhoneField("request-phone");
+            return;
+        }
+
         setIsSubmitting(true);
 
         const dialCode = COUNTRIES.find((c) => c.iso2 === phoneCountry)?.dialCode ?? "";
@@ -185,7 +211,25 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                                 <div className="border-t border-white/20 pt-6 flex justify-between items-end">
                                     <div>
                                         <span className="block text-[8px] uppercase tracking-widest text-white/50 mb-1">Investment</span>
-                                        <p className="font-mono text-lg text-amber-500">{selectedTour?.price}</p>
+                                        {showsDiscountedPrice ? (
+                                            <div className="flex items-baseline gap-2">
+                                                <p className="font-mono text-sm text-white/40 line-through">
+                                                    ${listPrice.toLocaleString()}
+                                                </p>
+                                                <p className="font-mono text-lg text-amber-500">
+                                                    ${discountedPrice.total.toLocaleString()}
+                                                </p>
+                                            </div>
+                                        ) : (
+                                            <p className="font-mono text-lg text-amber-500">
+                                                ${listPrice.toLocaleString()}
+                                            </p>
+                                        )}
+                                        {showsDiscountedPrice && (
+                                            <span className="block text-[8px] uppercase tracking-widest text-amber-500/70 mt-1">
+                                                {discount.percent}% {discount.kind === "loyalty" ? "membership" : "code"} discount
+                                            </span>
+                                        )}
                                     </div>
                                     <div className="text-right">
                                         <span className="block text-[8px] uppercase tracking-widest text-white/50 mb-1">Duration</span>
@@ -221,6 +265,10 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
 
                         {/* Contact Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+                            {/* Above the email field on purpose: the loyalty discount is
+                                resolved from the address alone, so a returning traveller
+                                has to be told before they type the wrong one. */}
+                            <ReturningTravellerHint className="md:col-span-2" />
                             <FormInput
                                 label="Email"
                                 name="email"
@@ -247,25 +295,18 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                                     />
                                 </div>
                             </div>
-                            <div className="space-y-4 group md:col-span-2">
-                                <label id="request-phone-label" htmlFor="request-phone" className="block text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
-                                    Phone
-                                </label>
-                                <div className="flex items-center gap-3 border-b border-black/10 focus-within:border-amber-600 transition-all">
-                                    <CountryCodeSelect value={phoneCountry} onChange={setPhoneCountry} ariaLabelledBy="request-phone-label" />
-                                    <input
-                                        id="request-phone"
-                                        type="tel"
-                                        name="phone"
-                                        required
-                                        autoComplete="tel"
-                                        value={formState.phone}
-                                        onChange={handleChange}
-                                        className="w-full py-4 text-lg font-light text-black bg-transparent rounded-none placeholder:text-gray-400 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
-                                        placeholder="17 123 456"
-                                    />
-                                </div>
-                            </div>
+                            <PhoneField
+                                id="request-phone"
+                                className="md:col-span-2"
+                                country={phoneCountry}
+                                onCountryChange={setPhoneCountry}
+                                value={formState.phone}
+                                onChange={(phone) => {
+                                    setPhoneError("");
+                                    setFormState((prev) => ({ ...prev, phone }));
+                                }}
+                                error={phoneError}
+                            />
                         </div>
 
                         {/* Travel Details Grid */}
@@ -316,7 +357,11 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
                             />
                         </div>
 
-                        <DiscountNotice email={formState.email} onCouponChange={setCouponCode} />
+                        <DiscountNotice
+                            email={formState.email}
+                            onCouponChange={setCouponCode}
+                            onDiscountChange={setDiscount}
+                        />
 
                         {/* Honeypot — hidden from real users, catches bots */}
                         <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden">

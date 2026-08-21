@@ -5,6 +5,7 @@ import { getAllHotels } from "@/lib/data/hotels";
 import { getAllCosts } from "@/lib/data/settings";
 import { getAboutContent } from "@/lib/data/about";
 import { getContactContent } from "@/lib/data/contact";
+import { costAppliesTo } from "@/lib/pricing/quote";
 
 // SECURITY BOUNDARY: this file is the entire set of data the chatbot can see.
 // Only fetch tables that are already public-facing content (same info shown
@@ -94,7 +95,7 @@ export async function getCatalogContext(): Promise<string> {
             "\n=== FEES / COSTS (from live site data) ===",
             ...costs.map(
                 (c) =>
-                    `- ${c.title}: $${c.price} (${c.type}, ${c.travelerCategory}${c.isIndianNational ? ", Indian national rate" : ""})`
+                    `- ${c.title}: $${c.price} (${c.type}, ${c.travelerCategory}, ${c.chargeBasis === "per_group" ? "per group" : "per person"}, applies to ${costAppliesTo(c) === "everyone" ? "all nationalities" : costAppliesTo(c) === "indian" ? "Indian nationals" : "non-Indian nationals"})`
             ),
 
             ...(about

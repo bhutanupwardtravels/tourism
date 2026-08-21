@@ -37,10 +37,11 @@ export interface FeesInput {
     children_under_6?: number;
     arrivalDate?: string;
     departureDate?: string;
+    /** Days actually built. Daily fees follow this, not the date range. */
+    customItinerary?: DayItinerary[];
 }
 
 export interface QuoteInput extends FeesInput {
-    customItinerary?: DayItinerary[];
     experiences?: PricedItem[];
     hotels?: PricedItem[];
 }
@@ -59,9 +60,24 @@ export interface DiscountResult {
 }
 
 /**
- * Government / operator fees from `global_costs`, matched on nationality and
- * traveller category. `daily` costs multiply by the trip length (nights + 1);
- * `fixed` costs are charged once per traveller.
+ * Which nationalities a cost is charged to. `appliesTo` is authoritative;
+ * `isIndianNational` is only read for rows written before that column existed.
+ */
+export function costAppliesTo(cost: Cost): "everyone" | "indian" | "international" {
+    if (cost.appliesTo) return cost.appliesTo;
+    return cost.isIndianNational ? "indian" : "international";
+}
+
+/**
+ * Government / operator fees from `global_costs`.
+ *
+ * Three rules decide a line:
+ *  - nationality: Indian nationals pay a different SDF schedule, but a cost
+ *    marked "everyone" (a guide, say) is charged either way;
+ *  - charge basis: per-group costs are charged once for the whole party, so a
+ *    single guide doesn't multiply by head count;
+ *  - `daily` costs multiply by the number of days actually built on the
+ *    itinerary, falling back to the date range when there is no itinerary yet.
  */
 export function computeFees({
     costs,
@@ -71,27 +87,41 @@ export function computeFees({
     children_under_6 = 0,
     arrivalDate,
     departureDate,
+    customItinerary,
 }: FeesInput): FeesResult {
-    if (!arrivalDate || !departureDate) return { total: 0, breakdown: [] };
+    const itineraryDays = customItinerary?.length ?? 0;
+    if (itineraryDays === 0 && (!arrivalDate || !departureDate)) {
+        return { total: 0, breakdown: [] };
+    }
 
-    const start = new Date(arrivalDate);
-    const end = new Date(departureDate);
-    const nights = Math.max(
-        0,
-        Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
-    );
-    const daysCount = nights + 1;
+    let daysCount = itineraryDays;
+    if (daysCount === 0) {
+        const start = new Date(arrivalDate as string);
+        const end = new Date(departureDate as string);
+        const nights = Math.max(
+            0,
+            Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
+        );
+        daysCount = nights + 1;
+    }
+
+    const isIndian = country === "IN";
+    const partySize = adults + children_6_12 + children_under_6;
 
     let total = 0;
     const breakdown: QuoteLine[] = [];
 
     (costs || []).forEach((cost) => {
-        // Nationality is a strict binary: Indian nationals pay a different
-        // SDF/fee schedule to everyone else.
-        if (cost.isIndianNational !== (country === "IN")) return;
+        const applies = costAppliesTo(cost);
+        if (applies !== "everyone" && (applies === "indian") !== isIndian) return;
+
+        // A per-group cost ignores the traveller category it was filed under:
+        // one guide covers the party, whoever is in it.
+        const perGroup = cost.chargeBasis === "per_group";
 
         let count = 0;
-        if (cost.travelerCategory === "adult") count = adults;
+        if (perGroup) count = partySize > 0 ? 1 : 0;
+        else if (cost.travelerCategory === "adult") count = adults;
         else if (cost.travelerCategory === "child_6_12") count = children_6_12;
         else if (cost.travelerCategory === "child_under_6") count = children_under_6;
 
@@ -100,7 +130,10 @@ export function computeFees({
         const base = (cost.price || 0) * count;
         const lineTotal = cost.type === "daily" ? base * daysCount : base;
         total += lineTotal;
-        breakdown.push({ label: `${cost.title} (${count}x)`, price: lineTotal });
+        breakdown.push({
+            label: perGroup ? `${cost.title} (per group)` : `${cost.title} (${count}x)`,
+            price: lineTotal,
+        });
     });
 
     return { total, breakdown };

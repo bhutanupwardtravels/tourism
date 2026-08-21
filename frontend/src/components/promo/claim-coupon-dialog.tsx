@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Loader2, Check, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { CountrySelect } from "@/components/common/country-select";
-import { CountryCodeSelect } from "@/components/common/country-code-select";
+import { PhoneField } from "@/components/common/phone-field";
 import { Turnstile } from "@/components/turnstile";
 import { COUNTRIES } from "@/lib/countries";
+import { validatePhoneNumber } from "@/lib/validation/phone";
 import { CONSENT_TEXT } from "@/lib/promotions/consent";
 import { claimCoupon } from "@/app/(portal)/plan-my-trip/actions";
 import { PublicCampaign } from "./types";
@@ -46,6 +47,11 @@ export function ClaimCouponDialog({ campaign, open, onClose, onClaimed }: ClaimC
         }
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
             toast.error("Please enter a valid email address.");
+            return;
+        }
+        const phoneProblem = validatePhoneNumber(form.phone);
+        if (phoneProblem) {
+            toast.error(phoneProblem);
             return;
         }
         if (!consent) {
@@ -222,24 +228,15 @@ export function ClaimCouponDialog({ campaign, open, onClose, onClaimed }: ClaimC
                                         </div>
                                     </div>
 
-                                    <div>
-                                        <label className={labelClass}>Phone</label>
-                                        <div className="flex items-center gap-2 border-b border-black/10">
-                                            <CountryCodeSelect
-                                                value={phoneCountry}
-                                                onChange={setPhoneCountry}
-                                                contentClassName="z-[70]"
-                                            />
-                                            <input
-                                                type="tel"
-                                                className="w-full min-w-0 text-black py-3 text-base font-light focus:outline-none bg-transparent placeholder:text-gray-300"
-                                                value={form.phone}
-                                                onChange={(e) => setField("phone", e.target.value)}
-                                                placeholder="17 123 456"
-                                                required
-                                            />
-                                        </div>
-                                    </div>
+                                    <PhoneField
+                                        id="claim-phone"
+                                        variant="compact"
+                                        country={phoneCountry}
+                                        onCountryChange={setPhoneCountry}
+                                        value={form.phone}
+                                        onChange={(phone) => setField("phone", phone)}
+                                        selectContentClassName="z-[70]"
+                                    />
                                 </div>
 
                                 {/* Honeypot — hidden from real users, irresistible to bots. */}

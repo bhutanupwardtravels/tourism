@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { phoneSchema } from "@/lib/validation/phone";
+
 // YYYY-MM-DD, matching <input type="date"> values.
 const dateStringSchema = z.string().trim().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date");
 
@@ -12,7 +14,7 @@ export const publicTourRequestSchema = z
         firstName: z.string().trim().min(1, "First name is required").max(100),
         lastName: z.string().trim().min(1, "Last name is required").max(100),
         email: z.string().trim().email("Invalid email address").max(254),
-        phone: z.string().trim().min(1, "Phone number is required").max(40),
+        phone: phoneSchema,
         destination: z.string().trim().max(200).optional(),
         travelDate: z.string().trim().max(100).optional(),
         travelers: z.string().trim().max(50).optional(),

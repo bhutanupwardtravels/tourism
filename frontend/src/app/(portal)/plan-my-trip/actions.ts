@@ -254,6 +254,41 @@ export async function submitTourRequest(data: Record<string, unknown>) {
 const LOOKUP_RATE_LIMIT = 20;
 const CLAIM_RATE_LIMIT = 3;
 
+export interface LoyaltyTeaser {
+    enabled: boolean;
+    /** Admin-authored copy from Promotions → Loyalty → Settings. */
+    teaserText: string;
+    /** Best tier on offer, so the hint can name a figure worth reading. */
+    maxTierPercent: number;
+}
+
+/**
+ * Copy for the "use the same email you booked with" hint shown above the email
+ * field. Takes no email — it says what is on offer, not what anyone has earned,
+ * so it reveals nothing about a specific address.
+ */
+export async function getLoyaltyTeaser(): Promise<LoyaltyTeaser> {
+    const off: LoyaltyTeaser = { enabled: false, teaserText: "", maxTierPercent: 0 };
+    try {
+        const settings = await getPromoSettings();
+        if (!settings.loyaltyEnabled) return off;
+
+        const bestTier = (settings.tiers || []).reduce(
+            (best, tier) => Math.max(best, Number.isFinite(tier?.percent) ? tier.percent : 0),
+            0
+        );
+        const maxTierPercent = Math.min(bestTier, settings.maxPercent ?? 100);
+        // Enabled with no tier worth anything is the same as off, as far as a
+        // visitor is concerned — don't promise a discount that resolves to 0%.
+        if (maxTierPercent <= 0) return off;
+
+        return { enabled: true, teaserText: settings.teaserText, maxTierPercent };
+    } catch (error) {
+        console.error("Loyalty teaser lookup failed:", error);
+        return off;
+    }
+}
+
 /**
  * The returning-traveller discount for an email, for live display in the forms.
  * Advisory only — submitTourRequest recomputes this independently.

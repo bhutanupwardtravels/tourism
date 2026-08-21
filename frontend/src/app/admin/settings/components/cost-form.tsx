@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { Loader2, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -45,14 +44,23 @@ export function CostForm({ initialData, action, title: pageTitle }: CostFormProp
 
     const form = useForm<CostInput, unknown, CostOutput>({
         resolver: zodResolver(costSchema),
-        defaultValues: initialData || {
-            title: "",
-            description: "",
-            price: 0,
-            type: "fixed",
-            isIndianNational: false,
-            travelerCategory: "adult",
-        },
+        defaultValues: initialData
+            ? {
+                  ...initialData,
+                  // Rows written before these columns existed: derive the
+                  // nationality from the old flag, and default to per person.
+                  appliesTo: initialData.appliesTo ?? (initialData.isIndianNational ? "indian" : "international"),
+                  chargeBasis: initialData.chargeBasis ?? "per_person",
+              }
+            : {
+                  title: "",
+                  description: "",
+                  price: 0,
+                  type: "fixed",
+                  appliesTo: "international",
+                  chargeBasis: "per_person",
+                  travelerCategory: "adult",
+              },
     });
 
     const onSubmit = (data: CostOutput) => {
@@ -61,7 +69,8 @@ export function CostForm({ initialData, action, title: pageTitle }: CostFormProp
         formData.append("description", data.description || "");
         formData.append("price", String(data.price));
         formData.append("type", data.type);
-        formData.append("isIndianNational", String(data.isIndianNational));
+        formData.append("appliesTo", data.appliesTo);
+        formData.append("chargeBasis", data.chargeBasis);
         formData.append("travelerCategory", data.travelerCategory);
 
         startTransition(async () => {
@@ -176,11 +185,12 @@ export function CostForm({ initialData, action, title: pageTitle }: CostFormProp
                                                 </FormControl>
                                                 <SelectContent className="border-gray-200">
                                                     <SelectItem value="fixed" className="focus:bg-zinc-50 focus:text-black cursor-pointer">Fixed (Once per tour)</SelectItem>
-                                                    <SelectItem value="daily" className="focus:bg-zinc-50 focus:text-black cursor-pointer">Daily (Per night)</SelectItem>
+                                                    <SelectItem value="daily" className="focus:bg-zinc-50 focus:text-black cursor-pointer">Daily (Per day)</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                             <FormDescription className="text-[10px] text-zinc-400 italic">
-                                                Daily charges are multiplied by the number of tour nights.
+                                                Daily charges are multiplied by the number of days built on the
+                                                itinerary (falling back to the arrival/departure range).
                                             </FormDescription>
                                             <FormMessage className="text-xs" />
                                         </FormItem>
@@ -214,19 +224,54 @@ export function CostForm({ initialData, action, title: pageTitle }: CostFormProp
 
                                 <FormField
                                     control={form.control}
-                                    name="isIndianNational"
+                                    name="appliesTo"
                                     render={({ field }) => (
-                                        <FormItem className="flex flex-row items-center space-x-2 space-y-0 h-full pt-6">
-                                            <FormControl>
-                                                <Checkbox
-                                                    checked={field.value}
-                                                    onCheckedChange={field.onChange}
-                                                    className="border-gray-300 shadow-none focus-visible:ring-amber-500"
-                                                />
-                                            </FormControl>
-                                            <FormLabel className="text-sm font-medium text-black cursor-pointer">
-                                                Indian National
-                                            </FormLabel>
+                                        <FormItem>
+                                            <FormLabel className="text-black">Applies To</FormLabel>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                <FormControl>
+                                                    <SelectTrigger className="bg-white border-gray-200 text-black w-full hover:bg-white">
+                                                        <SelectValue placeholder="Select who pays this" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent className="border-gray-200">
+                                                    <SelectItem value="everyone" className="focus:bg-zinc-50 focus:text-black cursor-pointer">Everyone</SelectItem>
+                                                    <SelectItem value="indian" className="focus:bg-zinc-50 focus:text-black cursor-pointer">Indian nationals</SelectItem>
+                                                    <SelectItem value="international" className="focus:bg-zinc-50 focus:text-black cursor-pointer">Other nationalities</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormDescription className="text-[10px] text-zinc-400 italic">
+                                                SDF differs by nationality; a guide or driver applies to everyone.
+                                            </FormDescription>
+                                            <FormMessage className="text-xs" />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-6">
+                                <FormField
+                                    control={form.control}
+                                    name="chargeBasis"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-black">Charge Basis</FormLabel>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                <FormControl>
+                                                    <SelectTrigger className="bg-white border-gray-200 text-black w-full hover:bg-white">
+                                                        <SelectValue placeholder="Select basis" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent className="border-gray-200">
+                                                    <SelectItem value="per_person" className="focus:bg-zinc-50 focus:text-black cursor-pointer">Per person</SelectItem>
+                                                    <SelectItem value="per_group" className="focus:bg-zinc-50 focus:text-black cursor-pointer">Per group</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormDescription className="text-[10px] text-zinc-400 italic">
+                                                Per group is charged once however many travellers there are — one
+                                                guide, one driver, one vehicle. The traveller category is then ignored.
+                                            </FormDescription>
+                                            <FormMessage className="text-xs" />
                                         </FormItem>
                                     )}
                                 />
@@ -280,7 +325,8 @@ export function CostForm({ initialData, action, title: pageTitle }: CostFormProp
                                         form.setValue("title", "SDF - International Adult");
                                         form.setValue("price", 100);
                                         form.setValue("type", "daily");
-                                        form.setValue("isIndianNational", false);
+                                        form.setValue("appliesTo", "international");
+                                        form.setValue("chargeBasis", "per_person");
                                         form.setValue("travelerCategory", "adult");
                                         form.setValue("description", "Sustainable Development Fee for international tourists ($100/night)");
                                     }}
@@ -296,7 +342,8 @@ export function CostForm({ initialData, action, title: pageTitle }: CostFormProp
                                         form.setValue("title", "SDF - Child (6-12)");
                                         form.setValue("price", 50);
                                         form.setValue("type", "daily");
-                                        form.setValue("isIndianNational", false);
+                                        form.setValue("appliesTo", "international");
+                                        form.setValue("chargeBasis", "per_person");
                                         form.setValue("travelerCategory", "child_6_12");
                                         form.setValue("description", "Sustainable Development Fee for children aged 6-12 ($50/night)");
                                     }}
@@ -312,13 +359,31 @@ export function CostForm({ initialData, action, title: pageTitle }: CostFormProp
                                         form.setValue("title", "SDF - Indian National");
                                         form.setValue("price", 15);
                                         form.setValue("type", "daily");
-                                        form.setValue("isIndianNational", true);
+                                        form.setValue("appliesTo", "indian");
+                                        form.setValue("chargeBasis", "per_person");
                                         form.setValue("travelerCategory", "adult");
                                         form.setValue("description", "Sustainable Development Fee for Indian nationals (INR 1200 ≈ $15/night)");
                                     }}
                                 >
                                     <span className="font-bold">Indian National</span>
                                     <span className="text-[10px] opacity-70 italic">INR 1,200 ≈ $15 USD / night</span>
+                                </Button>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    className="bg-white text-xs border-amber-200 hover:bg-amber-100 hover:text-amber-900 justify-start h-auto py-3 px-4 flex flex-col items-start gap-1"
+                                    onClick={() => {
+                                        form.setValue("title", "Guide Fee");
+                                        form.setValue("price", 45);
+                                        form.setValue("type", "daily");
+                                        form.setValue("appliesTo", "everyone");
+                                        form.setValue("chargeBasis", "per_group");
+                                        form.setValue("travelerCategory", "adult");
+                                        form.setValue("description", "Licensed guide, charged once per day for the whole group");
+                                    }}
+                                >
+                                    <span className="font-bold">Guide / Driver</span>
+                                    <span className="text-[10px] opacity-70 italic">$45 USD per group / day</span>
                                 </Button>
                             </div>
                         </CardContent>

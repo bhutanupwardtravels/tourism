@@ -1,6 +1,6 @@
 import { listCosts } from "./actions";
 import { SettingsTable } from "./components/settings-table";
-import { Cost } from "./schema";
+import { Cost, COST_APPLIES_TO } from "./schema";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = { title: "Fee Settings" };
@@ -11,7 +11,7 @@ interface SettingsPageProps {
         page_size?: string;
         title?: string;
         travelerCategory?: string;
-        isIndianNational?: string;
+        appliesTo?: string;
     }>;
 }
 
@@ -23,9 +23,9 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
     // Query params are free-form strings; only forward one the column accepts.
     const TRAVELER_CATEGORIES = ["adult", "child_6_12", "child_under_6"] as const;
     const travelerCategory = TRAVELER_CATEGORIES.find((c) => c === params.travelerCategory);
-    const isIndianNational = params.isIndianNational || "";
+    const appliesTo = COST_APPLIES_TO.find((value) => value === params.appliesTo);
 
-    const data = await listCosts(page, pageSize, title, { travelerCategory, isIndianNational });
+    const data = await listCosts(page, pageSize, title, { travelerCategory, appliesTo });
 
     return (
         <div className="space-y-6">

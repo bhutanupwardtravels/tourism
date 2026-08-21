@@ -9,7 +9,8 @@ const COLUMNS = [
     "description",
     "price",
     "type",
-    "is_indian_national",
+    "applies_to",
+    "charge_basis",
     "traveler_category",
 ];
 
@@ -17,7 +18,7 @@ const COLUMNS = [
 export type CostFilters = {
     travelerCategory?: Cost["travelerCategory"];
     /** A string because it comes straight off a query parameter. */
-    isIndianNational?: string;
+    appliesTo?: string;
 };
 
 export async function listCosts(page: number = 1, pageSize: number = 10, search?: string, filters?: CostFilters) {
@@ -32,8 +33,8 @@ export async function listCosts(page: number = 1, pageSize: number = 10, search?
     if (f.travelerCategory) {
         query = query.eq("traveler_category", f.travelerCategory);
     }
-    if (f.isIndianNational) {
-        query = query.eq("is_indian_national", f.isIndianNational === "true");
+    if (f.appliesTo) {
+        query = query.eq("applies_to", f.appliesTo);
     }
 
     const [from, to] = pageRange(page, pageSize);

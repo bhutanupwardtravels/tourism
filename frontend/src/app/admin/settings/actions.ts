@@ -17,7 +17,8 @@ export async function createCostAction(formData: FormData) {
             description: formData.get("description"),
             price: Number(formData.get("price")),
             type: formData.get("type"),
-            isIndianNational: formData.get("isIndianNational") === "true",
+            appliesTo: formData.get("appliesTo"),
+            chargeBasis: formData.get("chargeBasis"),
             travelerCategory: formData.get("travelerCategory"),
         };
 
@@ -37,7 +38,8 @@ export async function updateCostAction(id: string, formData: FormData) {
             description: formData.get("description"),
             price: Number(formData.get("price")),
             type: formData.get("type"),
-            isIndianNational: formData.get("isIndianNational") === "true",
+            appliesTo: formData.get("appliesTo"),
+            chargeBasis: formData.get("chargeBasis"),
             travelerCategory: formData.get("travelerCategory"),
         };
 

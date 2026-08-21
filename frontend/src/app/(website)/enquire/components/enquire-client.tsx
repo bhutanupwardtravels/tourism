@@ -10,11 +10,12 @@ import { Turnstile } from "@/components/turnstile";
 import { DiscountNotice } from "@/components/promo/discount-notice";
 import { submitTourRequest } from "@/app/(portal)/plan-my-trip/actions";
 import { FormInput } from "@/components/common/form-input";
-import { CountryCodeSelect } from "@/components/common/country-code-select";
+import { PhoneField, focusPhoneField } from "@/components/common/phone-field";
 import { CountrySelect } from "@/components/common/country-select";
 import { MonthSelect } from "@/components/common/month-select";
 import { OptionSelect } from "@/components/common/option-select";
 import { COUNTRIES } from "@/lib/countries";
+import { validatePhoneNumber } from "@/lib/validation/phone";
 import { Reveal } from "@/components/ui/reveal";
 
 const TRAVELER_OPTIONS = [
@@ -39,9 +40,8 @@ export default function EnquireClient() {
     });
 
     const [phoneCountry, setPhoneCountry] = useState("");
+    const [phoneError, setPhoneError] = useState("");
     const [company, setCompany] = useState(""); // honeypot — hidden from real users
-    // Advisory only: submitTourRequest re-validates the code server-side.
-    const [couponCode, setCouponCode] = useState("");
     const [turnstileToken, setTurnstileToken] = useState("");
 
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -56,6 +56,14 @@ export default function EnquireClient() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        const phoneProblem = validatePhoneNumber(formState.phone);
+        if (phoneProblem) {
+            setPhoneError(phoneProblem);
+            focusPhoneField("enquire-phone");
+            return;
+        }
+
         setIsSubmitting(true);
 
         const dialCode = COUNTRIES.find((c) => c.iso2 === phoneCountry)?.dialCode ?? "";
@@ -65,7 +73,6 @@ export default function EnquireClient() {
             phone: `${dialCode} ${formState.phone}`.trim(),
             company,
             turnstileToken,
-            couponCode: couponCode || undefined,
             tourName: "General Enquiry",
         });
 
@@ -286,25 +293,18 @@ Tell us roughly when you want to travel and who&apos;s coming. We&apos;ll come b
                                         />
                                     </div>
                                 </div>
-                                <div className="space-y-4 group md:col-span-2">
-                                    <label id="enquire-phone-label" htmlFor="enquire-phone" className="block text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors">
-                                        Phone
-                                    </label>
-                                    <div className="flex items-center gap-3 border-b border-black/10 focus-within:border-amber-600 transition-all">
-                                        <CountryCodeSelect value={phoneCountry} onChange={setPhoneCountry} ariaLabelledBy="enquire-phone-label" />
-                                        <input
-                                            id="enquire-phone"
-                                            type="tel"
-                                            name="phone"
-                                            required
-                                            autoComplete="tel"
-                                            value={formState.phone}
-                                            onChange={handleChange}
-                                            className="w-full py-4 text-lg font-light text-black bg-transparent rounded-none placeholder:text-gray-400 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
-                                            placeholder="17 123 456"
-                                        />
-                                    </div>
-                                </div>
+                                <PhoneField
+                                    id="enquire-phone"
+                                    className="md:col-span-2"
+                                    country={phoneCountry}
+                                    onCountryChange={setPhoneCountry}
+                                    value={formState.phone}
+                                    onChange={(phone) => {
+                                        setPhoneError("");
+                                        setFormState((prev) => ({ ...prev, phone }));
+                                    }}
+                                    error={phoneError}
+                                />
                             </div>
 
                             {/* Travel Details Grid */}
@@ -355,7 +355,9 @@ Tell us roughly when you want to travel and who&apos;s coming. We&apos;ll come b
                                 />
                             </div>
 
-                            <DiscountNotice email={formState.email} onCouponChange={setCouponCode} />
+                            {/* Badge only — this page is for questions, not for
+                                redeeming codes, so no coupon field here. */}
+                            <DiscountNotice email={formState.email} allowCoupon={false} />
 
                         {/* Honeypot — hidden from real users, catches bots */}
                             <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden">

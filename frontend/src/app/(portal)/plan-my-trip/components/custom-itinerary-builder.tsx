@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Plus, Loader2, Sparkles, Check, X, Search, Headphones } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { SUBMIT_BUTTON, SUBMIT_SWEEP } from "@/components/common/submit-button";
 import Link from "next/link";
 import { Destination } from "@/app/(website)/destinations/schema";
@@ -16,15 +15,18 @@ import { DayItinerary, ItineraryItem } from "@/app/admin/tour-requests/types";
 import { DayBuilder } from "./builder/day-builder";
 import { ExperienceSelector } from "./builder/experience-selector";
 import { HotelSelector } from "./builder/hotel-selector";
-import { submitTourRequest, lookupTravellerDiscount, validateCoupon } from "../actions";
+import { submitTourRequest, validateCoupon } from "../actions";
 import { Turnstile } from "@/components/turnstile";
 import { toast } from "sonner";
 import { getTravelTime } from "@/constants/travel-times";
 import { DestinationCard } from "@/components/common/destination-card";
 import { FormInput } from "@/components/common/form-input";
-import { CountryCodeSelect } from "@/components/common/country-code-select";
+import { PhoneField } from "@/components/common/phone-field";
+import { ReturningTravellerHint } from "@/components/promo/returning-traveller-hint";
 import { CountrySelect } from "@/components/common/country-select";
 import { COUNTRIES } from "@/lib/countries";
+import { validatePhoneNumber } from "@/lib/validation/phone";
+import { useTravellerLoyalty } from "@/hooks/use-traveller-loyalty";
 import { buildQuote, computeFees, applyDiscount } from "@/lib/pricing/quote";
 import { readDraft, writeDraft, clearDraft } from "../draft";
 
@@ -118,10 +120,9 @@ export function CustomItineraryBuilder({
     const [turnstileToken, setTurnstileToken] = useState("");
     const [company, setCompany] = useState(""); // honeypot
 
-    // Returning-traveller discount, resolved once the email is entered on the
-    // CONTACT step. Display only — the server recomputes it at submit.
-    const [loyaltyPercent, setLoyaltyPercent] = useState(0);
-    const [priorTrips, setPriorTrips] = useState(0);
+    // Returning-traveller discount, resolved from the email typed on the CONTACT
+    // step. Display only — the server recomputes it at submit.
+    const { percent: loyaltyPercent, priorTrips } = useTravellerLoyalty(userDetails.email);
 
     // Coupon from a lead-capture campaign.
     const [couponInput, setCouponInput] = useState("");
@@ -222,7 +223,8 @@ export function CustomItineraryBuilder({
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userDetails.email)) {
             next.email = "That doesn't look like a valid email address.";
         }
-        if (!userDetails.phone.trim()) next.phone = "Please enter a phone number.";
+        const phoneProblem = validatePhoneNumber(userDetails.phone);
+        if (phoneProblem) next.phone = phoneProblem;
         setErrors(next);
         return Object.keys(next).length === 0;
     };
@@ -425,19 +427,6 @@ export function CustomItineraryBuilder({
             toast.error(result.error || "Failed to submit request.");
         }
         setIsSubmitting(false);
-    };
-
-    // Resolved from the email on the CONTACT step, once it is known.
-    // Display only — submitTourRequest recounts it server-side at submit.
-    const refreshLoyalty = async (email: string) => {
-        try {
-            const result = await lookupTravellerDiscount(email);
-            setLoyaltyPercent(result.percent);
-            setPriorTrips(result.priorTrips);
-        } catch {
-            setLoyaltyPercent(0);
-            setPriorTrips(0);
-        }
     };
 
     const handleApplyCoupon = async () => {
@@ -752,9 +741,16 @@ export function CustomItineraryBuilder({
                                     <div className="space-y-6">
                                         <div className="flex justify-between items-end border-b border-white/10 pb-6">
                                             <span className="text-white/60 text-xs uppercase tracking-widest font-mono">{"// Total"}</span>
-                                            <span className="text-4xl font-light tracking-tighter text-amber-500">
-                                                ${discounted.total.toLocaleString()}
-                                            </span>
+                                            <div className="flex items-baseline gap-3">
+                                                {discountPercent > 0 && (
+                                                    <span className="text-lg font-light text-white/30 line-through">
+                                                        ${quoteSubtotal.toLocaleString()}
+                                                    </span>
+                                                )}
+                                                <span className="text-4xl font-light tracking-tighter text-amber-500">
+                                                    ${discounted.total.toLocaleString()}
+                                                </span>
+                                            </div>
                                         </div>
 
                                         <div className="space-y-4">
@@ -900,6 +896,11 @@ This estimate covers the Sustainable Development Fee, accommodation and the expe
                                 </p>
                             </div>
 
+                            {/* Above the fields on purpose: the loyalty discount is resolved
+                                from the email address alone, so a returning traveller has to
+                                be told before they type a different one. */}
+                            <ReturningTravellerHint />
+
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
                                 <FormInput
                                     label="First name"
@@ -937,47 +938,18 @@ This estimate covers the Sustainable Development Fee, accommodation and the expe
                                         clearError("email");
                                         setUserDetails({ ...userDetails, email: e.target.value });
                                     }}
-                                    // Fire-and-forget: a returning-traveller badge that appears a
-                                    // moment late is fine, and a slow lookup must never block typing.
-                                    onBlur={() => refreshLoyalty(userDetails.email)}
                                 />
-                                <div className="space-y-4 group">
-                                    <label
-                                        id="builder-phone-label"
-                                        htmlFor="builder-phone"
-                                        className="block text-[10px] font-bold uppercase tracking-[0.3em] text-black group-focus-within:text-amber-600 transition-colors"
-                                    >
-                                        Phone
-                                    </label>
-                                    <div className={cn(
-                                        "flex items-center gap-3 border-b transition-all focus-within:border-amber-600",
-                                        errors.phone ? "border-rose-500" : "border-black/10"
-                                    )}>
-                                        <CountryCodeSelect
-                                            value={phoneCountry}
-                                            onChange={setPhoneCountry}
-                                            ariaLabelledBy="builder-phone-label"
-                                        />
-                                        <input
-                                            id="builder-phone"
-                                            type="tel"
-                                            name="phone"
-                                            required
-                                            autoComplete="tel"
-                                            aria-invalid={errors.phone ? true : undefined}
-                                            value={userDetails.phone}
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                                clearError("phone");
-                                                setUserDetails({ ...userDetails, phone: e.target.value });
-                                            }}
-                                            className="w-full py-4 text-lg font-light text-black bg-transparent rounded-none placeholder:text-gray-400 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
-                                            placeholder="17 123 456"
-                                        />
-                                    </div>
-                                    {errors.phone && (
-                                        <p role="alert" className="text-[11px] font-medium text-rose-600">{errors.phone}</p>
-                                    )}
-                                </div>
+                                <PhoneField
+                                    id="builder-phone"
+                                    country={phoneCountry}
+                                    onCountryChange={setPhoneCountry}
+                                    value={userDetails.phone}
+                                    onChange={(phone) => {
+                                        clearError("phone");
+                                        setUserDetails({ ...userDetails, phone });
+                                    }}
+                                    error={errors.phone}
+                                />
                             </div>
 
                             <div className="space-y-4 group">
@@ -1071,6 +1043,27 @@ This estimate covers the Sustainable Development Fee, accommodation and the expe
                                     </div>
                                 </div>
 
+                                {/* Resolved from the email above, and shown here so the reason
+                                    for the new total is next to the field that could change it. */}
+                                {discountPercent > 0 && (
+                                    <div className="flex items-start gap-3 border border-amber-500/30 bg-amber-500/5 p-4">
+                                        <Sparkles className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+                                        <div className="space-y-1">
+                                            <p className="text-xs font-medium text-amber-500">
+                                                {discountKind === "loyalty"
+                                                    ? `${discountPercent}% membership discount applied`
+                                                    : `${discountPercent}% discount applied`}
+                                            </p>
+                                            <p className="text-[11px] font-light text-white/50 leading-relaxed">
+                                                {discountKind === "coupon"
+                                                    ? `Code ${couponCode} accepted.`
+                                                    : `Welcome back — you've travelled with us ${priorTrips} ${priorTrips === 1 ? "time" : "times"}.`}
+                                                {" "}Only the larger of a code and your membership discount applies.
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+
                                 {/* Coupon — validated against the email entered on this step. */}
                                 <div className="space-y-3">
                                     {couponPercent > 0 ? (
@@ -1144,9 +1137,16 @@ This estimate covers the Sustainable Development Fee, accommodation and the expe
                                     )}
                                     <div className="flex justify-between items-end">
                                         <span className="text-white/60 text-xs uppercase tracking-widest font-mono">{"// Estimated total"}</span>
-                                        <span className="text-3xl font-light tracking-tighter text-amber-500">
-                                            ${discounted.total.toLocaleString()}
-                                        </span>
+                                        <div className="flex items-baseline gap-3">
+                                            {discountPercent > 0 && (
+                                                <span className="text-base font-light text-white/30 line-through">
+                                                    ${quoteSubtotal.toLocaleString()}
+                                                </span>
+                                            )}
+                                            <span className="text-3xl font-light tracking-tighter text-amber-500">
+                                                ${discounted.total.toLocaleString()}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
 
