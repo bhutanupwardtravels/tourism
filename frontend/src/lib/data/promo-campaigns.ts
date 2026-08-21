@@ -2,8 +2,12 @@ import { cache } from "react";
 import { supabaseAdmin } from "../supabase/admin";
 import { rowToDoc, rowsToDocs, docToRow, paginate, pageRange } from "../supabase/mapping";
 import { PromoCampaign } from "@/app/admin/promotions/campaigns/schema";
+import { countIssuedForCampaign } from "./promo-leads";
 
 const TABLE = "promo_campaigns";
+
+/** How far down the priority list to look for a campaign with codes left. */
+const BANNER_CANDIDATES = 5;
 
 const COLUMNS = [
     "name",
@@ -63,6 +67,11 @@ export const getCampaignById = cache(async (id: string) => {
  * shipped to the browser, but the *client* re-checks it against the real clock:
  * the public layout is ISR'd with revalidate = 3600, so a purely server-side
  * check could keep a just-expired banner up for an hour.
+ *
+ * A campaign that has issued its last code is skipped too — there is nothing
+ * left to claim, so offering it would only earn the visitor an error. Several
+ * candidates are fetched rather than one so a sold-out campaign falls through
+ * to the next one in priority order instead of leaving the slot empty.
  */
 export const getActiveBannerCampaign = cache(async (): Promise<PromoCampaign | null> => {
     try {
@@ -77,10 +86,21 @@ export const getActiveBannerCampaign = cache(async (): Promise<PromoCampaign | n
             .or(`banner_ends_at.is.null,banner_ends_at.gte.${now}`)
             .order("priority", { ascending: false })
             .order("created_at", { ascending: false })
-            .limit(1)
-            .maybeSingle();
+            .limit(BANNER_CANDIDATES);
 
-        return rowToDoc<PromoCampaign>(data);
+        const candidates = rowsToDocs<PromoCampaign>(data);
+
+        for (const campaign of candidates) {
+            if (!campaign.maxIssued) return campaign;
+
+            const id = campaign._id ?? campaign.id;
+            if (!id) continue;
+
+            const issued = await countIssuedForCampaign(id);
+            if (issued < campaign.maxIssued) return campaign;
+        }
+
+        return null;
     } catch {
         // The banner is never worth breaking the site layout over.
         return null;

@@ -17,6 +17,7 @@ import * as hotelDb from "@/lib/data/hotels";
 import { Hotel } from "../../admin/hotels/schema";
 import { Cost } from "../../admin/settings/schema";
 import * as settingsDb from "@/lib/data/settings";
+import { revalidatePath } from "next/cache";
 
 export interface PlanMyTripData {
     packages: Tour[];
@@ -384,11 +385,13 @@ export async function claimCoupon(data: Record<string, unknown>) {
             return { success: false, error: "This offer has ended." };
         }
 
+        let isLastCode = false;
         if (campaign.maxIssued) {
             const issued = await leadDb.countIssuedForCampaign(parsed.data.campaignId);
             if (issued >= campaign.maxIssued) {
                 return { success: false, error: "All codes for this offer have been claimed." };
             }
+            isLastCode = issued + 1 >= campaign.maxIssued;
         }
 
         if (await leadDb.hasClaimed(parsed.data.campaignId, parsed.data.email)) {
@@ -462,6 +465,12 @@ export async function claimCoupon(data: Record<string, unknown>) {
             replyTo: await getOperatorEmails(),
         });
         if (!mail.success) console.error("Coupon email failed:", mail.error);
+
+        // That was the last code, so the banner must come down for everyone
+        // else. The public layout is ISR'd for an hour; without this the offer
+        // would keep inviting claims it can no longer honour. Only done on the
+        // final claim, so a busy campaign isn't rebuilding the site per lead.
+        if (isLastCode) revalidatePath("/", "layout");
 
         return { success: true, code: lead.code, discountPercent: lead.discountPercent };
     } catch (error) {
