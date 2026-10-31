@@ -1,3 +1,4 @@
+import { guides } from "@/lib/content/guides";
 import { siteUrl, SITE_NAME } from "@/lib/site";
 import { getAllTours } from "@/lib/data/tours";
 import { getFaqContent } from "@/lib/data/faq";
@@ -63,6 +64,10 @@ export async function GET() {
         lines.push(`- ${faq.question}`);
     }
     lines.push("", `Full answers: ${base}/bhutan-travel-guide`);
+    lines.push("", "## Bhutan Travel Guides");
+    for (const g of guides) {
+        lines.push(`- ${g.heading}: ${base}/bhutan-travel-guide/${g.slug}`);
+    }
 
     return new Response(lines.join("\n"), {
         headers: { "Content-Type": "text/plain; charset=utf-8" },

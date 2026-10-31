@@ -34,7 +34,7 @@ export function Header({ contact }: HeaderProps) {
 
   // Pages with white backgrounds requiring dark text when not scrolled
   const lightBgPages = ["/destinations", "/experiences", "/tours", "/hotels", "/terms", "/privacy", "/bhutan-travel-guide"];
-  const isDarkText = lightBgPages.includes(pathname) && !isScrolled;
+  const isDarkText = (lightBgPages.includes(pathname) || pathname.startsWith("/bhutan-travel-guide/")) && !isScrolled;
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     if (latest > 50) {

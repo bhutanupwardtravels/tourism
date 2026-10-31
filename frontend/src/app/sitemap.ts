@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { listSlugEntries, listTourDayEntries, type SlugEntry } from "@/lib/data/slugs";
+import { guides } from "@/lib/content/guides";
 import { siteUrl } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -61,5 +62,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.4,
     }));
 
-    return [...staticRoutes, ...entityRoutes, ...tourDayRoutes];
+    const guideRoutes: MetadataRoute.Sitemap = guides.map((g) => ({
+        url: `${base}/bhutan-travel-guide/${g.slug}`,
+        lastModified: BUILD_TIME,
+        changeFrequency: "monthly",
+        priority: 0.7,
+    }));
+
+    return [...staticRoutes, ...guideRoutes, ...entityRoutes, ...tourDayRoutes];
 }

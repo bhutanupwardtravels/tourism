@@ -23,7 +23,7 @@ export const metadata: Metadata = {
         template: `%s | ${SITE_NAME}`,
     },
     description:
-        "Curated journeys to the Land of the Thunder Dragon — tours, experiences, and stays across Bhutan.",
+        "Bhutan travel agency offering guided tours, experiences, and stays across the Land of the Thunder Dragon.",
     openGraph: {
         siteName: SITE_NAME,
         type: "website",

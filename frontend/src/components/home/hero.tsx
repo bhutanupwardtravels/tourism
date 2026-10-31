@@ -78,8 +78,9 @@ export function Hero({ licenseNumber, foundingYear, reviewCount }: HeroProps) {
             Bhutan
           </h1>
           <p className="block font-light text-base md:text-xl tracking-wide text-white/90 mb-12 max-w-2xl mx-auto drop-shadow-md">
-            Private guided journeys built with licensed Bhutanese specialists.
-            Sustainable Development Fee included, no fixed departures.
+            Licensed Bhutan travel agency and tour operator: private guided
+            tours built with Bhutanese specialists. Sustainable Development
+            Fee included, no fixed departures.
           </p>
         </div>
 

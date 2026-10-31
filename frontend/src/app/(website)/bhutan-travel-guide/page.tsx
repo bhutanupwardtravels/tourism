@@ -5,6 +5,8 @@ import { FaqSection } from "@/components/common/faq-section";
 import { JsonLd } from "@/components/common/json-ld";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 import { getFaqContent } from "@/lib/data/faq";
+import Link from "next/link";
+import { guides } from "@/lib/content/guides";
 import CallToAction from "@/components/common/call-to-action";
 
 export const metadata: Metadata = buildMetadata({
@@ -41,6 +43,23 @@ export default async function BhutanTravelGuidePage() {
                     The answers below cover the questions travellers ask most before booking.
                 </p>
             </div>
+
+            <section className="container mx-auto px-6 py-12">
+                <h2 className="text-3xl font-light tracking-tight mb-6">Bhutan travel guides</h2>
+                <ul className="grid gap-4 md:grid-cols-2 max-w-4xl">
+                    {guides.map((g) => (
+                        <li key={g.slug} className="border border-black/10 p-5">
+                            <Link
+                                href={`/bhutan-travel-guide/${g.slug}`}
+                                className="text-lg underline hover:text-amber-600"
+                            >
+                                {g.heading}
+                            </Link>
+                            <p className="mt-2 text-sm text-black/60 leading-relaxed">{g.description}</p>
+                        </li>
+                    ))}
+                </ul>
+            </section>
 
             <FaqSection
                 label="// the essentials"

@@ -21,9 +21,9 @@ import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/site";
 
 export const metadata: Metadata = buildMetadata({
-    title: "Bhutan Tours & Travel Packages",
+    title: "Bhutan Travel Agency | Tours & Travel Packages",
     description:
-        "Curated Bhutan tours, custom itineraries, and boutique stays — plan a fully guided journey through Paro, Thimphu, Punakha, and beyond with local specialists.",
+        "Licensed Bhutan travel company offering guided tours, custom itineraries, and boutique stays. Explore Bhutan — Paro, Thimphu, Punakha and beyond — with local specialists.",
     image: "/images/hero-poster.jpg",
     path: "/",
 });

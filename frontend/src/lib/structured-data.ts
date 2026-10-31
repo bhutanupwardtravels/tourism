@@ -12,6 +12,8 @@ export interface OrganizationCredentials {
     licenseNumber?: string;
 }
 
+const MIN_REVIEWS_FOR_RATING = 5;
+
 interface TestimonialLike {
     name: string;
     quote: string;
@@ -24,11 +26,21 @@ export function organizationJsonLd(
     testimonials?: TestimonialLike[]
 ) {
     const sameAs = contact
-        ? Object.values(contact.socials).filter((url) => Boolean(url))
+        ? Object.values(contact.socials).filter((url) => {
+              // A bare platform root (e.g. "https://www.facebook.com/") is a
+              // placeholder, not a profile — don't declare it as the business's.
+              try {
+                  return new URL(url).pathname.replace(/\/+$/, "") !== "";
+              } catch {
+                  return false;
+              }
+          })
         : [];
 
     const reviews = testimonials && testimonials.length > 0 ? testimonials : undefined;
-    const aggregateRating = reviews
+    // One review is not an aggregate; Google treats thin 5.0 ratings as
+    // self-serving markup, so only declare one once there is a real sample.
+    const aggregateRating = reviews && reviews.length >= MIN_REVIEWS_FOR_RATING
         ? {
               "@type": "AggregateRating",
               ratingValue: (reviews.reduce((sum, t) => sum + t.rating, 0) / reviews.length).toFixed(1),
@@ -46,6 +58,9 @@ export function organizationJsonLd(
         "@context": "https://schema.org",
         "@type": "TravelAgency",
         name: SITE_NAME,
+        description:
+            "Licensed Bhutan travel agency and tour operator offering guided tours, custom itineraries, experiences and hotel stays across Bhutan.",
+        areaServed: { "@type": "Country", name: "Bhutan" },
         url: siteUrl(),
         logo: abs("/images/logo.png"),
         image: abs("/images/logo.png"),
