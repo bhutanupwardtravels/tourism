@@ -81,6 +81,11 @@ export function TourRequestForm({ selectedTour, onBack }: TourRequestFormProps) 
         e.preventDefault();
         setSubmitError("");
 
+        if (!turnstileToken) {
+            setSubmitError("Please tick \u201cVerify you are human\u201d above the button, then send again.");
+            return;
+        }
+
         const phoneProblem = validatePhoneNumber(formState.phone);
         if (phoneProblem) {
             setPhoneError(phoneProblem);

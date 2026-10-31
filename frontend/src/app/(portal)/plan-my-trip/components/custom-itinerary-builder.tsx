@@ -398,6 +398,10 @@ export function CustomItineraryBuilder({
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!turnstileToken) {
+            toast.error("Please tick \u201cVerify you are human\u201d above the button, then send again.");
+            return;
+        }
         setIsSubmitting(true);
 
         const dialCode = COUNTRIES.find((c) => c.iso2 === phoneCountry)?.dialCode ?? "";
