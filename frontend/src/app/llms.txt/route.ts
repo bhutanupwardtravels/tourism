@@ -30,21 +30,25 @@ export async function GET() {
     const base = siteUrl();
     const [tours, faqContent] = await Promise.all([loadTourSummaries(), getFaqContent()]);
 
+    // Follows the llms.txt spec (llmstxt.org): H1, a blockquote summary, then
+    // H2 sections whose list items are markdown links — `[name](url): notes`,
+    // not bare "label: url" text — so link-aware crawlers can actually parse
+    // them as links instead of plain lines.
     const lines: string[] = [
         `# ${SITE_NAME}`,
         "",
         "> Bhutan Upward Travels is a licensed tour operator based in Thimphu, Bhutan, offering curated tours, custom itineraries, experiences, and boutique hotel stays across Bhutan (Paro, Thimphu, Punakha, and beyond).",
         "",
         "## Key Pages",
-        `- Homepage: ${base}/`,
-        `- Tours: ${base}/tours`,
-        `- Destinations: ${base}/destinations`,
-        `- Experiences: ${base}/experiences`,
-        `- Hotels: ${base}/hotels`,
-        `- About Us: ${base}/about-us`,
-        `- Bhutan Travel Guide (FAQ): ${base}/bhutan-travel-guide`,
-        `- Plan My Trip: ${base}/plan-my-trip`,
-        `- Enquire / Contact: ${base}/enquire`,
+        `- [Homepage](${base}/): Overview of Bhutan Upward Travels and featured tours.`,
+        `- [Tours](${base}/tours): Browse all Bhutan tour packages.`,
+        `- [Destinations](${base}/destinations): Regions and dzongkhags covered.`,
+        `- [Experiences](${base}/experiences): Curated activities and excursions.`,
+        `- [Hotels](${base}/hotels): Vetted accommodation across Bhutan.`,
+        `- [About Us](${base}/about-us): Company background, license, and credentials.`,
+        `- [Bhutan Travel Guide](${base}/bhutan-travel-guide): FAQs and planning guides — cost, visa, best time to visit, and more.`,
+        `- [Plan My Trip](${base}/plan-my-trip): Build a custom itinerary or choose a package.`,
+        `- [Enquire / Contact](${base}/enquire): Start a booking enquiry.`,
         "",
     ];
 
@@ -54,22 +58,30 @@ export async function GET() {
             const details = [tour.duration, tour.price ? `from $${tour.price} USD` : null]
                 .filter(Boolean)
                 .join(", ");
-            lines.push(`- ${tour.title}${details ? ` (${details})` : ""}: ${base}/tours/${tour.slug}`);
+            lines.push(
+                `- [${tour.title}](${base}/tours/${tour.slug})${details ? `: ${details}` : ""}`
+            );
         }
         lines.push("");
     }
 
-    lines.push("## Travel Guide Topics");
-    for (const faq of faqContent.items) {
-        lines.push(`- ${faq.question}`);
-    }
-    lines.push("", `Full answers: ${base}/bhutan-travel-guide`);
-    lines.push("", "## Bhutan Travel Guides");
+    lines.push("## Bhutan Travel Guides");
     for (const g of guides) {
-        lines.push(`- ${g.heading}: ${base}/bhutan-travel-guide/${g.slug}`);
+        lines.push(`- [${g.heading}](${base}/bhutan-travel-guide/${g.slug}): ${g.description}`);
+    }
+    lines.push("");
+
+    if (faqContent.items.length > 0) {
+        lines.push("## Optional");
+        lines.push(
+            `- [Frequently Asked Questions](${base}/bhutan-travel-guide): ${faqContent.items
+                .slice(0, 6)
+                .map((f) => f.question)
+                .join(" ")}`
+        );
     }
 
     return new Response(lines.join("\n"), {
-        headers: { "Content-Type": "text/plain; charset=utf-8" },
+        headers: { "Content-Type": "text/markdown; charset=utf-8" },
     });
 }
