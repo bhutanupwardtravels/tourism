@@ -27,12 +27,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!data) return {};
 
   const { dayData, tour } = data;
-  return buildMetadata({
-    title: `Day ${dayNumber} — ${tour.title}`,
-    description: dayData.description,
-    image: dayData.image || tour.image,
-    path: `/tours/${slug}/day/${dayNumber}`,
-  });
+  return {
+    ...buildMetadata({
+      title: `Day ${dayNumber} — ${tour.title}`,
+      description: dayData.description,
+      image: dayData.image || tour.image,
+      path: `/tours/${slug}/day/${dayNumber}`,
+    }),
+    // These pages repeat content already on the parent tour page, so they're
+    // kept out of the index to avoid competing with it — the full itinerary
+    // page is what should rank, not its individual day-fragments.
+    robots: { index: false, follow: true },
+  };
 }
 
 export default async function TourDayPage({ params }: PageProps) {

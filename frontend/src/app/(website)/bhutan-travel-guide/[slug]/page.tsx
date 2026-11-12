@@ -68,6 +68,15 @@ export default async function GuidePage({ params }: Props) {
             <article className="container mx-auto px-6 pb-16">
                 <p className="max-w-3xl text-lg leading-relaxed text-black/70">{guide.intro}</p>
 
+                {guide.primaryLink && (
+                    <Link
+                        href={guide.primaryLink.href}
+                        className="mt-5 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-amber-600 underline hover:text-black"
+                    >
+                        {guide.primaryLink.label} →
+                    </Link>
+                )}
+
                 {guide.sections.map((section) => (
                     <section key={section.heading} className="mt-12 max-w-3xl">
                         <h2 className="text-2xl md:text-3xl font-light tracking-tight mb-4">

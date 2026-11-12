@@ -19,6 +19,8 @@ export interface Guide {
     intro: string;
     sections: GuideSection[];
     faqs: { question: string; answer: string }[];
+    /** Optional featured link shown under the intro, for guides that point readers at an existing catalog page rather than their own listing. */
+    primaryLink?: { label: string; href: string };
 }
 
 export const guides: Guide[] = [
@@ -86,9 +88,9 @@ export const guides: Guide[] = [
         title: "Bhutan Visa Guide — How to Get a Bhutan Tourist Visa",
         heading: "Bhutan Visa Guide",
         description:
-            "How the Bhutan tourist visa works: who needs one, how a licensed tour operator applies for it, the Sustainable Development Fee, and what to prepare before you travel.",
+            "Bhutan visa requirements explained: who needs a visa, how a licensed tour operator applies for it, the Sustainable Development Fee, and what to prepare before you travel.",
         intro:
-            "Most visitors cannot apply for a Bhutan tourist visa on their own. The visa is processed through a licensed Bhutanese tour operator as part of your booking. This guide explains the steps and what you need to prepare.",
+            "This guide covers Bhutan visa requirements in full. Most visitors cannot apply for a Bhutan tourist visa on their own — it is processed through a licensed Bhutanese tour operator as part of your booking. Here is what you need to prepare.",
         sections: [
             {
                 heading: "Who needs a visa",
@@ -180,9 +182,9 @@ export const guides: Guide[] = [
         title: "How Much Does a Bhutan Tour Cost? Price Guide",
         heading: "Bhutan Tour Cost Guide",
         description:
-            "What a Bhutan tour costs: the US$100 per night Sustainable Development Fee, what a package includes, typical prices for 5, 7 and 10 days, and how to budget.",
+            "Bhutan travel cost explained: the US$100 per night Sustainable Development Fee, what a package includes, typical prices for 5, 7 and 10 days, and how to budget.",
         intro:
-            "Bhutan is a high-value, low-volume destination, and the price reflects that. Most of what you pay is bundled into one all-inclusive package, so there are few surprises once you book.",
+            "Bhutan travel cost is almost entirely bundled into one package price, since Bhutan is a high-value, low-volume destination. Most of what you pay is set upfront, so there are few surprises once you book.",
         sections: [
             {
                 heading: "What a package includes",
@@ -371,6 +373,133 @@ export const guides: Guide[] = [
                 question: "Is it cheaper to book with a local Bhutan operator?",
                 answer:
                     "Usually yes. Booking direct avoids a reseller's margin, and the minimum daily fee is the same regardless of who you book with.",
+            },
+        ],
+    },
+    {
+        slug: "bhutan-trekking-tours",
+        title: "Bhutan Trekking Tours — Routes, Difficulty & Best Season",
+        heading: "Bhutan Trekking Tours",
+        description:
+            "Bhutan trekking tours and trails, from the half-day Tiger's Nest hike to multi-day routes like the Druk Path and Jomolhari. Difficulty, fitness level and the best season to go.",
+        intro:
+            "Bhutan's trekking routes range from a half-day climb to a cliffside monastery to multi-day treks through alpine passes that see very few outside visitors. Trekking group numbers are limited by law on every route, which keeps the trails quiet even in high season.",
+        sections: [
+            {
+                heading: "Popular routes and difficulty",
+                paragraphs: ["Trekking in Bhutan spans a wide range of effort and length:"],
+                bullets: [
+                    "Tiger's Nest (Taktsang) hike — half a day, moderate, included in almost every itinerary.",
+                    "Druk Path Trek — about 5 days, moderate, alpine lakes between Paro and Thimphu.",
+                    "Jomolhari Trek — 7 to 9 days, challenging, views of Mount Jomolhari near the Tibetan border.",
+                    "Snowman Trek — 25 or more days, Bhutan's hardest trek, for experienced high-altitude trekkers only.",
+                ],
+            },
+            {
+                heading: "When to trek",
+                paragraphs: [
+                    "Spring (March to May) and autumn (September to November) give the clearest mountain views and the most stable trails. Most high routes are best avoided during the summer monsoon, June to August.",
+                ],
+            },
+        ],
+        primaryLink: {
+            label: "Browse Bhutan trekking & nature experiences",
+            href: "/experiences?category=Nature+Exploration",
+        },
+        faqs: [
+            {
+                question: "Do I need previous trekking experience for Bhutan?",
+                answer:
+                    "Not for shorter routes like the Druk Path, which suit a reasonably fit traveller. Longer, higher routes such as Jomolhari or the Snowman Trek need prior high-altitude experience.",
+            },
+            {
+                question: "Is a guide required for trekking in Bhutan?",
+                answer:
+                    "Yes. All trekking in Bhutan is done with a licensed guide and crew arranged through your tour operator; independent trekking is not permitted.",
+            },
+        ],
+    },
+    {
+        slug: "bhutan-honeymoon-packages",
+        title: "Bhutan Honeymoon Packages — Private Itineraries for Couples",
+        heading: "Bhutan Honeymoon Packages",
+        description:
+            "Bhutan honeymoon packages: private guided itineraries, boutique and luxury stays, and the best regions and pace for couples. What makes Bhutan different and how to plan.",
+        intro:
+            "Every Bhutan tour already travels as a private group with its own guide and vehicle, which makes the country naturally suited to a honeymoon: there is no fixed group to join and no shared itinerary to follow.",
+        sections: [
+            {
+                heading: "What makes a Bhutan honeymoon different",
+                paragraphs: [
+                    "Because tours are private by default, a honeymoon itinerary can set its own pace — a slower start each morning, a private dinner arranged through your guide, or a detour to a quieter monastery with fewer visitors.",
+                ],
+            },
+            {
+                heading: "Where couples usually go",
+                paragraphs: [
+                    "A 7 to 10 day route through Paro, Thimphu and Punakha covers the classic highlights at an easy pace, with boutique and luxury stays available in each town. Couples wanting more privacy often add a night or two in the Phobjikha valley.",
+                ],
+            },
+        ],
+        primaryLink: {
+            label: "Browse Bhutan tour packages for couples",
+            href: "/tours",
+        },
+        faqs: [
+            {
+                question: "Can we customise a Bhutan honeymoon itinerary?",
+                answer:
+                    "Yes. Every package can be adjusted for pace, hotel category and privacy — tell us it's a honeymoon when you enquire and we will shape the itinerary around that.",
+            },
+            {
+                question: "What is the best time for a Bhutan honeymoon?",
+                answer:
+                    "Spring and autumn offer the clearest weather and the festivals, but winter and summer are quieter and often better value for a private trip.",
+            },
+        ],
+    },
+    {
+        slug: "bhutan-tour-packages-from-singapore",
+        title: "Bhutan Tour Packages from Singapore — Flights, Visa & Itineraries",
+        heading: "Bhutan Tour Packages from Singapore",
+        description:
+            "Plan a Bhutan trip from Singapore: the direct Drukair connection to Paro, visa handling, the daily Sustainable Development Fee, and itineraries suited to a short break.",
+        intro:
+            "Singapore has a direct Drukair connection to Paro, which makes Bhutan more reachable from Singapore than from almost anywhere else outside the region.",
+        sections: [
+            {
+                heading: "Getting there",
+                paragraphs: [
+                    "Drukair operates a through flight between Singapore and Paro, typically with a brief technical stop en route, several times a week. Seats are limited, so confirm the current schedule and book early.",
+                ],
+            },
+            {
+                heading: "Visa and fees",
+                paragraphs: [
+                    "Singapore passport holders need a Bhutanese tourist visa, arranged by your licensed operator, plus the Sustainable Development Fee of US$100 per person per night — both included in a standard package.",
+                ],
+            },
+            {
+                heading: "Itineraries for a short break",
+                paragraphs: [
+                    "With a direct flight connection, Bhutan suits a short 4 to 6 day trip from Singapore covering Paro and Thimphu, as well as longer 7 to 10 day itineraries that add Punakha and central Bhutan.",
+                ],
+            },
+        ],
+        primaryLink: {
+            label: "Browse Bhutan tour packages",
+            href: "/tours",
+        },
+        faqs: [
+            {
+                question: "Is there a direct flight from Singapore to Bhutan?",
+                answer:
+                    "Yes. Drukair operates a through service between Singapore and Paro several times a week, usually with a brief technical stop — confirm the current schedule when you plan.",
+            },
+            {
+                question: "Do Singapore citizens need a visa for Bhutan?",
+                answer:
+                    "Yes. A Bhutanese tourist visa is required and is arranged by your licensed tour operator as part of your package, along with the Sustainable Development Fee.",
             },
         ],
     },

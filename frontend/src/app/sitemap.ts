@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { listSlugEntries, listTourDayEntries, type SlugEntry } from "@/lib/data/slugs";
+import { listSlugEntries, type SlugEntry } from "@/lib/data/slugs";
 import { guides } from "@/lib/content/guides";
 import { siteUrl } from "@/lib/site";
 
@@ -40,12 +40,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: path === "" ? 1 : 0.8,
     }));
 
-    const [tours, destinations, experiences, hotels, tourDays] = await Promise.all([
+    const [tours, destinations, experiences, hotels] = await Promise.all([
         listSlugEntries("tours"),
         listSlugEntries("destinations"),
         listSlugEntries("experiences"),
         listSlugEntries("hotels"),
-        listTourDayEntries(),
     ]);
 
     const entityRoutes: MetadataRoute.Sitemap = [
@@ -55,12 +54,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ...toEntityRoutes(base, "/hotels", hotels),
     ];
 
-    const tourDayRoutes: MetadataRoute.Sitemap = tourDays.map(({ slug, day, updatedAt }) => ({
-        url: `${base}/tours/${slug}/day/${day}`,
-        lastModified: updatedAt ? new Date(updatedAt) : BUILD_TIME,
-        changeFrequency: "monthly",
-        priority: 0.4,
-    }));
+    // Tour-day sub-pages are intentionally left out of the sitemap: they're
+    // noindex'd (see tours/[slug]/day/[day]/page.tsx) since their content
+    // duplicates the parent tour page, so listing them here would just send
+    // Google a contradictory signal.
 
     const guideRoutes: MetadataRoute.Sitemap = guides.map((g) => ({
         url: `${base}/bhutan-travel-guide/${g.slug}`,
@@ -69,5 +66,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
     }));
 
-    return [...staticRoutes, ...guideRoutes, ...entityRoutes, ...tourDayRoutes];
+    return [...staticRoutes, ...guideRoutes, ...entityRoutes];
 }
